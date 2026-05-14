@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Booking — Taj Al Sukn Admin</title>
+<link rel="icon" type="image/png" href="assets/images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="admin">
+
+<div class="admin-shell">
+
+  <!-- Sidebar -->
+  <aside class="admin-side">
+    <div class="admin-side__brand">
+      <span class="logo-frame"><img src="assets/images/logo.png" alt="" loading="lazy" decoding="async"></span>
+      <div>
+        <strong>Taj Al Sukn</strong>
+        <small>Admin Console</small>
+      </div>
+    </div>
+
+    <div class="admin-side__label">Workspace</div>
+    <ul class="admin-side__nav">
+      <li><a href="admin.html"><i class="fas fa-th-large"></i> Overview</a></li>
+      <li><a href="admin.html#bookings" class="active"><i class="far fa-calendar-check"></i> Bookings</a></li>
+      <li><a href="admin.html#members"><i class="fas fa-crown"></i> Members</a></li>
+      <li><a href="admin.html#calendar"><i class="far fa-calendar-alt"></i> Calendar</a></li>
+      <li><a href="admin.html#reports"><i class="fas fa-chart-line"></i> Reports</a></li>
+    </ul>
+
+    <div class="admin-side__label">Settings</div>
+    <ul class="admin-side__nav">
+      <li><a href="admin.html#settings"><i class="fas fa-cog"></i> Spa Settings</a></li>
+      <li><a href="index.html"><i class="fas fa-external-link-alt"></i> View Website</a></li>
+    </ul>
+
+    <div class="admin-side__user">
+      <div class="av">A</div>
+      <div>
+        <strong>Admin</strong>
+        <small>admin@tasukunspa.com</small>
+      </div>
+      <a id="admin-logout" title="Sign out" href="#"><i class="fas fa-sign-out-alt"></i></a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="admin-main">
+
+    <div class="admin-bar">
+      <div class="admin-bar__search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search bookings, members, services…">
+      </div>
+      <div class="admin-bar__actions">
+        <a href="admin.html" class="btn btn--outline" style="padding: 12px 22px; font-size: 0.7rem;"><i class="fas fa-arrow-left"></i> Back</a>
+        <a href="https://wa.me/97335194422" target="_blank" class="btn btn--primary" style="padding: 12px 22px; font-size: 0.7rem;"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+      </div>
+    </div>
+
+    <div class="admin-content">
+      <div class="admin-page__head">
+        <div>
+          <p style="font-size: 0.74rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--c-text-soft); font-weight: 700; margin-bottom: 6px;">
+            <a href="admin.html" style="color: inherit;">Admin</a> · <a href="admin.html#bookings" style="color: inherit;">Bookings</a> · <span style="color: var(--c-copper);">New Booking</span>
+          </p>
+          <h1>Create New Booking</h1>
+          <p>Enter guest details — invoice generates automatically with live discount &amp; tax calculation.</p>
+        </div>
+      </div>
+
+      <div class="booking-builder">
+
+        <!-- LEFT: Form -->
+        <form id="builder-form" class="builder-form">
+          <div class="panel">
+
+            <!-- 1. Guest Info -->
+            <div class="builder-section">
+              <h4><span class="step-badge">1</span>Guest Information</h4>
+              <p class="help">Who is this booking for?</p>
+              <div class="builder-grid">
+                <div class="field"><label>Full Name *</label><input type="text" name="name" required placeholder="e.g. Fatima Ali"></div>
+                <div class="field"><label>Phone *</label><input type="tel" name="phone" required placeholder="+973 …"></div>
+                <div class="field full"><label>Email (optional)</label><input type="email" name="email" placeholder="guest@example.com"></div>
+              </div>
+            </div>
+
+            <!-- 2. Service -->
+            <div class="builder-section">
+              <h4><span class="step-badge">2</span>Treatment Selection</h4>
+              <p class="help">Choose the service — pricing updates live.</p>
+              <div class="builder-grid">
+                <div class="field full">
+                  <label>Treatment <small style="color:var(--c-text-soft); font-weight:400; margin-left:8px;"><i class="fas fa-link"></i> driven by <a href="admin.html#sg-services" style="color:var(--c-copper);">Services master</a></small></label>
+                  <select name="service" id="bk-service" required data-dynamic>
+                    <!-- Filled at boot from taj-services -->
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Date & Time -->
+            <div class="builder-section">
+              <h4><span class="step-badge">3</span>Date, Time &amp; Therapist</h4>
+              <div class="builder-grid">
+                <div class="field"><label>Date *</label><input type="date" name="date" id="bk-date" required></div>
+                <div class="field"><label>Time *</label><input type="time" name="time" id="bk-time" required value="14:00"></div>
+                <div class="field full">
+                  <label>Therapist</label>
+                  <select name="therapist">
+                    <option>Auto-assign (next available)</option>
+                    <option>Sofia (Director)</option>
+                    <option>Aisha</option>
+                    <option>Maya</option>
+                    <option>Rahma</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. Membership -->
+            <div class="builder-section">
+              <h4><span class="step-badge">4</span>Membership Status</h4>
+              <p class="help">Apply member tier discount automatically.</p>
+              <div class="member-card" id="member-card">
+                <div class="member-card__head" id="member-card-head">
+                  <span class="lbl"><i class="fas fa-crown"></i> Is this guest a member?</span>
+                  <span class="switch"></span>
+                </div>
+                <div class="member-card__body">
+                  <div class="field">
+                    <label>Tier</label>
+                    <select id="bk-tier" name="tier">
+                      <option value="">Select tier…</option>
+                      <option value="Silver" data-discount="10">Silver — 10% off</option>
+                      <option value="Gold" data-discount="15" selected>Gold — 15% off</option>
+                      <option value="Platinum" data-discount="20">Platinum — 20% off</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>Member ID</label>
+                    <input type="text" id="bk-mid" name="member_id" placeholder="TAS-2025-XXXX">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. Discount -->
+            <div class="builder-section">
+              <h4><span class="step-badge">5</span>Additional Discount <small style="color:var(--c-text-soft); font-family: var(--f-body); font-size: 0.78rem; font-weight: 400; letter-spacing: 0; text-transform: none;">(optional)</small></h4>
+              <p class="help">Promo code, courtesy discount, or staff rate — applied on top of member discount.</p>
+              <div class="disc-card">
+                <div class="builder-grid">
+                  <div class="field">
+                    <label>Type</label>
+                    <select id="bk-disc-type">
+                      <option value="">No discount</option>
+                      <option value="percent">Percentage (%)</option>
+                      <option value="fixed">Fixed (BHD)</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>Reason</label>
+                    <select id="bk-disc-reason">
+                      <option value="Promo Code">Promo Code</option>
+                      <option value="First-Time Guest">First-Time Guest</option>
+                      <option value="Manager Discretion">Manager Discretion</option>
+                      <option value="Loyalty Bonus">Loyalty Bonus</option>
+                      <option value="Service Recovery">Service Recovery</option>
+                      <option value="Staff / Family">Staff / Family</option>
+                      <option value="Corporate Rate">Corporate Rate</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>Amount</label>
+                    <input type="number" id="bk-disc-value" placeholder="0" min="0" step="0.5">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 6. Payment & Notes -->
+            <div class="builder-section">
+              <h4><span class="step-badge">6</span>Payment &amp; Notes</h4>
+              <div class="builder-grid">
+                <div class="field">
+                  <label>Payment Status</label>
+                  <select id="bk-paid" name="paid">
+                    <option value="0">Unpaid (issue invoice)</option>
+                    <option value="1">Paid (issue receipt)</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Payment Method</label>
+                  <select name="payment_method">
+                    <option>Cash</option>
+                    <option>Card</option>
+                    <option>Bank Transfer</option>
+                    <option>BenefitPay</option>
+                    <option>Apple Pay</option>
+                  </select>
+                </div>
+                <div class="field full">
+                  <label>Internal Notes</label>
+                  <textarea name="notes" rows="3" placeholder="Any preferences, allergies, requests…"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Save bar -->
+            <div class="save-bar">
+              <button type="button" class="btn btn--outline" onclick="history.back()"><i class="fas fa-times"></i> Cancel</button>
+              <div class="spacer"></div>
+              <button type="button" id="save-and-new" class="btn btn--outline"><i class="fas fa-plus"></i> Save &amp; New</button>
+              <button type="submit" class="btn btn--primary"><i class="fas fa-save"></i> Save &amp; Generate Invoice</button>
+            </div>
+          </div>
+        </form>
+
+        <!-- RIGHT: Live invoice preview -->
+        <div class="invoice-preview">
+          <div class="inv-doc">
+            <!-- Header -->
+            <div class="inv-head">
+              <div class="inv-head__brand">
+                <span class="logo-frame"><img src="assets/images/logo.png" alt="" loading="lazy" decoding="async"></span>
+                <div class="info">
+                  <strong>Taj Al Sukn</strong>
+                  <small>Spa &amp; Wellness W.L.L.<br>
+                  Al Fateh, Manama · Bld 950<br>
+                  CR: 182250-1</small>
+                </div>
+              </div>
+              <div class="inv-head__meta">
+                <div class="doc-type" id="pv-type">Invoice</div>
+                <div class="doc-no" id="pv-no">DRAFT</div>
+                <div class="doc-date" id="pv-date">—</div>
+                <span class="inv-status draft" id="pv-status">Draft</span>
+              </div>
+            </div>
+
+            <div class="inv-bill">
+              <div>
+                <h6>Bill To</h6>
+                <strong id="pv-name">—</strong>
+                <p id="pv-info">Enter guest details to begin</p>
+              </div>
+              <div>
+                <h6>Issued By</h6>
+                <strong>Taj Al Sukn Spa</strong>
+                <p>+973 35194422<br>hello@tasukunspa.com</p>
+              </div>
+            </div>
+
+            <table class="inv-table">
+              <thead>
+                <tr><th>Service</th><th>Duration</th><th class="r">Qty</th><th class="r">Total</th></tr>
+              </thead>
+              <tbody id="pv-items"></tbody>
+            </table>
+
+            <div class="inv-totals">
+              <div class="inv-totals__inner">
+                <div class="row subtotal"><span>Subtotal</span><strong id="pv-subtotal">0.000 BHD</strong></div>
+                <div class="row discount" id="pv-mdisc-row" style="display:none;"><span id="pv-mdisc-label">Member Discount</span><strong id="pv-mdisc">−0.000 BHD</strong></div>
+                <div class="row discount" id="pv-edisc-row" style="display:none;"><span id="pv-edisc-label">Discount</span><strong id="pv-edisc">−0.000 BHD</strong></div>
+                <div class="row tax"><span>VAT (10%)</span><strong id="pv-tax">0.000 BHD</strong></div>
+                <div class="total">
+                  <span class="lbl">Total</span>
+                  <span class="amt" id="pv-total">0.000 BHD</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="inv-foot">
+              <strong>Thank you for choosing Taj Al Sukn.</strong>
+              <span>"the crown of stillness" · Al Fateh, Manama</span>
+            </div>
+          </div>
+
+          <div class="invoice-preview__hint">
+            <i class="fas fa-info-circle"></i>
+            Live preview — fill the form on the left to see the invoice update in real time. VAT is set to 10% (Bahrain).
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Supabase data layer -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="assets/js/supabase-config.js?v=20260514" defer></script>
+<script src="assets/js/taj-data.js?v=20260514" defer></script>
+<script src="assets/js/page-cms.js?v=20260514" defer></script>
+<script src="assets/js/admin-shared.js" defer></script>
+<script src="assets/js/admin-new-booking.js" defer></script>
+</body>
+</html>

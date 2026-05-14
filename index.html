@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taj Al Sukn — Spa & Wellness · Manama, Bahrain</title>
+<meta name="description" content="Taj Al Sukn — A modern wellness sanctuary in Manama. Authentic Hammams, signature massages, and curated rituals.">
+<link rel="icon" type="image/png" href="assets/images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header hero-on-top">
+  <nav class="nav">
+    <a href="index.html" class="nav__logo">
+      <span class="logo-frame"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></span>
+      <span class="brand-text"><strong>Taj Al Sukn</strong><small>Spa &amp; Wellness</small></span>
+    </a>
+    <ul class="nav__menu">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="membership.html">Membership</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav__cta">
+      <a href="member-signin.html" class="nav__signin"><i class="far fa-user-circle"></i> Sign In</a>
+      <span class="nav__member" id="nav-member-chip" hidden>
+        <span class="nav__member-av" id="nav-member-av">—</span>
+        <span class="nav__member-name" id="nav-member-name">Member</span>
+      </span>
+      <a href="booking.html" class="btn btn--primary"><i class="far fa-calendar-check"></i> Reserve</a>
+      <button class="nav__toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero__bg" data-cms="page-home.hero.image" data-cms-prop="bg" style="background-image:url('assets/images/sanctuary-bed.jpg');"></div>
+  <div class="hero__overlay"></div>
+  <div class="hero__content">
+    <div class="hero__copy reveal visible">
+      <span class="eyebrow" data-cms="page-home.hero.eyebrow">Manama · Bahrain · Est. 2024</span>
+      <h1 data-cms="page-home.hero.title">Immerse <em>yourself</em> in the atmosphere of stillness &amp; harmony.</h1>
+      <p data-cms="page-home.hero.subtitle">Step into Taj Al Sukn — a private sanctuary where Arabian rituals meet the world's finest spa traditions. Authentic Hammams, signature massages, and unhurried care.</p>
+      <div class="hero__actions">
+        <a href="booking.html" class="btn btn--gold"><i class="far fa-calendar-check"></i> Begin a New Chapter</a>
+        <a href="services.html" class="btn btn--outline-light">Explore the Menu</a>
+      </div>
+    </div>
+    <div class="hero__logo-card reveal visible delay-2">
+      <div class="logo-bg"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></div>
+      <h3>Taj Al Sukn</h3>
+      <span class="tag">Spa &amp; Wellness</span>
+      <div class="est">"the crown of stillness"</div>
+    </div>
+  </div>
+  <div class="hero__scroll"><span>Discover</span><div class="line"></div></div>
+</section>
+
+<!-- Marquee strip -->
+<div class="marquee">
+  <div class="marquee__track">
+    <span class="marquee__item">Royal Hammam</span>
+    <span class="marquee__item">Argan Oil Ritual</span>
+    <span class="marquee__item">Hot Stone</span>
+    <span class="marquee__item">Casablanca Hammam</span>
+    <span class="marquee__item">Couples Sanctuary</span>
+    <span class="marquee__item">Deep Tissue</span>
+    <span class="marquee__item">Royal Hammam</span>
+    <span class="marquee__item">Argan Oil Ritual</span>
+    <span class="marquee__item">Hot Stone</span>
+    <span class="marquee__item">Casablanca Hammam</span>
+    <span class="marquee__item">Couples Sanctuary</span>
+    <span class="marquee__item">Deep Tissue</span>
+  </div>
+</div>
+
+<!-- Image with overlay text card (Soul Studio style) -->
+<section class="section section--cream">
+  <div class="container-wide">
+    <div class="image-overlay reveal">
+      <img data-cms="page-home.loving.image" data-cms-prop="src" src="assets/images/sanctuary-bed.jpg" alt="Loving Through Touch" loading="lazy" decoding="async">
+      <div class="image-overlay__card">
+        <h3 data-cms="page-home.loving.title">Loving Through Touch</h3>
+        <p data-cms="page-home.loving.body">A professional massage therapist with extensive experience is ready to care for your physical and emotional wellbeing. Every ritual begins with you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Asymmetric headline + description -->
+<section class="section section--cream" style="padding-top: 30px;">
+  <div class="container">
+    <div class="asym reveal">
+      <h2 data-cms="page-home.stress.title">A place where <em>stress fades</em> and harmony begins.</h2>
+      <div class="asym__desc">
+        <p data-cms="page-home.stress.body">Experience the healing power of authentic Arabian rituals — a blend of tradition and care designed to release stress, improve circulation, and restore inner peace. Each session is a journey toward balance, clarity, and deep renewal.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Benefits row -->
+<section class="section--tight section--cream">
+  <div class="container-wide">
+    <div class="s-head reveal" style="margin-bottom: 50px;">
+      <h2 data-cms="page-home.benefits.title">Massage can help you <em>if you</em>...</h2>
+    </div>
+    <div class="benefits">
+      <div class="benefit reveal">
+        <div class="benefit__icon"><i class="fas fa-feather"></i></div>
+        <h5>Feel Lighter &amp; More Flexible</h5>
+        <p>Ease tension in a healthy, mobile body.</p>
+      </div>
+      <div class="benefit reveal delay-1">
+        <div class="benefit__icon"><i class="fas fa-leaf"></i></div>
+        <h5>Enjoy Pain-Free Living</h5>
+        <p>Living with physical ailments &amp; chronic conditions.</p>
+      </div>
+      <div class="benefit reveal delay-2">
+        <div class="benefit__icon"><i class="fas fa-bed"></i></div>
+        <h5>Better Sleep &amp; Energy</h5>
+        <p>Experience peaceful sleep and waking up rested.</p>
+      </div>
+      <div class="benefit reveal delay-3">
+        <div class="benefit__icon"><i class="fas fa-spa"></i></div>
+        <h5>Stress &amp; Tension Relief</h5>
+        <p>Frequently feeling stressed and unable to relax.</p>
+      </div>
+      <div class="benefit reveal delay-4">
+        <div class="benefit__icon"><i class="fas fa-heart"></i></div>
+        <h5>Build Self-Confidence</h5>
+        <p>Struggling with self-esteem and decision making.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Welcome editorial -->
+<section class="section section--cream">
+  <div class="container">
+    <div class="editorial">
+      <div class="editorial__media reveal">
+        <div class="main"><img src="assets/images/spa-foyer.jpg" alt="Taj Al Sukn lobby" loading="lazy" decoding="async"></div>
+        <div class="accent"><img src="assets/images/lounge-flowers.jpg" alt="Lounge detail" loading="lazy" decoding="async"></div>
+        <div class="stamp"><strong>2026</strong><small>EST.</small></div>
+      </div>
+      <div class="editorial__copy reveal delay-1">
+        <div class="numlabel"><span class="num">01</span><span class="lbl" data-cms="page-home.welcome.eyebrow">Welcome</span></div>
+        <h2 data-cms="page-home.welcome.title">A modern sanctuary, <em>rooted in tradition</em>.</h2>
+        <p data-cms="page-home.welcome.body">"Al Sukn" is the Arabic word for stillness — the deep, settled calm that follows true rest. From the moment you cross our threshold, every detail is composed to bring you there. Warm wood interiors, candlelight, expert hands, and rituals drawn from Morocco, Thailand, Bali, and the Arabian Peninsula. An hour, an afternoon, an entire day — you'll leave lighter than you came.</p>
+        <a href="about.html" class="btn btn--dark">Read Our Story</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Numbered Bento (After Your Massage style) -->
+<section class="section section--white">
+  <div class="container-wide">
+    <div class="s-head reveal">
+      <span class="eyebrow eyebrow--center" data-cms="page-home.after.eyebrow">After Your Visit</span>
+      <h2 data-cms="page-home.after.title">How you'll <em>feel</em>.</h2>
+      <div class="ornament"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0l3 9h9l-7 5 3 10-8-6-8 6 3-10-7-5h9z"/></svg></div>
+    </div>
+
+    <div class="numbento">
+      <div class="numbento__cell row2 reveal">
+        <img src="assets/images/spa-relax-1.jpg" alt="Deep relaxation" loading="lazy" decoding="async">
+      </div>
+      <div class="numbento__cell text reveal delay-1">
+        <span class="num">02</span>
+        <div>
+          <h5>Steps to a world of healing</h5>
+          <p>For your body and soul.</p>
+        </div>
+      </div>
+      <div class="numbento__cell reveal delay-2">
+        <img src="assets/images/sanctuary-bed.jpg" alt="Sanctuary" loading="lazy" decoding="async">
+      </div>
+      <div class="numbento__cell row2 reveal delay-3">
+        <img src="assets/images/spa-relax-2.jpg" alt="Hot stone" loading="lazy" decoding="async">
+      </div>
+      <div class="numbento__cell text reveal delay-1">
+        <span class="num">04</span>
+        <div>
+          <h5>Begin your journey</h5>
+          <p>Of rejuvenation and healing.</p>
+        </div>
+      </div>
+      <div class="numbento__cell text reveal delay-2">
+        <span class="num">01</span>
+        <div>
+          <h5>Deep relaxation</h5>
+          <p>Enjoy deep relaxation and rest.</p>
+        </div>
+      </div>
+      <div class="numbento__cell text reveal delay-3">
+        <span class="num">03</span>
+        <div>
+          <h5>Lightness in your body</h5>
+          <p>Experience lightness in muscles and joints.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Services -->
+<section class="section section--cream">
+  <div class="container-wide">
+    <div class="s-head reveal">
+      <span class="eyebrow eyebrow--center" data-cms="page-home.treatments.eyebrow">Signature Rituals</span>
+      <h2 data-cms="page-home.treatments.title">Treatments designed <em>around you</em>.</h2>
+      <div class="ornament"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0l3 9h9l-7 5 3 10-8-6-8 6 3-10-7-5h9z"/></svg></div>
+      <p>From deep-tissue therapy to the royal Hammam — every ritual is unhurried, deeply personal, and crafted to restore.</p>
+    </div>
+
+    <div class="feature-grid">
+      <article class="feature reveal">
+        <img src="assets/images/spa-detail-2.jpg" alt="Royal Hammam" loading="lazy" decoding="async">
+        <div class="feature__content">
+          <span class="tag">Signature</span>
+          <h4>Royal Hammam</h4>
+          <div class="meta"><span class="dur">75 min</span><span class="price">45<small style="font-family: var(--f-body); font-size: .65rem; letter-spacing: .2em; color: rgba(255,255,255,.6); font-style:normal; margin-left: 6px;">BHD</small></span></div>
+        </div>
+      </article>
+      <article class="feature reveal delay-1">
+        <img src="assets/images/therapist-products.jpg" alt="Argan Oil Massage" loading="lazy" decoding="async">
+        <div class="feature__content">
+          <span class="tag">Signature</span>
+          <h4>Argan Oil Ritual</h4>
+          <div class="meta"><span class="dur">60 / 90 min</span><span class="price">40<small style="font-family: var(--f-body); font-size: .65rem; letter-spacing: .2em; color: rgba(255,255,255,.6); font-style:normal; margin-left: 6px;">BHD</small></span></div>
+        </div>
+      </article>
+      <article class="feature reveal delay-2">
+        <img src="assets/images/deep-tissue.jpg" alt="Deep Tissue" loading="lazy" decoding="async">
+        <div class="feature__content">
+          <span class="tag">Therapeutic</span>
+          <h4>Deep Tissue</h4>
+          <div class="meta"><span class="dur">60 / 90 min</span><span class="price">30<small style="font-family: var(--f-body); font-size: .65rem; letter-spacing: .2em; color: rgba(255,255,255,.6); font-style:normal; margin-left: 6px;">BHD</small></span></div>
+        </div>
+      </article>
+      <article class="feature reveal delay-3">
+        <img src="assets/images/spa-detail-1.jpg" alt="Casablanca Hammam" loading="lazy" decoding="async">
+        <div class="feature__content">
+          <span class="tag">Hammam</span>
+          <h4>Casablanca</h4>
+          <div class="meta"><span class="dur">60 min</span><span class="price">25<small style="font-family: var(--f-body); font-size: .65rem; letter-spacing: .2em; color: rgba(255,255,255,.6); font-style:normal; margin-left: 6px;">BHD</small></span></div>
+        </div>
+      </article>
+    </div>
+
+    <div style="text-align:center; margin-top: 70px;" class="reveal">
+      <a href="services.html" class="btn btn--dark">View Complete Menu</a>
+    </div>
+  </div>
+</section>
+
+<!-- Big quote / dark section -->
+<section class="section section--dark">
+  <div class="container">
+    <div class="bigquote reveal">
+      <p data-cms="page-home.philosophy.quote" data-cms-prop="html">"Where the noise of the world ends, and the stillness of self begins. <em>That is Al Sukn.</em>"</p>
+      <span class="by" data-cms="page-home.philosophy.by">— Our Philosophy</span>
+    </div>
+  </div>
+</section>
+
+<!-- Founder / Director -->
+<section class="section section--cream">
+  <div class="container">
+    <div class="s-head reveal">
+      <span class="eyebrow eyebrow--center" data-cms="page-home.founder.eyebrow">Studio Director</span>
+      <h2>Hands that <em>understand</em>.</h2>
+    </div>
+
+    <div class="founder reveal">
+      <div class="founder__media">
+        <img data-cms="page-home.founder.image" data-cms-prop="src" src="assets/images/manager-portrait.jpg" alt="Spa Director" loading="lazy" decoding="async">
+      </div>
+      <div class="founder__copy">
+        <span class="role" data-cms="page-home.founder.role">Studio Founder</span>
+        <h3 data-cms="page-home.founder.name">Sophia Brown</h3>
+        <ul class="founder__list">
+          <li>Internationally certified Thai massage practitioner</li>
+          <li>Holds a medical degree with 15 years of hospital experience</li>
+          <li>Internationally certified Access Bars practitioner</li>
+          <li>Over 5 years of expertise in professional body relaxation</li>
+          <li>Welcomes clients of any gender, age, and physical condition</li>
+          <li>Gently activates the body's natural self-healing processes</li>
+        </ul>
+        <div class="founder__socials">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://wa.me/97335194422" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials (clean horizontal) -->
+<section class="section section--white">
+  <div class="container-wide">
+    <div class="s-head reveal">
+      <span class="eyebrow eyebrow--center" data-cms="page-home.testimonials.eyebrow">Client Testimonials</span>
+      <h2 data-cms="page-home.testimonials.title">Words from those who <em>visited</em>.</h2>
+    </div>
+
+    <div class="testi-grid">
+      <div class="testi reveal">
+        <div class="testi__by"><div class="testi__avatar">F</div><div><h6>Fatima A.</h6><span>Manama</span></div></div>
+        <div class="stars">★★★★★</div>
+        <p>A perfect escape from the city. The Royal Hammam left my skin glowing and my mind completely at ease. Sofia's touch is sheer magic.</p>
+      </div>
+      <div class="testi reveal delay-1">
+        <div class="testi__by"><div class="testi__avatar">M</div><div><h6>Mohammed K.</h6><span>Riffa</span></div></div>
+        <div class="stars">★★★★★</div>
+        <p>The atmosphere in the studio is incredibly calming from the very first minute. Sofia's touch is gentle and powerful, more than just a massage — it's therapy for the soul.</p>
+      </div>
+      <div class="testi reveal delay-2">
+        <div class="testi__by"><div class="testi__avatar">S</div><div><h6>Sarah R.</h6><span>Adliya</span></div></div>
+        <div class="stars">★★★★★</div>
+        <p>I've tried many massage therapists before, but Sofia's approach is truly unique. Each movement feels thoughtful and precise. My back pain has eased.</p>
+      </div>
+      <div class="testi reveal delay-3">
+        <div class="testi__by"><div class="testi__avatar">O</div><div><h6>Olivia T.</h6><span>Seef</span></div></div>
+        <div class="stars">★★★★★</div>
+        <p>Last night I slept like a child! I immediately felt my upper back, my legs, neck and lower body felt so much lighter. After my session everything was toned. Thank you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing comparison -->
+<section class="section section--cream">
+  <div class="container">
+    <div class="s-head reveal">
+      <span class="eyebrow eyebrow--center" data-cms="page-home.pricing.eyebrow">Flexible Rates</span>
+      <h2 data-cms="page-home.pricing.title">For every <em>moment</em>.</h2>
+      <p>Three ways to experience Taj Al Sukn — choose what fits today.</p>
+    </div>
+
+    <div class="pricing">
+      <div class="plan reveal">
+        <span class="plan__name">Basic</span>
+        <div class="plan__price">25<small> / session · BHD</small></div>
+        <div class="plan__divider"></div>
+        <ul class="plan__list">
+          <li>60-min Swedish or Casablanca</li>
+          <li>Aromatic oils</li>
+          <li>Herbal tea after session</li>
+          <li class="muted">Hot herbal compress</li>
+          <li class="muted">Foot reflexology</li>
+        </ul>
+        <a href="booking.html" class="btn btn--outline btn--block">Book Your Massage</a>
+      </div>
+      <div class="plan plan--featured reveal delay-1">
+        <span class="plan__name">Standard</span>
+        <div class="plan__price">35<small> / session · BHD</small></div>
+        <div class="plan__divider"></div>
+        <ul class="plan__list">
+          <li>90-min Traditional Massage</li>
+          <li>Aromatic oils</li>
+          <li>Hot herbal compress</li>
+          <li>Foot reflexology (15 min)</li>
+          <li class="muted">Hot stone therapy</li>
+        </ul>
+        <a href="booking.html" class="btn btn--gold btn--block">Book Your Massage</a>
+      </div>
+      <div class="plan reveal delay-2">
+        <span class="plan__name">Premium</span>
+        <div class="plan__price">120<small> / session · BHD</small></div>
+        <div class="plan__divider"></div>
+        <ul class="plan__list">
+          <li>120-min Luxury Ritual</li>
+          <li>Aromatic oils</li>
+          <li>Hot herbal compress</li>
+          <li>Foot reflexology (30 min)</li>
+          <li>Hot stone therapy</li>
+        </ul>
+        <a href="booking.html" class="btn btn--outline btn--block">Book Your Massage</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Email capture -->
+<section class="section section--white">
+  <div class="container">
+    <div class="capture reveal">
+      <div class="capture__copy">
+        <span class="eyebrow" data-cms="page-home.offer.eyebrow">Welcome Offer</span>
+        <h2 data-cms="page-home.offer.title">Enjoy <em>10% off</em> your first massage.</h2>
+        <p data-cms="page-home.offer.body">Fill out the form and we'll contact you to confirm your appointment with a complimentary discount applied.</p>
+        <form class="capture__form" id="capture-form">
+          <input type="text" name="name" placeholder="Name *" required>
+          <input type="email" name="email" placeholder="Email *" required>
+          <input type="tel" name="phone" placeholder="Phone (optional)">
+          <button type="submit" class="btn btn--dark" data-cms="page-home.offer.button" data-cms-prop="html"><i class="fab fa-whatsapp"></i> Book Your Massage</button>
+        </form>
+      </div>
+      <div class="capture__media">
+        <div class="pic"><img src="assets/images/team-reception.jpg" alt="Welcome at reception" loading="lazy" decoding="async"></div>
+        <div class="pic tall"><img src="assets/images/therapist-prep.jpg" alt="Therapist preparing" loading="lazy" decoding="async"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Banner -->
+<section class="section--tight" style="background: var(--c-cream); padding-bottom: 130px;">
+  <div class="container">
+    <div class="cta-banner reveal">
+      <div class="cta-banner__logo"><img src="assets/images/logo.png" alt="" loading="lazy" decoding="async"></div>
+      <div class="cta-banner__content">
+        <span class="eyebrow eyebrow--center" style="color: var(--c-gold);" data-cms="page-home.cta.eyebrow">Reserve Your Moment</span>
+        <h2 data-cms="page-home.cta.title">Your sanctuary <em>awaits</em>.</h2>
+        <p data-cms="page-home.cta.body">Same-day appointments often available. Reserve online or message us directly on WhatsApp — a real human will reply.</p>
+        <div class="cta-banner__actions">
+          <a href="booking.html" class="btn btn--gold" data-cms="page-home.cta.button" data-cms-prop="html"><i class="far fa-calendar-check"></i> Book Online</a>
+          <a href="https://wa.me/97335194422" target="_blank" class="btn btn--outline-light"><i class="fab fa-whatsapp"></i> +973 35194422</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo-frame"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></span>
+        <h4>Taj Al Sukn</h4>
+        <p data-cms="page-footer.brand.tagline">A modern wellness sanctuary in Manama, blending authentic Arabian rituals with the finest spa traditions of the world.</p>
+        <div class="socials">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://wa.me/97335194422" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Visit</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Experience</h5>
+        <ul>
+          <li><a href="booking.html">Book Online</a></li>
+          <li><a href="membership.html">Membership</a></li>
+              <li><a href="services.html#packages">Packages</a></li>
+          <li><a href="services.html">Treatments</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-contact">
+        <h5>Contact</h5>
+        <p><i class="fas fa-map-marker-alt"></i><span data-cms="page-footer.contact.address" data-cms-prop="html">Al Fateh, Manama<br>Complex 324 · Road 2416 · Bld 950</span></p>
+        <p><i class="fas fa-phone"></i><a data-cms="page-footer.contact.phone" href="tel:+973 35194422">+973 35194422</a></p>
+        <p><i class="fas fa-clock"></i><span data-cms="page-footer.contact.hours">Sat – Thu · 10am – 11pm</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span><strong>© <span id="year"></span> Taj Al Sukn Spa W.L.L.</strong> — All rights reserved.</span>
+      <span>CR: 182250-1 · Crafted with care in Manama · <a href="admin-login.html" style="color: rgba(212,184,150,.5); font-weight: 500; margin-left: 8px;">Admin</a></span>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/97335194422" class="wa-float" aria-label="Chat on WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+<!-- Supabase data layer -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="assets/js/supabase-config.js?v=20260514" defer></script>
+<script src="assets/js/taj-data.js?v=20260514" defer></script>
+<script src="assets/js/page-cms.js?v=20260514" defer></script>
+<script src="assets/js/member-auth.js?v=20260511" defer></script>
+<script src="assets/js/main.js?v=20260511" defer></script>
+</body>
+</html>

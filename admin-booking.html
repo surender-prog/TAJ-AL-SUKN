@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Booking Details — Taj Al Sukn Admin</title>
+<link rel="icon" type="image/png" href="assets/images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="admin">
+
+<div class="admin-shell">
+
+  <!-- Sidebar -->
+  <aside class="admin-side">
+    <div class="admin-side__brand">
+      <span class="logo-frame"><img src="assets/images/logo.png" alt="" loading="lazy" decoding="async"></span>
+      <div>
+        <strong>Taj Al Sukn</strong>
+        <small>Admin Console</small>
+      </div>
+    </div>
+
+    <div class="admin-side__label">Workspace</div>
+    <ul class="admin-side__nav">
+      <li><a href="admin.html"><i class="fas fa-th-large"></i> Overview</a></li>
+      <li><a href="admin.html#bookings" class="active"><i class="far fa-calendar-check"></i> Bookings</a></li>
+      <li><a href="admin.html#members"><i class="fas fa-crown"></i> Members</a></li>
+      <li><a href="admin.html#calendar"><i class="far fa-calendar-alt"></i> Calendar</a></li>
+      <li><a href="admin.html#reports"><i class="fas fa-chart-line"></i> Reports</a></li>
+    </ul>
+
+    <div class="admin-side__label">Settings</div>
+    <ul class="admin-side__nav">
+      <li><a href="admin.html#settings"><i class="fas fa-cog"></i> Spa Settings</a></li>
+      <li><a href="index.html"><i class="fas fa-external-link-alt"></i> View Website</a></li>
+    </ul>
+
+    <div class="admin-side__user">
+      <div class="av">A</div>
+      <div>
+        <strong>Admin</strong>
+        <small>admin@tasukunspa.com</small>
+      </div>
+      <a id="admin-logout" title="Sign out" href="#"><i class="fas fa-sign-out-alt"></i></a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="admin-main">
+
+    <div class="admin-bar">
+      <div class="admin-bar__search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search bookings, members, services…">
+      </div>
+      <div class="admin-bar__actions">
+        <a href="admin.html#bookings" class="btn btn--outline" style="padding: 12px 22px; font-size: 0.7rem;"><i class="fas fa-arrow-left"></i> Back</a>
+        <a href="https://wa.me/97335194422" target="_blank" class="btn btn--primary" style="padding: 12px 22px; font-size: 0.7rem;"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+      </div>
+    </div>
+
+    <div class="admin-content">
+
+      <div class="admin-page__head">
+        <div>
+          <p style="font-size: 0.74rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--c-text-soft); font-weight: 700; margin-bottom: 6px;">
+            <a href="admin.html" style="color: inherit;">Admin</a> ·
+            <a href="admin.html#bookings" style="color: inherit;">Bookings</a> ·
+            <span style="color: var(--c-copper);" id="crumb-id">—</span>
+          </p>
+          <h1>Booking Details</h1>
+          <p>View, edit, reschedule, or change the status of this booking.</p>
+        </div>
+      </div>
+
+      <!-- Status banner -->
+      <div class="book-banner">
+        <div class="book-banner__copy">
+          <span class="book-banner__id" id="bn-id">BK-2026-0000</span>
+          <h1 id="bn-title">Guest · Service</h1>
+          <div class="meta">
+            <span><i class="far fa-calendar-alt"></i><span id="bn-date">—</span></span>
+            <span><i class="far fa-clock"></i><span id="bn-time">—</span></span>
+            <span><i class="fas fa-user-md"></i><span id="bn-therapist">Auto-assign</span></span>
+          </div>
+        </div>
+        <div class="book-banner__actions">
+          <span class="badge-status" id="bn-status">—</span>
+          <strong id="bn-total">— BHD</strong>
+          <span class="paid" id="bn-paid">—</span>
+        </div>
+      </div>
+
+      <!-- Status pipeline -->
+      <div class="pipeline" id="pipeline">
+        <div class="pipeline__step" data-step="new">
+          <div class="pipeline__dot"><i class="fas fa-inbox"></i></div>
+          <span class="lbl">New</span>
+          <span class="when" id="when-new">—</span>
+        </div>
+        <div class="pipeline__step" data-step="pending">
+          <div class="pipeline__dot"><i class="far fa-clock"></i></div>
+          <span class="lbl">Pending</span>
+          <span class="when" id="when-pending">—</span>
+        </div>
+        <div class="pipeline__step" data-step="ok">
+          <div class="pipeline__dot"><i class="fas fa-check"></i></div>
+          <span class="lbl">Confirmed</span>
+          <span class="when" id="when-ok">—</span>
+        </div>
+        <div class="pipeline__step" data-step="done">
+          <div class="pipeline__dot"><i class="fas fa-check-double"></i></div>
+          <span class="lbl">Completed</span>
+          <span class="when" id="when-done">—</span>
+        </div>
+      </div>
+
+      <!-- Two-column detail layout -->
+      <div class="book-detail">
+
+        <!-- LEFT: main content -->
+        <div class="book-detail__main">
+
+          <!-- Guest information -->
+          <div class="info-block">
+            <div class="info-block__head">
+              <h3><i class="fas fa-user"></i> Guest Information</h3>
+              <button class="edit"><i class="fas fa-pen" style="margin-right:6px;"></i> Edit</button>
+            </div>
+            <div class="info-row">
+              <div>
+                <span class="lbl">Full Name</span>
+                <span class="val lg" id="g-name">—</span>
+              </div>
+              <div>
+                <span class="lbl">Phone</span>
+                <span class="val"><a id="g-phone-link" href="tel:">—</a></span>
+              </div>
+              <div>
+                <span class="lbl">Email</span>
+                <span class="val" id="g-email">—</span>
+              </div>
+              <div>
+                <span class="lbl">Member Status</span>
+                <span class="val" id="g-tier">Guest</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Service & Schedule -->
+          <div class="info-block">
+            <div class="info-block__head">
+              <h3><i class="fas fa-spa"></i> Service &amp; Schedule</h3>
+              <button class="edit" id="reschedule-btn"><i class="far fa-calendar-alt" style="margin-right:6px;"></i> Reschedule</button>
+            </div>
+            <div class="info-row">
+              <div>
+                <span class="lbl">Treatment</span>
+                <span class="val lg" id="s-name">—</span>
+              </div>
+              <div>
+                <span class="lbl">Duration</span>
+                <span class="val" id="s-duration">—</span>
+              </div>
+              <div>
+                <span class="lbl">Date</span>
+                <span class="val" id="s-date">—</span>
+              </div>
+              <div>
+                <span class="lbl">Time</span>
+                <span class="val" id="s-time">—</span>
+              </div>
+              <div>
+                <span class="lbl">Assigned Therapist</span>
+                <span class="val" id="s-therapist">Auto-assign</span>
+              </div>
+              <div>
+                <span class="lbl">Booking Source</span>
+                <span class="val" id="s-source">—</span>
+              </div>
+            </div>
+
+            <div class="reschedule-form" id="reschedule-form">
+              <div class="row">
+                <input type="date" id="re-date">
+                <input type="time" id="re-time">
+              </div>
+              <div class="actions">
+                <button class="btn btn--outline" id="re-cancel">Cancel</button>
+                <button class="btn btn--primary" id="re-save"><i class="fas fa-check"></i> Save New Schedule</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="info-block">
+            <div class="info-block__head">
+              <h3><i class="fas fa-sticky-note"></i> Internal Notes</h3>
+              <button class="edit" id="save-notes"><i class="fas fa-save" style="margin-right:6px;"></i> Save</button>
+            </div>
+            <textarea class="notes-area" id="notes" placeholder="Add notes for the therapist or reception team — preferences, allergies, special requests…"></textarea>
+          </div>
+
+          <!-- Activity timeline -->
+          <div class="info-block">
+            <div class="info-block__head">
+              <h3><i class="far fa-clock"></i> Activity History</h3>
+            </div>
+            <ul class="timeline" id="timeline"></ul>
+          </div>
+
+        </div>
+
+        <!-- RIGHT: sidebar -->
+        <div class="book-detail__side">
+
+          <!-- Pricing summary -->
+          <div class="price-card">
+            <h4><i class="fas fa-receipt"></i> Pricing Summary</h4>
+            <div class="row subtotal"><span>Subtotal</span><strong id="ps-subtotal">— BHD</strong></div>
+            <div class="row discount" id="ps-mdisc-row" style="display:none;"><span id="ps-mdisc-label">Member Disc.</span><strong id="ps-mdisc">— BHD</strong></div>
+            <div class="row discount" id="ps-edisc-row" style="display:none;"><span id="ps-edisc-label">Discount</span><strong id="ps-edisc">— BHD</strong></div>
+            <div class="row tax"><span>VAT (10%)</span><strong id="ps-tax">— BHD</strong></div>
+            <div class="total">
+              <span class="lbl">Total</span>
+              <span class="amt" id="ps-total">— BHD</span>
+            </div>
+            <div class="paid-tag" id="ps-paid" style="display:none;">
+              <i class="fas fa-check-circle" style="margin-right:6px;"></i>Paid <span id="ps-paid-when">—</span>
+            </div>
+            <a href="#" id="open-invoice" class="btn btn--gold btn--block" style="margin-top: 18px; padding: 12px 18px; font-size: 0.7rem;"><i class="fas fa-file-invoice"></i> View Invoice</a>
+          </div>
+
+          <!-- Status actions -->
+          <div class="action-card">
+            <h4>Change Status</h4>
+            <div class="stack">
+              <button class="btn btn--primary" data-set="ok"><i class="fas fa-check"></i> Mark Confirmed</button>
+              <button class="btn btn--outline" data-set="done"><i class="fas fa-check-double"></i> Mark Completed</button>
+              <button class="btn btn--outline" data-set="pending"><i class="far fa-clock"></i> Set Pending</button>
+              <button class="btn btn--outline" data-set="cancel" style="border-color:#c44a3d; color:#c44a3d;"><i class="fas fa-times"></i> Cancel Booking</button>
+            </div>
+          </div>
+
+          <!-- Communication -->
+          <div class="action-card">
+            <h4>Contact Guest</h4>
+            <div class="stack">
+              <a id="ac-call" href="tel:" class="btn btn--outline"><i class="fas fa-phone"></i> Call</a>
+              <a id="ac-wa" target="_blank" href="#" class="btn btn--whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+              <a id="ac-email" href="mailto:" class="btn btn--outline"><i class="fas fa-envelope"></i> Email</a>
+              <a id="ac-reminder" href="#" target="_blank" class="btn btn--outline"><i class="far fa-bell"></i> Send Reminder</a>
+            </div>
+          </div>
+
+          <!-- Booking metadata -->
+          <div class="action-card">
+            <h4>Booking Details</h4>
+            <div style="font-size: 0.85rem; color: var(--c-text-soft); line-height: 1.85;">
+              <div><strong style="color:var(--c-deep); display:inline-block; min-width: 90px;">ID</strong> <code style="font-family: 'Courier New', monospace; color: var(--c-copper); font-weight: 600;" id="md-id">—</code></div>
+              <div><strong style="color:var(--c-deep); display:inline-block; min-width: 90px;">Source</strong> <span id="md-source">—</span></div>
+              <div><strong style="color:var(--c-deep); display:inline-block; min-width: 90px;">Created</strong> <span id="md-created">—</span></div>
+              <div><strong style="color:var(--c-deep); display:inline-block; min-width: 90px;">Payment</strong> <span id="md-payment">—</span></div>
+            </div>
+            <button class="btn btn--outline" id="delete-bk" style="margin-top: 18px; padding: 11px 18px; font-size: 0.66rem; width: 100%; justify-content: center; border-color:#c44a3d; color:#c44a3d;"><i class="fas fa-trash"></i> Delete Booking</button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- Supabase data layer -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="assets/js/supabase-config.js?v=20260514" defer></script>
+<script src="assets/js/taj-data.js?v=20260514" defer></script>
+<script src="assets/js/page-cms.js?v=20260514" defer></script>
+<script src="assets/js/admin-shared.js" defer></script>
+<script src="assets/js/admin-booking.js" defer></script>
+</body>
+</html>

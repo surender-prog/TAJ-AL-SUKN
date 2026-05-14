@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Console — Taj Al Sukn</title>
+<link rel="icon" type="image/png" href="assets/images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="admin">
+
+<div class="admin-shell">
+
+  <!-- Sidebar -->
+  <aside class="admin-side">
+    <div class="admin-side__brand">
+      <span class="logo-frame"><img src="assets/images/logo.png" alt="" loading="lazy" decoding="async"></span>
+      <div>
+        <strong>Taj Al Sukn</strong>
+        <small>Admin Console</small>
+      </div>
+    </div>
+
+    <div class="admin-side__label">Workspace</div>
+    <ul class="admin-side__nav">
+      <li><a data-tab="overview" class="active"><i class="fas fa-th-large"></i> Overview</a></li>
+      <li><a data-tab="bookings"><i class="far fa-calendar-check"></i> Bookings <span class="badge" id="badge-bookings">0</span></a></li>
+      <li><a data-tab="members"><i class="fas fa-crown"></i> Members <span class="badge" id="badge-members">0</span></a></li>
+      <li><a data-tab="calendar"><i class="far fa-calendar-alt"></i> Calendar</a></li>
+      <li><a data-tab="reports"><i class="fas fa-chart-line"></i> Reports</a></li>
+    </ul>
+
+    <div class="admin-side__label">Content</div>
+    <ul class="admin-side__nav">
+      <li><a data-tab="website"><i class="fas fa-globe"></i> Website Pages</a></li>
+    </ul>
+
+    <div class="admin-side__label">Settings</div>
+    <ul class="admin-side__nav">
+      <li><a data-tab="settings"><i class="fas fa-cog"></i> Spa Settings</a></li>
+      <li><a href="index.html"><i class="fas fa-external-link-alt"></i> View Website</a></li>
+    </ul>
+
+    <div class="admin-side__user">
+      <div class="av">A</div>
+      <div>
+        <strong>Admin</strong>
+        <small>admin@tasukunspa.com</small>
+      </div>
+      <a id="admin-logout" title="Sign out" href="#"><i class="fas fa-sign-out-alt"></i></a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="admin-main">
+
+    <div class="admin-bar">
+      <div class="admin-bar__search">
+        <i class="fas fa-search"></i>
+        <input type="text" id="admin-search" placeholder="Search bookings, members, services…">
+      </div>
+      <div class="admin-bar__actions">
+        <span class="db-status" id="db-status" title="Database connection">
+          <span class="db-status__dot"></span>
+          <span class="db-status__label">Offline</span>
+        </span>
+        <div class="bell-wrap">
+          <button class="admin-bar__btn" id="bell-btn" title="Notifications"><i class="far fa-bell"></i><span class="bell-count" id="bell-count" style="display:none;">0</span></button>
+          <div class="notif-drop" id="notif-drop">
+            <div class="notif-drop__head">
+              <h4>Notifications</h4>
+              <a id="mark-all-read">Mark all read</a>
+            </div>
+            <ul class="notif-drop__list" id="notif-list"></ul>
+            <div class="notif-drop__head" style="border-top: 1px solid var(--c-line); border-bottom: 0; background: #fff; justify-content: center;">
+              <a id="view-all-activity" style="color: var(--c-deep);">View Full Activity Log →</a>
+            </div>
+          </div>
+        </div>
+        <button class="admin-bar__btn" title="Help"><i class="far fa-question-circle"></i></button>
+        <a href="https://wa.me/97335194422" target="_blank" class="btn btn--primary" style="padding: 12px 22px; font-size: 0.7rem;"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+      </div>
+    </div>
+
+    <div class="admin-content">
+
+      <!-- ============ OVERVIEW TAB ============ -->
+      <section id="tab-overview" class="admin-tab active">
+        <div class="admin-page__head">
+          <div>
+            <h1>Today's Snapshot</h1>
+            <p id="today-date">—</p>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <button class="btn btn--outline" id="export-overview" style="padding:12px 22px; font-size:0.7rem;"><i class="fas fa-download"></i> Export</button>
+            <a href="admin-new-booking.html" class="btn btn--primary" style="padding:12px 22px; font-size:0.7rem;"><i class="fas fa-plus"></i> New Booking</a>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <a class="stat-card link" data-jump="bookings:today" title="View today's bookings">
+            <div class="stat-card__head">
+              <span class="lbl">Today's Bookings</span>
+              <span class="ic"><i class="far fa-calendar-check"></i></span>
+            </div>
+            <div class="num" id="stat-today">0</div>
+            <div class="sub" id="stat-today-sub">— vs yesterday</div>
+          </a>
+          <a class="stat-card link" data-jump="bookings:revenue" title="View bookings">
+            <div class="stat-card__head">
+              <span class="lbl">Today's Revenue</span>
+              <span class="ic"><i class="fas fa-coins"></i></span>
+            </div>
+            <div class="num" id="stat-revenue-today">0 <small style="font-size: 0.95rem; color: var(--c-text-soft); font-family: var(--f-body); font-weight: 400;">BHD</small></div>
+            <div class="sub" id="stat-revenue-today-sub">— from confirmed bookings</div>
+          </a>
+          <a class="stat-card link" data-jump="members" title="View all members">
+            <div class="stat-card__head">
+              <span class="lbl">Active Members</span>
+              <span class="ic"><i class="fas fa-crown"></i></span>
+            </div>
+            <div class="num" id="stat-members">0</div>
+            <div class="sub up" id="stat-members-sub">+0 this month</div>
+          </a>
+          <a class="stat-card link" data-jump="bookings:month" title="View month bookings">
+            <div class="stat-card__head">
+              <span class="lbl">Revenue This Month</span>
+              <span class="ic"><i class="fas fa-chart-line"></i></span>
+            </div>
+            <div class="num" id="stat-revenue">0 <small style="font-size: 0.95rem; color: var(--c-text-soft); font-family: var(--f-body); font-weight: 400;">BHD</small></div>
+            <div class="sub up" id="stat-revenue-sub">↑ 18% vs last month</div>
+          </a>
+        </div>
+
+        <!-- Revenue chart + top services -->
+        <div class="panel-cols">
+          <div class="panel">
+            <div class="panel__head">
+              <h3><i class="fas fa-chart-line" style="color:var(--c-copper); margin-right:10px;"></i>Revenue · Last 7 Days</h3>
+              <span style="font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--c-text-soft); font-weight:600;" id="chart-total">— BHD</span>
+            </div>
+            <div class="mini-chart" id="mini-chart"></div>
+            <div class="mini-chart-labels" id="mini-chart-labels"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel__head">
+              <h3><i class="fas fa-trophy" style="color:var(--c-copper); margin-right:10px;"></i>Top Services</h3>
+              <span style="font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--c-text-soft); font-weight:600;">This month</span>
+            </div>
+            <ul class="rank-list" id="top-services"></ul>
+          </div>
+        </div>
+
+        <!-- Today's schedule + activity -->
+        <div class="panel-cols">
+          <div class="panel">
+            <div class="panel__head">
+              <h3><i class="far fa-calendar-alt" style="color:var(--c-copper); margin-right:10px;"></i>Today's Schedule</h3>
+              <a class="btn btn--outline" data-tab="bookings" style="padding:10px 18px; font-size:0.66rem; cursor:pointer;">View All</a>
+            </div>
+            <table class="dtable" id="today-schedule">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Guest</th>
+                  <th>Service</th>
+                  <th>Therapist</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="today-schedule-body"></tbody>
+            </table>
+          </div>
+
+          <div class="panel">
+            <div class="panel__head">
+              <h3><i class="far fa-clock" style="color:var(--c-copper); margin-right:10px;"></i>Recent Activity</h3>
+              <a id="open-activity-log" style="font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--c-copper); font-weight:600; cursor:pointer;">Full Log →</a>
+            </div>
+            <ul class="activity" id="activity-feed"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ BOOKINGS TAB ============ -->
+      <section id="tab-bookings" class="admin-tab">
+        <div class="admin-page__head">
+          <div>
+            <h1>Bookings</h1>
+            <p>Manage all upcoming and past bookings.</p>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <button class="btn btn--outline" id="export-bookings" style="padding:12px 22px; font-size:0.7rem;"><i class="fas fa-download"></i> Export CSV</button>
+            <a href="admin-new-booking.html" class="btn btn--primary" style="padding:12px 22px; font-size:0.7rem;"><i class="fas fa-plus"></i> New Booking</a>
+          </div>
+        </div>
+
+        <!-- Quick stats -->
+        <div class="book-stats">
+          <div class="book-stat">
+            <span class="lbl">Today</span>
+            <span class="num" id="bs-today">0</span>
+            <span class="sub" id="bs-today-rev">— BHD revenue</span>
+          </div>
+          <div class="book-stat">
+            <span class="lbl">This Week</span>
+            <span class="num" id="bs-week">0</span>
+            <span class="sub" id="bs-week-rev">— BHD revenue</span>
+          </div>
+          <div class="book-stat">
+            <span class="lbl">This Month</span>
+            <span class="num" id="bs-month">0</span>
+            <span class="sub" id="bs-month-rev">— BHD revenue</span>
+          </div>
+          <div class="book-stat">
+            <span class="lbl">Pending Action</span>
+            <span class="num" id="bs-pending">0</span>
+            <span class="sub alert" id="bs-pending-sub">need confirmation</span>
+          </div>
+        </div>
+
+        <!-- Filter bar -->
+        <div class="filter-bar">
+          <div class="filter-bar__group">
+            <span class="lbl">Status</span>
+            <button class="filter-bar__chip active" data-bf="all">All <span class="count" id="cnt-all">0</span></button>
+            <button class="filter-bar__chip" data-bf="new">New <span class="count" id="cnt-new">0</span></button>
+            <button class="filter-bar__chip" data-bf="pending">Pending <span class="count" id="cnt-pending">0</span></button>
+            <button class="filter-bar__chip" data-bf="ok">Confirmed <span class="count" id="cnt-ok">0</span></button>
+            <button class="filter-bar__chip" data-bf="done">Done <span class="count" id="cnt-done">0</span></button>
+            <button class="filter-bar__chip" data-bf="cancel">Cancelled <span class="count" id="cnt-cancel">0</span></button>
+          </div>
+          <div class="filter-bar__group">
+            <span class="lbl">When</span>
+            <select class="filter-bar__select" id="f-when">
+              <option value="all">All Dates</option>
+              <option value="today">Today</option>
+              <option value="tomorrow">Tomorrow</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+              <option value="past">Past Bookings</option>
+            </select>
+          </div>
+          <div class="filter-bar__group">
+            <span class="lbl">Source</span>
+            <select class="filter-bar__select" id="f-source">
+              <option value="all">All Sources</option>
+              <option value="website">Website</option>
+              <option value="phone">Phone</option>
+              <option value="walk-in">Walk-In</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div class="filter-bar__group">
+            <span class="lbl">Member</span>
+            <select class="filter-bar__select" id="f-member">
+              <option value="all">All Guests</option>
+              <option value="member">Members Only</option>
+              <option value="Silver">Silver</option>
+              <option value="Gold">Gold</option>
+              <option value="Platinum">Platinum</option>
+              <option value="guest">Non-Members</option>
+            </select>
+          </div>
+          <div class="filter-bar__spacer"></div>
+          <button class="btn btn--outline" id="reset-filters" style="padding:9px 16px; font-size:0.66rem;"><i class="fas fa-redo-alt"></i> Reset</button>
+        </div>
+
+        <!-- Bulk actions bar (appears when items selected) -->
+        <div class="bulk-bar" id="bulk-bar">
+          <span class="bulk-bar__count"><strong id="bulk-count">0</strong> selected</span>
+          <div class="bulk-bar__spacer"></div>
+          <button class="btn" data-bulk="ok"><i class="fas fa-check"></i> Confirm</button>
+          <button class="btn" data-bulk="done"><i class="fas fa-check-double"></i> Mark Completed</button>
+          <button class="btn" data-bulk="export"><i class="fas fa-download"></i> Export</button>
+          <button class="btn danger" data-bulk="cancel"><i class="fas fa-times"></i> Cancel</button>
+          <button class="btn" data-bulk="clear"><i class="fas fa-times-circle"></i> Clear</button>
+        </div>
+
+        <!-- Table panel -->
+        <div class="panel" style="padding: 0;">
+          <table class="dtable" id="bookings-table">
+            <thead>
+              <tr>
+                <th class="cb"><input type="checkbox" id="cb-all" title="Select all"></th>
+                <th>Date / Time</th>
+                <th>Guest</th>
+                <th>Service</th>
+                <th>Member</th>
+                <th>Source</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th class="cell-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="bookings-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============ MEMBERS TAB ============ -->
+      <section id="tab-members" class="admin-tab">
+        <div class="admin-page__head">
+          <div>
+            <h1>Members</h1>
+            <p>Manage memberships, balances, and renewals.</p>
+          </div>
+          <a href="admin-new-member.html" class="btn btn--primary" style="padding:12px 22px; font-size:0.7rem;"><i class="fas fa-plus"></i> Add Member</a>
+        </div>
+
+        <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
+          <div class="stat-card">
+            <div class="stat-card__head"><span class="lbl">Silver Members</span><span class="ic"><i class="fas fa-gem"></i></span></div>
+            <div class="num" id="stat-silver">18</div>
+            <div class="sub">2,700 BHD annual revenue</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__head"><span class="lbl">Gold Members</span><span class="ic"><i class="fas fa-crown"></i></span></div>
+            <div class="num" id="stat-gold">22</div>
+            <div class="sub">7,700 BHD annual revenue</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__head"><span class="lbl">Platinum Members</span><span class="ic"><i class="fas fa-star"></i></span></div>
+            <div class="num" id="stat-platinum">7</div>
+            <div class="sub">5,250 BHD annual revenue</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="dt-filter">
+            <button class="btn-chip active" data-mf="all">All Members</button>
+            <button class="btn-chip" data-mf="Silver">Silver</button>
+            <button class="btn-chip" data-mf="Gold">Gold</button>
+            <button class="btn-chip" data-mf="Platinum">Platinum</button>
+            <button class="btn-chip" data-mf="expiring">Expiring Soon</button>
+          </div>
+
+          <table class="dtable" id="members-table">
+            <thead>
+              <tr>
+                <th>Member</th>
+                <th>Member ID</th>
+                <th>Tier</th>
+                <th>Joined</th>
+                <th>Renews</th>
+                <th>Balance</th>
+                <th class="cell-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="members-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============ CALENDAR TAB ============ -->
+      <section id="tab-calendar" class="admin-tab">
+        <div class="admin-page__head">
+          <div>
+            <h1>Calendar</h1>
+            <p>Therapist availability &amp; schedule overview.</p>
+          </div>
+          <div class="section-actions">
+            <a href="admin-new-booking.html" class="btn btn--primary"><i class="fas fa-plus"></i> New Booking</a>
+          </div>
+        </div>
+
+        <!-- Toolbar: navigation + view switcher -->
+        <div class="cal-toolbar panel">
+          <div class="cal-toolbar__nav">
+            <button class="cal-btn" id="cal-prev" title="Previous"><i class="fas fa-chevron-left"></i></button>
+            <button class="cal-btn cal-btn--today" id="cal-today">Today</button>
+            <button class="cal-btn" id="cal-next" title="Next"><i class="fas fa-chevron-right"></i></button>
+            <span class="cal-range" id="cal-range">—</span>
+            <input type="date" id="cal-jump" class="cal-jump" title="Jump to date">
+          </div>
+          <div class="cal-toolbar__views">
+            <button class="cal-view-btn is-active" data-view="day"><i class="far fa-calendar"></i> Day</button>
+            <button class="cal-view-btn" data-view="week"><i class="far fa-calendar-alt"></i> Week</button>
+            <button class="cal-view-btn" data-view="month"><i class="far fa-calendar-check"></i> Month</button>
+            <button class="cal-view-btn" data-view="therapist"><i class="fas fa-user-md"></i> Therapists</button>
+          </div>
+        </div>
+
+        <!-- Stats strip -->
+        <div class="cal-stats" id="cal-stats">
+          <div class="cal-stat">
+            <span class="cal-stat__icon"><i class="far fa-calendar-check"></i></span>
+            <div>
+              <span class="cal-stat__num" id="cal-stat-bookings">0</span>
+              <span class="cal-stat__lbl">Bookings <span id="cal-stat-context">today</span></span>
+            </div>
+          </div>
+          <div class="cal-stat">
+            <span class="cal-stat__icon"><i class="fas fa-check-circle"></i></span>
+            <div>
+              <span class="cal-stat__num" id="cal-stat-confirmed">0</span>
+              <span class="cal-stat__lbl">Confirmed</span>
+            </div>
+          </div>
+          <div class="cal-stat">
+            <span class="cal-stat__icon"><i class="far fa-clock"></i></span>
+            <div>
+              <span class="cal-stat__num" id="cal-stat-pending">0</span>
+              <span class="cal-stat__lbl">Pending</span>
+            </div>
+          </div>
+          <div class="cal-stat">
+            <span class="cal-stat__icon"><i class="fas fa-coins"></i></span>
+            <div>
+              <span class="cal-stat__num" id="cal-stat-revenue">0</span>
+              <span class="cal-stat__lbl">Revenue (BHD)</span>
+            </div>
+          </div>
+          <div class="cal-stat">
+            <span class="cal-stat__icon"><i class="fas fa-user-md"></i></span>
+            <div>
+              <span class="cal-stat__num" id="cal-stat-occupancy">0%</span>
+              <span class="cal-stat__lbl">Occupancy</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filters + Legend -->
+        <div class="cal-filters panel">
+          <div class="cal-filters__group">
+            <span class="cal-filters__label">THERAPIST</span>
+            <div class="cal-filters__chips" id="cal-filter-therapist">
+              <button class="cal-chip is-active" data-tval="all">All</button>
+            </div>
+          </div>
+          <div class="cal-filters__group">
+            <span class="cal-filters__label">STATUS</span>
+            <div class="cal-filters__chips" id="cal-filter-status">
+              <button class="cal-chip is-active" data-sval="all">All</button>
+              <button class="cal-chip" data-sval="confirmed"><span class="cal-dot cal-dot--ok"></span> Confirmed</button>
+              <button class="cal-chip" data-sval="pending"><span class="cal-dot cal-dot--pending"></span> Pending</button>
+              <button class="cal-chip" data-sval="completed"><span class="cal-dot cal-dot--done"></span> Completed</button>
+              <button class="cal-chip" data-sval="cancelled"><span class="cal-dot cal-dot--cancel"></span> Cancelled</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- The actual calendar view (populated by JS) -->
+        <div class="cal-view-wrap panel" id="cal-view-wrap">
+          <div id="cal-view"></div>
+        </div>
+
+      </section>
+
+      <!-- ============ REPORTS TAB ============ -->
+      <section id="tab-reports" class="admin-tab">
+        <div class="admin-page__head">
+          <div>
+            <h1>Reports</h1>
+            <p>Revenue, retention, and treatment performance.</p>
+          </div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card__head"><span class="lbl">Most Booked</span><span class="ic"><i class="fas fa-trophy"></i></span></div>
+            <div class="num" style="font-size: 1.6rem;">Royal Hammam</div>
+            <div class="sub">82 bookings this month</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__head"><span class="lbl">Revenue</span><span class="ic"><i class="fas fa-coins"></i></span></div>
+            <div class="num">12,450 <small style="font-size: 0.85rem; color: var(--c-text-soft); font-family: var(--f-body); font-weight: 400;">BHD</small></div>
+            <div class="sub up">↑ 18% vs last month</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__head"><span class="lbl">Member Retention</span><span class="ic"><i class="fas fa-heart"></i></span></div>
+            <div class="num">93%</div>
+            <div class="sub up">↑ 4% vs last quarter</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__head"><span class="lbl">Avg. Spend / Visit</span><span class="ic"><i class="fas fa-receipt"></i></span></div>
+            <div class="num">38 <small style="font-size: 0.85rem; color: var(--c-text-soft); font-family: var(--f-body); font-weight: 400;">BHD</small></div>
+            <div class="sub">Members average 32 BHD</div>
+          </div>
+        </div>
+        <div class="panel" style="text-align:center; padding: 60px 30px;">
+          <i class="fas fa-chart-line" style="font-size: 50px; color: var(--c-copper); margin-bottom: 18px;"></i>
+          <h3 style="font-family: var(--f-display); font-weight: 500;">Detailed reports coming soon.</h3>
+          <p style="color: var(--c-text-soft); margin-top: 10px;">Daily, weekly &amp; monthly breakdowns by therapist, service, and tier.</p>
+        </div>
+      </section>
+
+      <!-- ============ WEBSITE PAGES TAB ============ -->
+      <section id="tab-website" class="admin-tab">
+        <div class="admin-page__head">
+          <div>
+            <h1>Website Pages</h1>
+            <p>Edit headings, copy, and imagery on every public page. Changes go live the moment you save.</p>
+          </div>
+          <div class="section-actions">
+            <a href="index.html" target="_blank" class="btn btn--outline"><i class="fas fa-external-link-alt"></i> View Website</a>
+            <button class="btn btn--outline" id="cms-reset-all"><i class="fas fa-undo"></i> Reset to defaults</button>
+          </div>
+        </div>
+
+        <div class="cms-shell">
+          <!-- LEFT: page picker -->
+          <aside class="cms-side">
+            <nav class="cms-side__nav" id="cms-page-list">
+              <button class="cms-page is-active" data-page="page-home">
+                <span class="cms-page__ico"><i class="fas fa-home"></i></span>
+                <span class="cms-page__meta">
+                  <strong>Home</strong>
+                  <small>Hero · marquee · editorial · CTAs</small>
+                </span>
+              </button>
+              <button class="cms-page" data-page="page-about">
+                <span class="cms-page__ico"><i class="fas fa-feather"></i></span>
+                <span class="cms-page__meta">
+                  <strong>About</strong>
+                  <small>Story · values · team</small>
+                </span>
+              </button>
+              <button class="cms-page" data-page="page-services">
+                <span class="cms-page__ico"><i class="fas fa-spa"></i></span>
+                <span class="cms-page__meta">
+                  <strong>Services</strong>
+                  <small>Treatment menu (cards from Services master)</small>
+                </span>
+              </button>
+              <button class="cms-page" data-page="page-gallery">
+                <span class="cms-page__ico"><i class="far fa-images"></i></span>
+                <span class="cms-page__meta">
+                  <strong>Gallery</strong>
+                  <small>Visual tour grid</small>
+                </span>
+              </button>
+              <button class="cms-page" data-page="page-membership">
+                <span class="cms-page__ico"><i class="fas fa-crown"></i></span>
+                <span class="cms-page__meta">
+                  <strong>Membership</strong>
+                  <small>Tiers + benefits</small>
+                </span>
+              </button>
+              <button class="cms-page" data-page="page-contact">
+                <span class="cms-page__ico"><i class="fas fa-phone-alt"></i></span>
+                <span class="cms-page__meta">
+                  <strong>Contact</strong>
+                  <small>Address · hours · form</small>
+                </span>
+              </button>
+              <button class="cms-page" data-page="page-footer">
+                <span class="cms-page__ico"><i class="far fa-window-maximize"></i></span>
+                <span class="cms-page__meta">
+                  <strong>Footer (global)</strong>
+                  <small>Address · phone · hours · tagline</small>
+                </span>
+              </button>
+            </nav>
+
+            <div class="cms-side__hint">
+              <i class="fas fa-info-circle"></i>
+              <span>Edit text, swap images, then click <strong>Save</strong>. The public site reflects changes immediately — no rebuild needed.</span>
+            </div>
+          </aside>
+
+          <!-- RIGHT: section editor -->
+          <main class="cms-main">
+            <div class="cms-main__head">
+              <div>
+                <span class="eyebrow" id="cms-current-eyebrow">EDITING</span>
+                <h2 id="cms-current-title">Select a page</h2>
+              </div>
+              <div class="cms-main__actions">
+                <a href="#" target="_blank" id="cms-preview-link" class="btn btn--outline"><i class="fas fa-eye"></i> Preview</a>
+                <button class="btn btn--outline" id="cms-revert"><i class="fas fa-undo"></i> Revert</button>
+                <button class="btn btn--primary" id="cms-save"><i class="fas fa-check"></i> Save Changes</button>
+              </div>
+            </div>
+
+            <div id="cms-sections">
+              <!-- section cards rendered by JS -->
+            </div>
+          </main>
+        </div>
+
+        <!-- Image picker dialog -->
+        <div class="cms-img-picker" id="cms-img-picker" hidden>
+          <div class="cms-img-picker__sheet">
+            <header>
+              <h3>Choose an image</h3>
+              <button class="cms-img-picker__close" id="cms-img-close">×</button>
+            </header>
+            <div class="cms-img-picker__url">
+              <label>Custom URL or path</label>
+              <input type="text" id="cms-img-url" placeholder="https://… or assets/images/…">
+              <button class="btn btn--primary" id="cms-img-use">Use This URL</button>
+            </div>
+            <div class="cms-img-picker__label">OR pick from library</div>
+            <div class="cms-img-picker__grid" id="cms-img-grid">
+              <!-- thumbnails -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SETTINGS TAB ============ -->
+      <section id="tab-settings" class="admin-tab">
+        <div class="admin-page__head">
+          <div>
+            <h1>Spa Settings</h1>
+            <p>Manage spa info, team, services, tax, payments, hours, and more.</p>
+          </div>
+        </div>
+
+        <!-- Sub-navigation (sticky) -->
+        <nav class="settings-nav">
+          <a href="#sg-general"   class="settings-nav__chip active"><i class="fas fa-info-circle"></i> General</a>
+          <a href="#sg-notify"    class="settings-nav__chip"><i class="far fa-bell"></i> Notifications</a>
+          <a href="#sg-therapist" class="settings-nav__chip"><i class="fas fa-user-md"></i> Therapists</a>
+          <a href="#sg-services"  class="settings-nav__chip"><i class="fas fa-spa"></i> Services</a>
+          <a href="#sg-tax"       class="settings-nav__chip"><i class="fas fa-percent"></i> Tax &amp; VAT</a>
+          <a href="#sg-payments"  class="settings-nav__chip"><i class="fas fa-credit-card"></i> Payments</a>
+          <a href="#sg-hours"     class="settings-nav__chip"><i class="far fa-clock"></i> Hours</a>
+          <a href="#sg-tiers"     class="settings-nav__chip"><i class="fas fa-crown"></i> Tiers</a>
+          <a href="#sg-policy"    class="settings-nav__chip"><i class="fas fa-shield-alt"></i> Policy</a>
+          <a href="#sg-admins"    class="settings-nav__chip"><i class="fas fa-user-shield"></i> Admins</a>
+        </nav>
+
+        <!-- 1. General Spa Information -->
+        <div class="panel settings-section" id="sg-general">
+          <div class="panel__head">
+            <h3><i class="fas fa-info-circle" style="color:var(--c-copper); margin-right:10px;"></i>General Information</h3>
+            <div class="section-actions">
+              <button class="btn btn--primary" data-save-settings><i class="fas fa-save"></i> Save Changes</button>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="field"><label>Spa Name</label><input type="text" id="set-name" value="Taj Al Sukn Spa &amp; Wellness"></div>
+            <div class="field"><label>Trading Name</label><input type="text" id="set-trade" value="Taj Al Sukn Spa W.L.L."></div>
+            <div class="field"><label>WhatsApp Number</label><input type="tel" id="set-whatsapp" value="+973 35194422"></div>
+            <div class="field"><label>Secondary Phone</label><input type="tel" id="set-phone2" value="+973 77924422"></div>
+            <div class="field"><label>Email</label><input type="email" id="set-email" value="hello@tasukunspa.com"></div>
+            <div class="field"><label>Admin Email</label><input type="email" id="set-admin-email" value="admin@tasukunspa.com"></div>
+            <div class="field"><label>CR Number</label><input type="text" id="set-cr" value="182250-1"></div>
+            <div class="field"><label>Tax Registration No.</label><input type="text" id="set-trn" value="200000123400002"></div>
+            <div class="field full"><label>Address</label><input type="text" id="set-addr" value="Al Fateh, Manama · Complex 324 · Road 2416 · Building 950, Kingdom of Bahrain"></div>
+            <div class="field full"><label>Tagline</label><input type="text" id="set-tagline" value="The crown of stillness"></div>
+          </div>
+        </div>
+
+        <!-- 2. Notifications -->
+        <div class="panel settings-section" id="sg-notify">
+          <div class="panel__head"><h3><i class="far fa-bell" style="color:var(--c-copper); margin-right:10px;"></i>Notification Settings</h3></div>
+          <p style="color: var(--c-text-soft); margin-bottom: 22px;">Choose how you receive copies of new guest bookings and member signups.</p>
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <label style="display: flex; gap: 16px; align-items: center; padding: 16px 20px; border: 1px solid var(--c-line); border-radius: var(--r-md); cursor: pointer;">
+              <input type="checkbox" checked style="width: 20px; height: 20px; accent-color: var(--c-copper);">
+              <div style="flex: 1;">
+                <strong style="display: block; color: var(--c-deep);">WhatsApp Notifications</strong>
+                <small style="color: var(--c-text-soft);">Every booking sent to <strong>+973 35194422</strong></small>
+              </div>
+              <span class="badge-status ok">Active</span>
+            </label>
+            <label style="display: flex; gap: 16px; align-items: center; padding: 16px 20px; border: 1px solid var(--c-line); border-radius: var(--r-md); cursor: pointer;">
+              <input type="checkbox" checked style="width: 20px; height: 20px; accent-color: var(--c-copper);">
+              <div style="flex: 1;">
+                <strong style="display: block; color: var(--c-deep);">Email Notifications</strong>
+                <small style="color: var(--c-text-soft);">Sent to <strong>admin@tasukunspa.com</strong></small>
+              </div>
+              <span class="badge-status ok">Active</span>
+            </label>
+            <label style="display: flex; gap: 16px; align-items: center; padding: 16px 20px; border: 1px solid var(--c-line); border-radius: var(--r-md); cursor: pointer;">
+              <input type="checkbox" style="width: 20px; height: 20px; accent-color: var(--c-copper);">
+              <div style="flex: 1;">
+                <strong style="display: block; color: var(--c-deep);">SMS Notifications</strong>
+                <small style="color: var(--c-text-soft);">Backup channel — disabled by default</small>
+              </div>
+              <span class="badge-status done">Inactive</span>
+            </label>
+            <label style="display: flex; gap: 16px; align-items: center; padding: 16px 20px; border: 1px solid var(--c-line); border-radius: var(--r-md); cursor: pointer;">
+              <input type="checkbox" checked style="width: 20px; height: 20px; accent-color: var(--c-copper);">
+              <div style="flex: 1;">
+                <strong style="display: block; color: var(--c-deep);">Daily Summary Digest</strong>
+                <small style="color: var(--c-text-soft);">End-of-day email with bookings, revenue, and pending actions</small>
+              </div>
+              <span class="badge-status ok">Active</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 3. Therapists -->
+        <div class="panel settings-section" id="sg-therapist">
+          <div class="panel__head">
+            <h3><i class="fas fa-user-md" style="color:var(--c-copper); margin-right:10px;"></i>Therapists &amp; Staff</h3>
+            <div class="section-actions">
+              <button class="btn btn--primary" id="add-therapist"><i class="fas fa-plus"></i> Add Therapist</button>
+            </div>
+          </div>
+          <div class="therapist-grid" id="therapist-grid"></div>
+        </div>
+
+        <!-- 4. Services -->
+        <div class="panel settings-section" id="sg-services">
+          <div class="panel__head">
+            <h3><i class="fas fa-spa" style="color:var(--c-copper); margin-right:10px;"></i>Services Master</h3>
+            <div class="section-actions">
+              <button class="btn btn--outline" id="export-services"><i class="fas fa-download"></i> Export</button>
+              <button class="btn btn--primary" id="add-service"><i class="fas fa-plus"></i> Add Service</button>
+            </div>
+          </div>
+          <table class="dtable" id="services-table">
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Category</th>
+                <th>Duration</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th class="cell-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="services-body"></tbody>
+          </table>
+        </div>
+
+        <!-- 5. Tax & VAT -->
+        <div class="panel settings-section" id="sg-tax">
+          <div class="panel__head">
+            <h3><i class="fas fa-percent" style="color:var(--c-copper); margin-right:10px;"></i>Tax &amp; Currency</h3>
+            <div class="section-actions">
+              <button class="btn btn--primary" data-save-settings><i class="fas fa-save"></i> Save Changes</button>
+            </div>
+          </div>
+          <div class="tax-card">
+            <div class="form-grid">
+              <div class="field"><label>VAT Rate (%)</label><input type="number" id="set-vat" value="10" min="0" max="100" step="0.5"></div>
+              <div class="field"><label>Currency</label>
+                <select id="set-currency">
+                  <option value="BHD" selected>Bahraini Dinar (BHD)</option>
+                  <option value="USD">US Dollar (USD)</option>
+                  <option value="AED">UAE Dirham (AED)</option>
+                  <option value="SAR">Saudi Riyal (SAR)</option>
+                </select>
+              </div>
+              <div class="field"><label>Decimal Places</label>
+                <select id="set-decimals">
+                  <option value="2">2 (e.g. 12.50)</option>
+                  <option value="3" selected>3 (BHD standard, e.g. 12.500)</option>
+                </select>
+              </div>
+              <div class="field"><label>Tax Registration Number</label><input type="text" id="set-trn-2" value="200000123400002"></div>
+              <div class="field full">
+                <label>VAT Effective Date</label>
+                <input type="date" id="set-vat-date" value="2019-01-01">
+              </div>
+              <div class="field full" style="display:flex; gap:14px; align-items:center; padding: 14px 18px; background: var(--c-cream); border-radius: var(--r-sm);">
+                <input type="checkbox" checked style="width: 18px; height: 18px; accent-color: var(--c-copper);">
+                <div>
+                  <strong style="color:var(--c-deep);">Show VAT breakdown on receipts</strong>
+                  <div style="font-size: 0.82rem; color: var(--c-text-soft); margin-top: 2px;">Recommended for Bahrain VAT compliance.</div>
+                </div>
+              </div>
+            </div>
+            <div class="tax-card__big">
+              <span class="lbl">Current VAT Rate</span>
+              <div class="pct" id="vat-display">10%</div>
+              <div class="desc">Applied to all treatments &amp; products. Bahrain standard rate.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Payment methods -->
+        <div class="panel settings-section" id="sg-payments">
+          <div class="panel__head">
+            <h3><i class="fas fa-credit-card" style="color:var(--c-copper); margin-right:10px;"></i>Accepted Payment Methods</h3>
+            <div class="section-actions">
+              <button class="btn btn--primary" data-save-settings><i class="fas fa-save"></i> Save Changes</button>
+            </div>
+          </div>
+          <p style="color: var(--c-text-soft); margin-bottom: 18px;">Toggle the methods customers can pay with. These appear in the booking and receipt flows.</p>
+          <div class="pay-toggles" id="pay-toggles"></div>
+
+          <div style="margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--c-line);">
+            <h4 style="font-family:var(--f-display); margin-bottom: 14px; font-weight:500;">Bank Transfer Details</h4>
+            <p style="color: var(--c-text-soft); font-size: 0.88rem; margin-bottom: 14px;">These are shared with guests when they choose Bank Transfer at checkout.</p>
+            <div class="form-grid">
+              <div class="field"><label>Account Name</label><input type="text" value="Taj Al Sukn Spa W.L.L."></div>
+              <div class="field"><label>Bank</label>
+                <select>
+                  <option>National Bank of Bahrain (NBB)</option>
+                  <option>BBK</option>
+                  <option>Ahli United Bank</option>
+                  <option>Bahrain Islamic Bank</option>
+                </select>
+              </div>
+              <div class="field"><label>IBAN</label><input type="text" value="BH00 NBOB 0000 0000 0000 00"></div>
+              <div class="field"><label>SWIFT</label><input type="text" value="NBOBBHBM"></div>
+            </div>
+          </div>
+
+          <div style="margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--c-line);">
+            <h4 style="font-family:var(--f-display); margin-bottom: 14px; font-weight:500;">BenefitPay Merchant</h4>
+            <div class="form-grid">
+              <div class="field"><label>Merchant ID</label><input type="text" value="BNP-MERCHANT-99214"></div>
+              <div class="field"><label>Merchant Phone</label><input type="tel" value="+973 35194422"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. Operating hours -->
+        <div class="panel settings-section" id="sg-hours">
+          <div class="panel__head">
+            <h3><i class="far fa-clock" style="color:var(--c-copper); margin-right:10px;"></i>Operating Hours</h3>
+            <div class="section-actions">
+              <button class="btn btn--primary" data-save-settings><i class="fas fa-save"></i> Save Changes</button>
+            </div>
+          </div>
+          <ul class="hours-editor" id="hours-editor"></ul>
+        </div>
+
+        <!-- 8. Membership Tiers Editor -->
+        <div class="panel settings-section" id="sg-tiers">
+          <div class="panel__head">
+            <h3><i class="fas fa-crown" style="color:var(--c-copper); margin-right:10px;"></i>Membership Tiers</h3>
+            <div class="section-actions">
+              <a href="membership.html" target="_blank" class="btn btn--outline"><i class="fas fa-external-link-alt"></i> Public Page</a>
+              <button class="btn btn--primary" data-save-settings><i class="fas fa-save"></i> Save Changes</button>
+            </div>
+          </div>
+          <p style="color: var(--c-text-soft); margin-bottom: 22px;">Update annual fees, allowances, and discount percentages for each tier.</p>
+          <div class="tier-editor">
+            <div class="tier-editor__card">
+              <h5>Silver</h5>
+              <div class="name">The Companion</div>
+              <div class="tier-editor__row"><label>Annual Fee (BHD)</label><input type="number" value="150" min="0"></div>
+              <div class="tier-editor__row"><label>Member Discount %</label><input type="number" value="10" min="0" max="100"></div>
+              <div class="tier-editor__row"><label>Free Massages / yr</label><input type="number" value="2" min="0"></div>
+              <div class="tier-editor__row"><label>Free Hammams / yr</label><input type="number" value="0" min="0"></div>
+              <div class="tier-editor__row"><label>Free Foot Rituals / yr</label><input type="number" value="1" min="0"></div>
+              <div class="tier-editor__row"><label>Guest Passes / yr</label><input type="number" value="0" min="0"></div>
+              <div class="tier-editor__row"><label>Priority (hours ahead)</label><input type="number" value="24" min="0"></div>
+            </div>
+            <div class="tier-editor__card gold">
+              <h5 style="color: var(--c-copper);">Gold (Most Popular)</h5>
+              <div class="name">The Sanctuary</div>
+              <div class="tier-editor__row"><label>Annual Fee (BHD)</label><input type="number" value="350" min="0"></div>
+              <div class="tier-editor__row"><label>Member Discount %</label><input type="number" value="15" min="0" max="100"></div>
+              <div class="tier-editor__row"><label>Free Massages / yr</label><input type="number" value="6" min="0"></div>
+              <div class="tier-editor__row"><label>Free Hammams / yr</label><input type="number" value="1" min="0"></div>
+              <div class="tier-editor__row"><label>Free Foot Rituals / yr</label><input type="number" value="2" min="0"></div>
+              <div class="tier-editor__row"><label>Guest Passes / yr</label><input type="number" value="1" min="0"></div>
+              <div class="tier-editor__row"><label>Priority (hours ahead)</label><input type="number" value="48" min="0"></div>
+            </div>
+            <div class="tier-editor__card">
+              <h5>Platinum</h5>
+              <div class="name">The Royal Circle</div>
+              <div class="tier-editor__row"><label>Annual Fee (BHD)</label><input type="number" value="750" min="0"></div>
+              <div class="tier-editor__row"><label>Member Discount %</label><input type="number" value="20" min="0" max="100"></div>
+              <div class="tier-editor__row"><label>Free Massages / yr</label><input type="number" value="24" min="0"></div>
+              <div class="tier-editor__row"><label>Free Hammams / yr</label><input type="number" value="12" min="0"></div>
+              <div class="tier-editor__row"><label>Free Foot Rituals / yr</label><input type="number" value="24" min="0"></div>
+              <div class="tier-editor__row"><label>Guest Passes / yr</label><input type="number" value="4" min="0"></div>
+              <div class="tier-editor__row"><label>Priority (hours ahead)</label><input type="number" value="0" min="0"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9. Cancellation Policy -->
+        <div class="panel settings-section" id="sg-policy">
+          <div class="panel__head">
+            <h3><i class="fas fa-shield-alt" style="color:var(--c-copper); margin-right:10px;"></i>Cancellation &amp; Refund Policy</h3>
+            <div class="section-actions">
+              <button class="btn btn--primary" data-save-settings><i class="fas fa-save"></i> Save Changes</button>
+            </div>
+          </div>
+          <p style="color: var(--c-text-soft); margin-bottom: 22px;">Define cancellation fees and refund rules. Applied automatically when a booking is cancelled.</p>
+          <div class="policy-grid">
+            <div class="policy-item">
+              <div class="when">More than 24 hrs before</div>
+              <div class="pct">100% Refund</div>
+              <div class="desc">Free cancellation, no charge.</div>
+            </div>
+            <div class="policy-item">
+              <div class="when">Within 24 hrs</div>
+              <div class="pct">50% Refund</div>
+              <div class="desc">Half-price cancellation fee.</div>
+            </div>
+            <div class="policy-item">
+              <div class="when">No-Show</div>
+              <div class="pct">0% Refund</div>
+              <div class="desc">Full charge — service is not available again.</div>
+            </div>
+          </div>
+          <div class="form-grid" style="margin-top: 22px;">
+            <div class="field full">
+              <label>Custom policy text (shown on website &amp; receipts)</label>
+              <textarea rows="3">Cancellations made more than 24 hours before the appointment receive a full refund. Within 24 hours, a 50% fee applies. No-shows are charged in full. Members may reschedule once at no cost.</textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- 10. Admin Users -->
+        <div class="panel settings-section" id="sg-admins">
+          <div class="panel__head">
+            <h3><i class="fas fa-user-shield" style="color:var(--c-copper); margin-right:10px;"></i>Admin Users</h3>
+            <div class="section-actions">
+              <button class="btn btn--primary"><i class="fas fa-plus"></i> Invite User</button>
+            </div>
+          </div>
+          <table class="dtable">
+            <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Last Active</th><th class="cell-actions">Actions</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><div class="cell-name"><div class="av">A</div><div><strong>Admin</strong><small>Owner</small></div></div></td>
+                <td>admin@tasukunspa.com</td>
+                <td><span class="badge-tier gold">Owner</span></td>
+                <td>Just now</td>
+                <td class="cell-actions"><a class="icon-btn" title="Edit"><i class="fas fa-pen"></i></a></td>
+              </tr>
+              <tr>
+                <td><div class="cell-name"><div class="av">S</div><div><strong>Sofia</strong><small>Spa Director</small></div></div></td>
+                <td>sofia@tasukunspa.com</td>
+                <td><span class="badge-tier silver">Manager</span></td>
+                <td>2 hours ago</td>
+                <td class="cell-actions"><a class="icon-btn" title="Edit"><i class="fas fa-pen"></i></a></td>
+              </tr>
+              <tr>
+                <td><div class="cell-name"><div class="av">R</div><div><strong>Reception</strong><small>Front Desk</small></div></div></td>
+                <td>reception@tasukunspa.com</td>
+                <td><span class="badge-tier platinum">Receptionist</span></td>
+                <td>Yesterday</td>
+                <td class="cell-actions"><a class="icon-btn" title="Edit"><i class="fas fa-pen"></i></a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- Booking detail modal -->
+<div id="booking-modal" class="modal">
+  <div class="modal__card">
+    <button class="modal__close" data-close="booking-modal">×</button>
+    <div class="modal__head"><h3 id="bk-title">Booking Details</h3></div>
+    <div id="bk-body"></div>
+  </div>
+</div>
+
+<!-- Member detail modal -->
+<div id="member-modal" class="modal">
+  <div class="modal__card">
+    <button class="modal__close" data-close="member-modal">×</button>
+    <div class="modal__head"><h3 id="mb-title">Member Details</h3></div>
+    <div id="mb-body"></div>
+  </div>
+</div>
+
+<!-- Add booking modal (manual entry) -->
+<div id="add-booking-modal" class="modal">
+  <div class="modal__card">
+    <button class="modal__close" data-close="add-booking-modal">×</button>
+    <div class="modal__head"><h3>New Booking</h3></div>
+    <form id="add-booking-form" class="form-grid">
+      <div class="field"><label>Guest Name</label><input type="text" name="name" required></div>
+      <div class="field"><label>Phone</label><input type="tel" name="phone" required></div>
+      <div class="field full"><label>Service</label>
+        <select name="service" required>
+          <option>Royal Hammam — 45 BHD</option>
+          <option>Casablanca Hammam — 25 BHD</option>
+          <option>Argan Oil Ritual — 40 BHD</option>
+          <option>Hot Stone Therapy — 35 BHD</option>
+          <option>Deep Tissue — 30 BHD</option>
+          <option>Swedish Massage — 25 BHD</option>
+          <option>Reflexology — 15 BHD</option>
+        </select>
+      </div>
+      <div class="field"><label>Date</label><input type="date" name="date" required></div>
+      <div class="field"><label>Time</label><input type="time" name="time" required></div>
+      <div class="field full"><label>Notes</label><textarea name="notes"></textarea></div>
+      <div class="full"><button type="submit" class="btn btn--primary btn--block"><i class="fas fa-save"></i> Save Booking</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- Invoice / Receipt modal -->
+<div id="invoice-modal" class="modal inv-modal">
+  <div class="modal__card">
+    <button class="modal__close" data-close="invoice-modal" style="z-index: 5;">×</button>
+
+    <div class="inv-doc" id="inv-doc">
+      <!-- Header -->
+      <div class="inv-head">
+        <div class="inv-head__brand">
+          <span class="logo-frame"><img src="assets/images/logo.png" alt="" loading="lazy" decoding="async"></span>
+          <div class="info">
+            <strong>Taj Al Sukn</strong>
+            <small>Spa &amp; Wellness W.L.L.<br>
+            Al Fateh, Manama · Bld 950<br>
+            CR: 182250-1 · +973 35194422</small>
+          </div>
+        </div>
+        <div class="inv-head__meta">
+          <div class="doc-type" id="inv-type">Invoice</div>
+          <div class="doc-no" id="inv-no">INV-2026-0089</div>
+          <div class="doc-date" id="inv-date">May 10, 2026</div>
+          <span class="inv-status unpaid" id="inv-status-badge">Unpaid</span>
+        </div>
+      </div>
+
+      <!-- Bill to / from -->
+      <div class="inv-bill">
+        <div>
+          <h6>Bill To</h6>
+          <strong id="inv-guest-name">Guest Name</strong>
+          <p id="inv-guest-info">+973 …<br>—</p>
+        </div>
+        <div>
+          <h6>Issued By</h6>
+          <strong>Taj Al Sukn Spa W.L.L.</strong>
+          <p>hello@tasukunspa.com<br>+973 35194422</p>
+        </div>
+      </div>
+
+      <!-- Line items -->
+      <table class="inv-table">
+        <thead>
+          <tr>
+            <th>Service</th>
+            <th>Duration</th>
+            <th class="r">Qty</th>
+            <th class="r">Unit Price</th>
+            <th class="r">Total</th>
+          </tr>
+        </thead>
+        <tbody id="inv-items"></tbody>
+      </table>
+
+      <!-- Discount panel (hidden in print) -->
+      <div class="inv-discount" id="inv-discount-panel">
+        <div class="inv-discount__head" id="inv-discount-head">
+          <span class="title"><i class="fas fa-tags"></i> Apply Additional Discount</span>
+          <i class="fas fa-chevron-down chev" style="color: var(--c-copper); transition: transform .25s ease;"></i>
+        </div>
+        <div class="inv-discount__body">
+          <div class="inv-discount__row">
+            <div class="field">
+              <label>Type</label>
+              <select id="disc-type">
+                <option value="percent">Percentage (%)</option>
+                <option value="fixed">Fixed Amount (BHD)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Reason</label>
+              <select id="disc-reason">
+                <option value="Promo Code">Promo Code</option>
+                <option value="Manager Discretion">Manager Discretion</option>
+                <option value="First-Time Guest">First-Time Guest</option>
+                <option value="Loyalty Bonus">Loyalty Bonus</option>
+                <option value="Service Recovery">Service Recovery</option>
+                <option value="Staff / Family">Staff / Family</option>
+                <option value="Corporate Rate">Corporate Rate</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Amount</label>
+              <input type="number" id="disc-value" placeholder="0" min="0" step="0.5">
+            </div>
+            <button class="btn btn--primary" id="apply-discount"><i class="fas fa-check"></i> Apply</button>
+          </div>
+          <p style="margin-top: 14px; font-size: 0.78rem; color: var(--c-text-soft);">
+            <i class="fas fa-info-circle" style="color: var(--c-copper); margin-right: 6px;"></i>
+            Member discounts are applied automatically. Use this for promos, courtesy, or staff rates.
+          </p>
+        </div>
+      </div>
+
+      <!-- Totals -->
+      <div class="inv-totals">
+        <div class="inv-totals__inner">
+          <div class="row subtotal"><span>Subtotal</span><strong id="inv-subtotal">25.000 BHD</strong></div>
+          <div class="row discount" id="inv-member-disc-row" style="display:none;"><span id="inv-member-disc-label">Member Discount</span><strong id="inv-member-disc">−0.000 BHD</strong></div>
+          <div class="row discount" id="inv-extra-disc-row" style="display:none;"><span id="inv-extra-disc-label">Discount</span><strong id="inv-extra-disc">−0.000 BHD</strong></div>
+          <div class="row tax"><span>VAT (10%)</span><strong id="inv-tax">2.500 BHD</strong></div>
+          <div class="total">
+            <span class="lbl">Total Due</span>
+            <span class="amt" id="inv-total">27.500 BHD</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="inv-foot">
+        <strong>Thank you for choosing Taj Al Sukn.</strong>
+        <span>"the crown of stillness" · Al Fateh, Manama, Kingdom of Bahrain</span>
+      </div>
+    </div>
+
+    <!-- Action bar -->
+    <div class="inv-actions">
+      <button class="btn btn--gold" id="mark-paid"><i class="fas fa-check-circle"></i> Mark as Paid</button>
+      <button class="btn btn--outline" onclick="document.body.classList.add('print-invoice');window.print();setTimeout(()=>document.body.classList.remove('print-invoice'),500);"><i class="fas fa-print"></i> Print</button>
+      <a href="#" class="btn btn--whatsapp" id="inv-wa"><i class="fab fa-whatsapp"></i> Send via WhatsApp</a>
+      <a href="#" class="btn btn--outline" id="inv-email"><i class="fas fa-envelope"></i> Email</a>
+      <div class="spacer"></div>
+      <button class="btn btn--outline" data-close="invoice-modal"><i class="fas fa-times"></i> Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add member modal -->
+<div id="add-member-modal" class="modal">
+  <div class="modal__card">
+    <button class="modal__close" data-close="add-member-modal">×</button>
+    <div class="modal__head"><h3>New Member</h3></div>
+    <form id="add-member-form" class="form-grid">
+      <div class="field"><label>Full Name</label><input type="text" name="name" required></div>
+      <div class="field"><label>Phone</label><input type="tel" name="phone" required></div>
+      <div class="field full"><label>Email</label><input type="email" name="email" required></div>
+      <div class="field full"><label>Tier</label>
+        <select name="tier" required>
+          <option value="Silver">Silver — 150 BHD/yr</option>
+          <option value="Gold" selected>Gold — 350 BHD/yr</option>
+          <option value="Platinum">Platinum — 750 BHD/yr</option>
+        </select>
+      </div>
+      <div class="full"><button type="submit" class="btn btn--primary btn--block"><i class="fas fa-save"></i> Enroll Member</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- Supabase data layer -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="assets/js/supabase-config.js?v=20260514" defer></script>
+<script src="assets/js/taj-data.js?v=20260514" defer></script>
+<script src="assets/js/page-cms.js?v=20260514" defer></script>
+<script src="assets/js/admin-shared.js" defer></script>
+<script src="assets/js/admin.js" defer></script>
+<script src="assets/js/admin-pages.js?v=20260514" defer></script>
+</body>
+</html>

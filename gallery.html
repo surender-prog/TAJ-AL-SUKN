@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gallery — Taj Al Sukn</title>
+<meta name="description" content="A visual tour of Taj Al Sukn — our private rooms, treatments, and team in Manama, Bahrain.">
+<link rel="icon" type="image/png" href="assets/images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="nav__logo">
+      <span class="logo-frame"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></span>
+      <span class="brand-text"><strong>Taj Al Sukn</strong><small>Spa &amp; Wellness</small></span>
+    </a>
+    <ul class="nav__menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="gallery.html" class="active">Gallery</a></li>
+      <li><a href="membership.html">Membership</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav__cta">
+      <a href="member-signin.html" class="nav__signin"><i class="far fa-user-circle"></i> Sign In</a>
+      <span class="nav__member" id="nav-member-chip" hidden>
+        <span class="nav__member-av" id="nav-member-av">—</span>
+        <span class="nav__member-name" id="nav-member-name">Member</span>
+      </span>
+      <a href="booking.html" class="btn btn--primary"><i class="far fa-calendar-check"></i> Reserve</a>
+      <button class="nav__toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+</header>
+
+<section class="banner">
+  <div class="banner__bg" data-cms="page-gallery.hero.image" data-cms-prop="bg" style="background-image:url('assets/images/spa-corridor.jpg');"></div>
+  <div class="banner__content reveal visible">
+    <div class="crumb"><a href="index.html">Home</a><span>/</span><span>Gallery</span></div>
+    <h1 data-cms="page-gallery.hero.title">Step inside the <em>sanctuary</em>.</h1>
+    <p data-cms="page-gallery.hero.subtitle">A visual tour of the rooms, rituals, and small details that shape every visit.</p>
+  </div>
+</section>
+
+<section class="section section--cream">
+  <div class="container-wide">
+    <div class="s-head reveal">
+      <span class="eyebrow eyebrow--center" data-cms="page-gallery.intro.eyebrow">The Visual Journey</span>
+      <h2 data-cms="page-gallery.intro.title">Beauty in <em>every detail</em>.</h2>
+      <div class="ornament"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0l3 9h9l-7 5 3 10-8-6-8 6 3-10-7-5h9z"/></svg></div>
+      <p>Tap any image to view it in full.</p>
+    </div>
+
+    <div class="bento">
+      <div class="bento__item x6y2 reveal"><img src="assets/images/sanctuary-bed.jpg" alt="Sanctuary" loading="lazy" decoding="async"><span class="label">A Sanctuary of Silence</span></div>
+      <div class="bento__item x3y2 reveal"><img src="assets/images/treatment-room.jpg" alt="Suite" loading="lazy" decoding="async"><span class="label">Private Suite</span></div>
+      <div class="bento__item x3y2 reveal"><img src="assets/images/reception-desk.jpg" alt="Reception" loading="lazy" decoding="async"><span class="label">A Warm Welcome</span></div>
+
+      <div class="bento__item x3y3 reveal"><img src="assets/images/deep-tissue.jpg" alt="Deep tissue" loading="lazy" decoding="async"><span class="label">Deep Tissue Therapy</span></div>
+      <div class="bento__item x3y2 reveal"><img src="assets/images/spa-corridor.jpg" alt="Corridor" loading="lazy" decoding="async"><span class="label">Walk to Stillness</span></div>
+      <div class="bento__item x3y2 reveal"><img src="assets/images/spa-foyer.jpg" alt="Foyer" loading="lazy" decoding="async"><span class="label">The Foyer</span></div>
+      <div class="bento__item x3y2 reveal"><img src="assets/images/waiting-lounge.jpg" alt="Lounge" loading="lazy" decoding="async"><span class="label">Lounge</span></div>
+
+      <div class="bento__item x3y2 reveal"><img src="assets/images/therapist-prep.jpg" alt="Therapist prep" loading="lazy" decoding="async"><span class="label">Preparing the Ritual</span></div>
+      <div class="bento__item x6y2 reveal"><img src="assets/images/couples-massage.jpg" alt="Couples" loading="lazy" decoding="async"><span class="label">Couples Sanctuary</span></div>
+      <div class="bento__item x3y2 reveal"><img src="assets/images/therapist-products.jpg" alt="Oils" loading="lazy" decoding="async"><span class="label">Premium Oils</span></div>
+
+      <div class="bento__item x3y2 reveal"><img src="assets/images/products-shelf.jpg" alt="Products" loading="lazy" decoding="async"><span class="label">Curated Products</span></div>
+      <div class="bento__item x3y2 reveal"><img src="assets/images/lounge-flowers.jpg" alt="Flowers" loading="lazy" decoding="async"><span class="label">Quiet Detail</span></div>
+      <div class="bento__item x3y2 reveal"><img src="assets/images/lobby-table.jpg" alt="Lobby" loading="lazy" decoding="async"><span class="label">Lobby Centerpiece</span></div>
+      <div class="bento__item x3y2 reveal"><img src="assets/images/spa-detail-1.jpg" alt="Detail" loading="lazy" decoding="async"><span class="label">Interior Detail</span></div>
+
+      <div class="bento__item x4y2 reveal"><img src="assets/images/team-reception.jpg" alt="Team" loading="lazy" decoding="async"><span class="label">The Team</span></div>
+      <div class="bento__item x4y2 reveal"><img src="assets/images/spa-relax-1.jpg" alt="Relaxation" loading="lazy" decoding="async"><span class="label">Relaxation Suite</span></div>
+      <div class="bento__item x4y2 reveal"><img src="assets/images/spa-relax-2.jpg" alt="Hot stone" loading="lazy" decoding="async"><span class="label">Hot Stone</span></div>
+
+      <div class="bento__item x4y2 reveal"><img src="assets/images/spa-relax-3.jpg" alt="Foot ritual" loading="lazy" decoding="async"><span class="label">Foot Ritual</span></div>
+      <div class="bento__item x4y2 reveal"><img src="assets/images/spa-entrance.jpg" alt="Entrance" loading="lazy" decoding="async"><span class="label">Entrance</span></div>
+      <div class="bento__item x4y2 reveal"><img src="assets/images/spa-exterior.jpg" alt="Exterior" loading="lazy" decoding="async"><span class="label">Building 950</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--dark">
+  <div class="container">
+    <div class="bigquote reveal">
+      <p data-cms="page-gallery.quote.quote" data-cms-prop="html">"Every detail is composed — every fragrance, every sound, every silence. <em>It all leads here.</em>"</p>
+      <span class="by" data-cms="page-gallery.quote.by">— Taj Al Sukn</span>
+    </div>
+  </div>
+</section>
+
+<section class="section section--cream">
+  <div class="container" style="text-align:center; max-width: 720px;">
+    <span class="eyebrow eyebrow--center reveal">Follow Our Journey</span>
+    <h2 class="reveal">Find us on <em>Instagram</em>.</h2>
+    <p class="reveal" style="margin: 22px auto 32px; color: var(--c-muted);">Daily moments from inside the sanctuary — treatments, rituals, and seasonal offers.</p>
+    <a href="#" class="btn btn--outline reveal"><i class="fab fa-instagram"></i> @tasukunspa</a>
+  </div>
+</section>
+
+<section class="section--tight" style="background: var(--c-cream); padding-bottom: 120px;">
+  <div class="container">
+    <div class="cta-banner reveal">
+      <div class="cta-banner__logo"><img src="assets/images/logo.png" alt="" loading="lazy" decoding="async"></div>
+      <div class="cta-banner__content">
+        <span class="eyebrow eyebrow--center" style="color: var(--c-gold);">Ready to step inside?</span>
+        <h2>Reserve your <em>visit</em>.</h2>
+        <p>Same-day appointments often available — secure your moment.</p>
+        <div class="cta-banner__actions">
+          <a href="booking.html" class="btn btn--gold"><i class="far fa-calendar-check"></i> Book Online</a>
+          <a href="https://wa.me/97335194422" target="_blank" class="btn btn--outline-light"><i class="fab fa-whatsapp"></i> Chat with us</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo-frame"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></span>
+        <h4>Taj Al Sukn</h4>
+        <p data-cms="page-footer.brand.tagline">A modern wellness sanctuary in Manama, blending authentic Arabian rituals with the finest spa traditions of the world.</p>
+        <div class="socials">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://wa.me/97335194422" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Visit</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Experience</h5>
+        <ul>
+          <li><a href="booking.html">Book Online</a></li>
+          <li><a href="membership.html">Membership</a></li>
+              <li><a href="services.html#packages">Packages</a></li>
+          <li><a href="services.html">Treatments</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-contact">
+        <h5>Contact</h5>
+        <p><i class="fas fa-map-marker-alt"></i><span data-cms="page-footer.contact.address" data-cms-prop="html">Al Fateh, Manama<br>Complex 324 · Road 2416 · Bld 950</span></p>
+        <p><i class="fas fa-phone"></i><a data-cms="page-footer.contact.phone" href="tel:+973 35194422">+973 35194422</a></p>
+        <p><i class="fas fa-clock"></i><span data-cms="page-footer.contact.hours">Sat – Thu · 10am – 11pm</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span><strong>© <span id="year"></span> Taj Al Sukn Spa W.L.L.</strong> — All rights reserved.</span>
+      <span>CR: 182250-1 · Crafted with care in Manama · <a href="admin-login.html" style="color: rgba(212,184,150,.5); font-weight: 500; margin-left: 8px;">Admin</a></span>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/97335194422" class="wa-float" aria-label="Chat on WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+<!-- Supabase data layer -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="assets/js/supabase-config.js?v=20260514" defer></script>
+<script src="assets/js/taj-data.js?v=20260514" defer></script>
+<script src="assets/js/page-cms.js?v=20260514" defer></script>
+<script src="assets/js/member-auth.js?v=20260511" defer></script>
+<script src="assets/js/main.js?v=20260511" defer></script>
+</body>
+</html>

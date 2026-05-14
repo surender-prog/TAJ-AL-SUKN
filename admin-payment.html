@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Record Payment — Taj Al Sukn Admin</title>
+<link rel="icon" type="image/png" href="assets/images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="admin">
+
+<div class="admin-shell">
+
+  <!-- Sidebar -->
+  <aside class="admin-side">
+    <div class="admin-side__brand">
+      <span class="logo-frame"><img src="assets/images/logo.png" alt="" loading="lazy" decoding="async"></span>
+      <div>
+        <strong>Taj Al Sukn</strong>
+        <small>Admin Console</small>
+      </div>
+    </div>
+
+    <div class="admin-side__label">Workspace</div>
+    <ul class="admin-side__nav">
+      <li><a href="admin.html"><i class="fas fa-th-large"></i> Overview</a></li>
+      <li><a href="admin.html#bookings" class="active"><i class="far fa-calendar-check"></i> Bookings</a></li>
+      <li><a href="admin.html#members"><i class="fas fa-crown"></i> Members</a></li>
+      <li><a href="admin.html#calendar"><i class="far fa-calendar-alt"></i> Calendar</a></li>
+      <li><a href="admin.html#reports"><i class="fas fa-chart-line"></i> Reports</a></li>
+    </ul>
+
+    <div class="admin-side__label">Settings</div>
+    <ul class="admin-side__nav">
+      <li><a href="admin.html#settings"><i class="fas fa-cog"></i> Spa Settings</a></li>
+      <li><a href="index.html"><i class="fas fa-external-link-alt"></i> View Website</a></li>
+    </ul>
+
+    <div class="admin-side__user">
+      <div class="av">A</div>
+      <div>
+        <strong>Admin</strong>
+        <small>admin@tasukunspa.com</small>
+      </div>
+      <a id="admin-logout" title="Sign out" href="#"><i class="fas fa-sign-out-alt"></i></a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="admin-main">
+
+    <div class="admin-bar">
+      <div class="admin-bar__search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search bookings, members, services…">
+      </div>
+      <div class="admin-bar__actions">
+        <a id="back-to-invoice" href="admin-invoice.html" class="btn btn--outline" style="padding: 12px 22px; font-size: 0.7rem;"><i class="fas fa-arrow-left"></i> Back to Invoice</a>
+      </div>
+    </div>
+
+    <div class="admin-content payment-page">
+      <div class="admin-page__head">
+        <div>
+          <p style="font-size: 0.74rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--c-text-soft); font-weight: 700; margin-bottom: 6px;">
+            <a href="admin.html" style="color: inherit;">Admin</a> ·
+            <a href="admin.html#bookings" style="color: inherit;">Bookings</a> ·
+            <a id="crumb-inv-link" href="#" style="color: inherit;"><span id="crumb-inv">INV-—</span></a> ·
+            <span style="color: var(--c-copper);">Payment</span>
+          </p>
+          <h1>Record Payment</h1>
+          <p>Choose a method, capture the transaction, and the receipt is issued automatically.</p>
+        </div>
+        <div class="pay-status-pill" id="pay-status-pill">
+          <i class="far fa-clock"></i> Awaiting Payment
+        </div>
+      </div>
+
+      <form id="payment-form" class="pay-grid">
+
+        <!-- ===================== LEFT (Main) ===================== -->
+        <section class="pay-main">
+
+          <!-- 1. Amount Due hero card -->
+          <div class="panel pay-hero">
+            <div class="pay-hero__left">
+              <span class="pay-hero__label">AMOUNT DUE</span>
+              <div class="pay-hero__amount" id="pay-amount-display">0.000 BHD</div>
+              <div class="pay-hero__doc">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span id="pay-doc-number">INV-—</span>
+                <span class="pay-hero__sep">·</span>
+                <span id="pay-guest-name">—</span>
+              </div>
+            </div>
+            <div class="pay-hero__right">
+              <div class="pay-hero__bd">
+                <div><span>Subtotal</span><strong id="pay-bd-subtotal">0.000</strong></div>
+                <div><span>Discount</span><strong id="pay-bd-discount">0.000</strong></div>
+                <div><span>Tax (VAT)</span><strong id="pay-bd-tax">0.000</strong></div>
+                <div class="pay-hero__bd-total"><span>Total</span><strong id="pay-bd-total">0.000</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Payment Method picker -->
+          <div class="panel">
+            <div class="panel__head">
+              <h3><i class="fas fa-credit-card" style="color: var(--c-copper); margin-right: 10px;"></i>Payment Method</h3>
+            </div>
+            <div class="pay-method-grid">
+              <label class="pay-method-tile selected" data-method="cash">
+                <input type="radio" name="method" value="cash" checked>
+                <div class="pay-method-tile__icon"><i class="fas fa-money-bill-wave"></i></div>
+                <span class="pay-method-tile__name">Cash</span>
+                <small>Pay at reception</small>
+              </label>
+              <label class="pay-method-tile" data-method="card">
+                <input type="radio" name="method" value="card">
+                <div class="pay-method-tile__icon"><i class="far fa-credit-card"></i></div>
+                <span class="pay-method-tile__name">Card</span>
+                <small>Visa / Master / Amex</small>
+              </label>
+              <label class="pay-method-tile" data-method="benefit">
+                <input type="radio" name="method" value="benefit">
+                <div class="pay-method-tile__icon"><i class="fas fa-mobile-alt"></i></div>
+                <span class="pay-method-tile__name">BenefitPay</span>
+                <small>QR / wallet · BH</small>
+              </label>
+              <label class="pay-method-tile" data-method="bank">
+                <input type="radio" name="method" value="bank">
+                <div class="pay-method-tile__icon"><i class="fas fa-university"></i></div>
+                <span class="pay-method-tile__name">Transfer</span>
+                <small>IBAN · same-day</small>
+              </label>
+              <label class="pay-method-tile" data-method="apple">
+                <input type="radio" name="method" value="apple">
+                <div class="pay-method-tile__icon"><i class="fab fa-apple-pay"></i></div>
+                <span class="pay-method-tile__name">Apple Pay</span>
+                <small>Touch / Face ID</small>
+              </label>
+            </div>
+          </div>
+
+          <!-- 3. Method-specific details -->
+
+          <!-- Cash -->
+          <div class="panel pay-detail show" id="pay-detail-cash">
+            <div class="panel__head">
+              <h3><i class="fas fa-money-bill-wave" style="color: var(--c-copper); margin-right: 10px;"></i>Cash Details</h3>
+              <span class="panel__hint">Cash drawer adjusts automatically</span>
+            </div>
+            <div class="form-grid">
+              <div class="field">
+                <label>Amount Received (BHD)</label>
+                <input type="number" name="cash_received" step="0.001" min="0" placeholder="0.000" id="cash-received">
+              </div>
+              <div class="field">
+                <label>Change Given (BHD)</label>
+                <input type="number" name="cash_change" step="0.001" id="cash-change" readonly>
+              </div>
+            </div>
+            <div class="pay-quick-cash">
+              <span class="pay-quick-cash__label">QUICK FILL</span>
+              <div class="pay-quick-cash__btns" id="quick-cash-buttons">
+                <!-- injected by JS based on total -->
+              </div>
+            </div>
+            <div class="pay-cash-summary" id="cash-summary"></div>
+          </div>
+
+          <!-- Card -->
+          <div class="panel pay-detail" id="pay-detail-card">
+            <div class="panel__head">
+              <h3><i class="far fa-credit-card" style="color: var(--c-copper); margin-right: 10px;"></i>Card Details</h3>
+              <span class="panel__hint">Captured from POS terminal</span>
+            </div>
+            <div class="form-grid">
+              <div class="field">
+                <label>Card Type</label>
+                <select name="card_type">
+                  <option>Visa</option>
+                  <option>Mastercard</option>
+                  <option>Amex</option>
+                  <option>Diners</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Last 4 Digits</label>
+                <input type="text" name="card_last4" maxlength="4" pattern="[0-9]{4}" placeholder="0000" inputmode="numeric">
+              </div>
+              <div class="field">
+                <label>Authorization Code</label>
+                <input type="text" name="card_auth" placeholder="AUTH-XXXXXX">
+              </div>
+              <div class="field">
+                <label>Terminal Reference</label>
+                <input type="text" name="card_terminal" placeholder="POS terminal ref">
+              </div>
+              <div class="field full">
+                <label>Cardholder Name</label>
+                <input type="text" name="card_holder" placeholder="As printed on card (optional)">
+              </div>
+            </div>
+          </div>
+
+          <!-- BenefitPay -->
+          <div class="panel pay-detail" id="pay-detail-benefit">
+            <div class="panel__head">
+              <h3><i class="fas fa-mobile-alt" style="color: var(--c-copper); margin-right: 10px;"></i>BenefitPay Details</h3>
+              <span class="panel__hint">Scan QR or send by phone</span>
+            </div>
+            <div class="form-grid">
+              <div class="field full">
+                <label>BenefitPay Reference</label>
+                <input type="text" name="benefit_ref" placeholder="BNP-XXXXXXXX">
+              </div>
+              <div class="field">
+                <label>Sender Phone</label>
+                <input type="tel" name="benefit_phone" placeholder="+973 …">
+              </div>
+              <div class="field">
+                <label>Sender Name (optional)</label>
+                <input type="text" name="benefit_name" placeholder="As registered on BenefitPay">
+              </div>
+              <div class="field full">
+                <label>Notes</label>
+                <input type="text" name="benefit_notes" placeholder="QR scan id, message…">
+              </div>
+            </div>
+            <div class="pay-benefit-qr">
+              <div class="pay-benefit-qr__visual">
+                <i class="fas fa-qrcode"></i>
+              </div>
+              <div>
+                <strong>Show QR on your terminal</strong>
+                <p>Customer opens BenefitPay → Scan → confirms amount → reference auto-fills.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bank Transfer -->
+          <div class="panel pay-detail" id="pay-detail-bank">
+            <div class="panel__head">
+              <h3><i class="fas fa-university" style="color: var(--c-copper); margin-right: 10px;"></i>Bank Transfer Details</h3>
+              <span class="panel__hint">Verify settlement before issuing receipt</span>
+            </div>
+            <div class="form-grid">
+              <div class="field">
+                <label>Bank Name</label>
+                <input type="text" name="bank_name" placeholder="e.g. NBB, BBK, Ahli United">
+              </div>
+              <div class="field">
+                <label>Reference</label>
+                <input type="text" name="bank_ref" placeholder="Transfer reference">
+              </div>
+              <div class="field">
+                <label>Settlement Date</label>
+                <input type="date" name="bank_date">
+              </div>
+              <div class="field">
+                <label>Sender IBAN (last 6, optional)</label>
+                <input type="text" name="bank_iban" placeholder="…123456" maxlength="6">
+              </div>
+              <div class="field full">
+                <label>Receipt Notes</label>
+                <input type="text" name="bank_notes" placeholder="Sender name, additional reference…">
+              </div>
+            </div>
+            <div class="bank-info">
+              <h4>Our bank details (share with payer):</h4>
+              <dl>
+                <dt>Account Name</dt><dd>Taj Al Sukn Spa W.L.L.</dd>
+                <dt>Bank</dt><dd>National Bank of Bahrain (NBB)</dd>
+                <dt>IBAN</dt><dd>BH00 NBOB 0000 0000 4400 00</dd>
+              </dl>
+            </div>
+          </div>
+
+          <!-- Apple Pay -->
+          <div class="panel pay-detail" id="pay-detail-apple">
+            <div class="panel__head">
+              <h3><i class="fab fa-apple-pay" style="color: var(--c-copper); margin-right: 10px;"></i>Apple Pay Details</h3>
+              <span class="panel__hint">Transparently tokenised</span>
+            </div>
+            <div class="form-grid">
+              <div class="field full">
+                <label>Apple Pay Transaction ID</label>
+                <input type="text" name="apple_id" placeholder="TXN-…">
+              </div>
+              <div class="field">
+                <label>Device</label>
+                <select name="apple_device">
+                  <option>iPhone</option>
+                  <option>Apple Watch</option>
+                  <option>iPad</option>
+                  <option>Mac</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Card Type (underlying)</label>
+                <select name="apple_card">
+                  <option>Visa</option>
+                  <option>Mastercard</option>
+                  <option>Amex</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Tip & Split (advanced) -->
+          <div class="panel">
+            <div class="panel__head">
+              <h3><i class="fas fa-sliders-h" style="color: var(--c-copper); margin-right: 10px;"></i>Additional Options</h3>
+            </div>
+
+            <div class="pay-toggle-block">
+              <label class="pay-toggle">
+                <input type="checkbox" id="toggle-tip">
+                <span>Add a tip to this payment</span>
+              </label>
+              <div class="pay-toggle__body" id="tip-body">
+                <div class="pay-tip-row">
+                  <button type="button" class="pay-tip-btn" data-tip="5">+5%</button>
+                  <button type="button" class="pay-tip-btn" data-tip="10">+10%</button>
+                  <button type="button" class="pay-tip-btn" data-tip="15">+15%</button>
+                  <button type="button" class="pay-tip-btn" data-tip="20">+20%</button>
+                  <button type="button" class="pay-tip-btn" data-tip="custom">Custom</button>
+                </div>
+                <div class="form-grid">
+                  <div class="field">
+                    <label>Tip Amount (BHD)</label>
+                    <input type="number" id="tip-amount" name="tip_amount" step="0.001" min="0" value="0">
+                  </div>
+                  <div class="field">
+                    <label>Goes To</label>
+                    <select name="tip_to">
+                      <option value="therapist">Treating Therapist</option>
+                      <option value="pool">Shared Tip Pool</option>
+                      <option value="house">House</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pay-toggle-block">
+              <label class="pay-toggle">
+                <input type="checkbox" id="toggle-split">
+                <span>Split this payment across methods</span>
+              </label>
+              <div class="pay-toggle__body" id="split-body">
+                <p class="panel__hint" style="margin: 0 0 12px;">Useful for cash + card combinations. Add the secondary method below.</p>
+                <div class="form-grid">
+                  <div class="field">
+                    <label>Secondary Method</label>
+                    <select name="split_method">
+                      <option value="">— None —</option>
+                      <option value="cash">Cash</option>
+                      <option value="card">Card</option>
+                      <option value="benefit">BenefitPay</option>
+                      <option value="apple">Apple Pay</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>Secondary Amount (BHD)</label>
+                    <input type="number" name="split_amount" step="0.001" min="0" placeholder="0.000">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. Receipt details -->
+          <div class="panel">
+            <div class="panel__head">
+              <h3><i class="fas fa-receipt" style="color: var(--c-copper); margin-right: 10px;"></i>Receipt Details</h3>
+            </div>
+            <div class="form-grid">
+              <div class="field">
+                <label>Received By</label>
+                <select name="cashier" id="pay-cashier">
+                  <option value="Admin">Admin</option>
+                  <option value="Reception">Reception Desk</option>
+                  <option value="Sofia">Sofia · Spa Director</option>
+                  <option value="Layla">Layla · Therapist</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Payment Date &amp; Time</label>
+                <input type="datetime-local" name="paid_at" id="pay-when">
+              </div>
+              <div class="field">
+                <label>Receipt Number</label>
+                <input type="text" name="receipt_no" id="receipt-no" readonly>
+              </div>
+              <div class="field">
+                <label>Receipt Delivery</label>
+                <select name="receipt_delivery">
+                  <option value="whatsapp">WhatsApp + Print</option>
+                  <option value="email">Email</option>
+                  <option value="print">Print only</option>
+                  <option value="none">None — record only</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label>Internal Notes (not on receipt)</label>
+                <textarea name="payment_notes" rows="2" placeholder="Tip handling, special arrangement, follow-up needed…"></textarea>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ===================== RIGHT (Summary) ===================== -->
+        <aside class="pay-summary">
+          <div class="panel pay-summary__panel">
+            <div class="panel__head">
+              <h3><i class="fas fa-file-alt" style="color: var(--c-copper); margin-right: 10px;"></i>Receipt Preview</h3>
+            </div>
+
+            <div class="pay-summary__doc">
+              <div class="pay-summary__doc-head">
+                <span class="logo-frame"><img src="assets/images/logo.png" alt="" loading="lazy" decoding="async"></span>
+                <div>
+                  <strong>Taj Al Sukn Spa</strong>
+                  <small>Manama, Bahrain</small>
+                </div>
+              </div>
+              <div class="pay-summary__doc-info">
+                <div><span>Receipt</span><strong id="sum-receipt-no">RCP-—</strong></div>
+                <div><span>Invoice</span><strong id="sum-invoice-no">INV-—</strong></div>
+                <div><span>Date</span><strong id="sum-when">—</strong></div>
+                <div><span>Guest</span><strong id="sum-guest">—</strong></div>
+              </div>
+
+              <div class="pay-summary__service" id="sum-service">
+                <strong>—</strong>
+                <small>—</small>
+              </div>
+
+              <div class="pay-summary__breakdown">
+                <div><span>Service</span><strong id="sum-subtotal">0.000 BHD</strong></div>
+                <div id="sum-discount-row" hidden><span>Discount</span><strong id="sum-discount">— 0.000 BHD</strong></div>
+                <div id="sum-tip-row" hidden><span>Tip</span><strong id="sum-tip">+ 0.000 BHD</strong></div>
+                <div><span>VAT (10%)</span><strong id="sum-tax">0.000 BHD</strong></div>
+                <div class="pay-summary__total"><span>Total Paid</span><strong id="sum-total">0.000 BHD</strong></div>
+                <div id="sum-change-row" hidden><span>Change Given</span><strong id="sum-change">0.000 BHD</strong></div>
+              </div>
+
+              <div class="pay-summary__method">
+                <span class="pay-summary__method-label">PAID VIA</span>
+                <div class="pay-summary__method-row">
+                  <i id="sum-method-icon" class="fas fa-money-bill-wave"></i>
+                  <strong id="sum-method-name">Cash</strong>
+                </div>
+                <small id="sum-method-detail">Pay at reception</small>
+              </div>
+
+              <div class="pay-summary__foot">
+                <span>Thank you for choosing Taj Al Sukn — "the crown of stillness"</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pay-summary__hint">
+            <i class="fas fa-info-circle"></i>
+            <span>Once you confirm, the receipt is issued and the booking status flips to <strong>Paid</strong>. You can re-print or share later.</span>
+          </div>
+        </aside>
+
+        <!-- ===================== Sticky footer actions ===================== -->
+        <div class="pay-footer">
+          <a id="cancel-payment" href="admin-invoice.html" class="btn btn--outline"><i class="fas fa-times"></i> Cancel</a>
+          <button type="button" class="btn btn--outline" id="save-draft"><i class="far fa-save"></i> Save as Draft</button>
+          <button type="submit" class="btn btn--gold pay-footer__primary">
+            <i class="fas fa-check-circle"></i>
+            Confirm Payment &amp; Issue Receipt
+            <span class="pay-footer__amt" id="footer-amount">0.000 BHD</span>
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </main>
+</div>
+
+<!-- Supabase data layer -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="assets/js/supabase-config.js?v=20260514" defer></script>
+<script src="assets/js/taj-data.js?v=20260514" defer></script>
+<script src="assets/js/page-cms.js?v=20260514" defer></script>
+<script src="assets/js/admin-shared.js" defer></script>
+<script src="assets/js/admin-payment.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Portal — Taj Al Sukn</title>
+<meta name="description" content="Your Taj Al Sukn member portal — services balance, upcoming bookings, history, and quick actions.">
+<link rel="icon" type="image/png" href="assets/images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="member-portal-body">
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="nav__logo">
+      <span class="logo-frame"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></span>
+      <span class="brand-text"><strong>Taj Al Sukn</strong><small>Spa &amp; Wellness</small></span>
+    </a>
+    <ul class="nav__menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="membership.html">Membership</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav__cta">
+      <span class="nav__member" id="nav-member-chip" hidden>
+        <span class="nav__member-av" id="nav-member-av">—</span>
+        <span class="nav__member-name" id="nav-member-name">Member</span>
+      </span>
+      <a href="booking.html" class="btn btn--primary"><i class="far fa-calendar-check"></i> Reserve</a>
+      <button class="nav__toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+</header>
+
+<!-- Auth gate (shown briefly if not signed in, before redirect) -->
+<section class="portal-gate" id="portal-gate" hidden>
+  <div class="container container-narrow" style="text-align:center; padding:80px 20px;">
+    <div class="auth-card__crown" style="margin: 0 auto 24px;">
+      <span class="logo-frame"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></span>
+    </div>
+    <h2>Please sign in.</h2>
+    <p style="color:var(--c-text-soft); margin:14px 0 28px;">Your portal is private — sign in to see your benefits balance, upcoming visits, and history.</p>
+    <a href="member-signin.html" class="btn btn--primary"><i class="fas fa-arrow-right-to-bracket"></i> Sign In</a>
+    <a href="member-signup.html" class="btn btn--outline" style="margin-left:10px;"><i class="fas fa-crown"></i> Become a Member</a>
+  </div>
+</section>
+
+<!-- Portal content -->
+<main class="portal-shell" id="portal-shell" hidden>
+
+  <!-- Editorial hero -->
+  <section class="portal-hero">
+    <div class="portal-hero__bg" style="background-image:url('assets/images/spa-foyer.jpg');"></div>
+    <div class="portal-hero__overlay"></div>
+    <div class="container">
+      <div class="portal-hero__inner">
+        <div>
+          <span class="eyebrow" style="color: var(--c-gold);">MEMBER PORTAL</span>
+          <h1>Welcome back, <em id="hero-name">Member</em>.</h1>
+          <p id="hero-tagline">Your sanctuary is ready. Here's what awaits.</p>
+        </div>
+        <div class="portal-hero__card">
+          <div class="portal-hero__card-head">
+            <div>
+              <span class="portal-hero__id-label">MEMBER ID</span>
+              <strong id="hero-id">MBR-XXXX</strong>
+            </div>
+            <span class="portal-hero__tier" id="hero-tier">Gold</span>
+          </div>
+          <div class="portal-hero__progress">
+            <div class="portal-hero__progress-bar">
+              <span id="hero-progress" style="width:62%"></span>
+            </div>
+            <div class="portal-hero__progress-meta">
+              <span id="hero-progress-start">Started —</span>
+              <span id="hero-progress-end">Renews —</span>
+            </div>
+          </div>
+          <div class="portal-hero__actions">
+            <button type="button" class="portal-hero__action" id="profile-btn">
+              <i class="far fa-user"></i> My Profile
+            </button>
+            <button type="button" class="portal-hero__action portal-hero__action--ghost" id="signout-btn">
+              <i class="fas fa-sign-out-alt"></i> Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats strip -->
+  <section class="portal-stats-section">
+    <div class="container">
+      <div class="portal-stats">
+        <div class="portal-stat">
+          <div class="portal-stat__icon"><i class="fas fa-spa"></i></div>
+          <div>
+            <span class="portal-stat__num" id="stat-services">—</span>
+            <span class="portal-stat__lbl">Complimentary Services Left</span>
+          </div>
+        </div>
+        <div class="portal-stat">
+          <div class="portal-stat__icon"><i class="fas fa-percent"></i></div>
+          <div>
+            <span class="portal-stat__num" id="stat-discount">—</span>
+            <span class="portal-stat__lbl">Member Discount</span>
+          </div>
+        </div>
+        <div class="portal-stat">
+          <div class="portal-stat__icon"><i class="fas fa-wallet"></i></div>
+          <div>
+            <span class="portal-stat__num" id="stat-balance">—</span>
+            <span class="portal-stat__lbl">Account Balance</span>
+          </div>
+        </div>
+        <div class="portal-stat">
+          <div class="portal-stat__icon"><i class="far fa-calendar-check"></i></div>
+          <div>
+            <span class="portal-stat__num" id="stat-bookings">—</span>
+            <span class="portal-stat__lbl">Visits This Year</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TABBED CONTENT — Bookings · Profile · Benefits
+       ============================================================ -->
+  <section class="section section--cream portal-tabs-section">
+    <div class="container container-wide">
+      <nav class="portal-tabnav" role="tablist">
+        <button type="button" class="portal-tabnav__btn is-active" data-ptab="bookings" role="tab">
+          <i class="far fa-calendar-check"></i><span>My Bookings</span>
+        </button>
+        <button type="button" class="portal-tabnav__btn" data-ptab="profile" role="tab">
+          <i class="far fa-user"></i><span>My Profile</span>
+        </button>
+        <button type="button" class="portal-tabnav__btn" data-ptab="benefits" role="tab">
+          <i class="fas fa-crown"></i><span>Benefits</span>
+        </button>
+      </nav>
+
+      <!-- ====== BOOKINGS TAB ====== -->
+      <div class="portal-tabpanel is-active" data-ppanel="bookings" role="tabpanel">
+        <div class="portal-section-head">
+          <div>
+            <span class="eyebrow">YOUR BOOKINGS</span>
+            <h2>Upcoming &amp; Past Visits</h2>
+          </div>
+          <div class="portal-section-head__actions">
+            <a href="booking.html" class="btn btn--primary"><i class="far fa-calendar-plus"></i> New Booking</a>
+          </div>
+        </div>
+
+        <div class="portal-bookings-tabs">
+          <button class="portal-tab is-active" data-bktab="upcoming">Upcoming</button>
+          <button class="portal-tab" data-bktab="past">Past</button>
+          <button class="portal-tab" data-bktab="all">All</button>
+        </div>
+
+        <div class="portal-bookings" id="portal-bookings">
+          <!-- rendered by JS -->
+        </div>
+
+        <div class="portal-empty" id="portal-empty" hidden>
+        <i class="far fa-calendar"></i>
+        <h4>No bookings yet</h4>
+        <p>Reserve your first visit and it'll appear here.</p>
+        <a href="booking.html" class="btn btn--primary"><i class="far fa-calendar-check"></i> Book a Treatment</a>
+        </div>
+      </div>
+
+      <!-- ====== PROFILE TAB ====== -->
+      <div class="portal-tabpanel" data-ppanel="profile" role="tabpanel">
+        <div class="portal-section-head">
+          <div>
+            <span class="eyebrow">MY PROFILE</span>
+            <h2>Personal &amp; <em>preferences</em>.</h2>
+            <p style="color:var(--c-text-soft); margin-top: 4px;">Keep your details current so we can greet you correctly and tailor your visits.</p>
+          </div>
+          <div class="portal-section-head__actions" id="profile-actions-view">
+            <button type="button" class="btn btn--outline" id="profile-edit-btn"><i class="far fa-edit"></i> Edit Profile</button>
+          </div>
+          <div class="portal-section-head__actions" id="profile-actions-edit" hidden>
+            <button type="button" class="btn btn--outline" id="profile-cancel-btn"><i class="fas fa-times"></i> Cancel</button>
+            <button type="button" class="btn btn--primary" id="profile-save-btn"><i class="fas fa-check"></i> Save Changes</button>
+          </div>
+        </div>
+
+        <!-- VIEW MODE -->
+        <div class="profile-card" id="profile-view">
+          <div class="profile-card__head">
+            <div class="profile-card__avatar" id="profile-avatar">—</div>
+            <div>
+              <h3 id="profile-name">—</h3>
+              <p class="profile-card__subtitle">
+                <span id="profile-tier-badge" class="portal-hero__tier">Gold</span>
+                <span id="profile-mid">MBR-XXXX</span>
+                <span id="profile-joined">Member since —</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="profile-grid">
+            <div class="profile-field">
+              <span class="profile-field__label"><i class="far fa-envelope"></i> EMAIL</span>
+              <strong id="profile-email">—</strong>
+            </div>
+            <div class="profile-field">
+              <span class="profile-field__label"><i class="fas fa-phone-alt"></i> WHATSAPP / PHONE</span>
+              <strong id="profile-phone">—</strong>
+            </div>
+            <div class="profile-field">
+              <span class="profile-field__label"><i class="far fa-calendar"></i> DATE OF BIRTH</span>
+              <strong id="profile-dob">—</strong>
+            </div>
+            <div class="profile-field">
+              <span class="profile-field__label"><i class="fas fa-spa"></i> THERAPIST PREFERENCE</span>
+              <strong id="profile-therapist-pref">—</strong>
+            </div>
+            <div class="profile-field profile-field--full">
+              <span class="profile-field__label"><i class="far fa-comment-dots"></i> HEALTH NOTES &amp; PREFERENCES</span>
+              <strong id="profile-notes">—</strong>
+            </div>
+            <div class="profile-field">
+              <span class="profile-field__label"><i class="fas fa-crown"></i> MEMBERSHIP TIER</span>
+              <strong id="profile-tier">—</strong>
+            </div>
+            <div class="profile-field">
+              <span class="profile-field__label"><i class="fas fa-percent"></i> MEMBER DISCOUNT</span>
+              <strong id="profile-discount">—</strong>
+            </div>
+            <div class="profile-field">
+              <span class="profile-field__label"><i class="far fa-calendar-check"></i> START DATE</span>
+              <strong id="profile-start">—</strong>
+            </div>
+            <div class="profile-field">
+              <span class="profile-field__label"><i class="far fa-calendar-times"></i> RENEWS</span>
+              <strong id="profile-end">—</strong>
+            </div>
+          </div>
+
+          <div class="profile-card__foot">
+            <a href="https://wa.me/97335194422?text=I'd%20like%20to%20upgrade%20my%20membership" target="_blank" class="profile-card__link"><i class="fas fa-arrow-up"></i> Upgrade tier</a>
+            <a href="https://wa.me/97335194422?text=I'd%20like%20to%20cancel%20my%20membership" target="_blank" class="profile-card__link profile-card__link--danger"><i class="fas fa-ban"></i> Cancel membership</a>
+          </div>
+        </div>
+
+        <!-- EDIT MODE -->
+        <form class="profile-card" id="profile-edit" hidden>
+          <div class="form-grid">
+            <div class="field">
+              <label for="pf-first">First Name</label>
+              <div class="field__input-wrap">
+                <i class="far fa-user"></i>
+                <input type="text" id="pf-first" required>
+              </div>
+            </div>
+            <div class="field">
+              <label for="pf-last">Last Name</label>
+              <div class="field__input-wrap">
+                <i class="far fa-user"></i>
+                <input type="text" id="pf-last" required>
+              </div>
+            </div>
+            <div class="field">
+              <label for="pf-email">Email</label>
+              <div class="field__input-wrap">
+                <i class="far fa-envelope"></i>
+                <input type="email" id="pf-email" required>
+              </div>
+            </div>
+            <div class="field">
+              <label for="pf-phone">WhatsApp / Phone</label>
+              <div class="field__input-wrap">
+                <i class="fas fa-phone-alt"></i>
+                <input type="tel" id="pf-phone" required>
+              </div>
+            </div>
+            <div class="field">
+              <label for="pf-dob">Date of Birth</label>
+              <div class="field__input-wrap">
+                <i class="far fa-calendar"></i>
+                <input type="date" id="pf-dob">
+              </div>
+            </div>
+            <div class="field">
+              <label for="pf-therapist">Therapist Preference</label>
+              <div class="field__input-wrap">
+                <i class="fas fa-spa"></i>
+                <select id="pf-therapist">
+                  <option value="">No preference</option>
+                  <option value="female">Female therapist</option>
+                  <option value="male">Male therapist</option>
+                </select>
+              </div>
+            </div>
+            <div class="field full">
+              <label for="pf-notes">Health Notes &amp; Preferences</label>
+              <div class="field__input-wrap field__input-wrap--textarea">
+                <i class="far fa-comment-dots"></i>
+                <textarea id="pf-notes" rows="3" placeholder="Allergies, sensitivities, pressure preference, scents to avoid…"></textarea>
+              </div>
+            </div>
+          </div>
+          <p style="margin-top:14px; padding:12px 14px; background:rgba(176,120,73,0.08); border-radius:8px; font-size:0.8rem; color:var(--c-text-soft); line-height:1.55;">
+            <i class="fas fa-info-circle" style="color:var(--c-copper); margin-right:6px;"></i>
+            Membership ID, tier, and renewal dates are managed by reception. To change those, please reach out via WhatsApp.
+          </p>
+        </form>
+      </div>
+
+      <!-- ====== BENEFITS TAB ====== -->
+      <div class="portal-tabpanel" data-ppanel="benefits" role="tabpanel">
+        <div class="portal-section-head">
+          <div>
+            <span class="eyebrow">YOUR BENEFITS</span>
+            <h2>What's included with your <em id="benefits-tier-h">membership</em>.</h2>
+            <p style="color:var(--c-text-soft); margin-top: 4px;">Use these any time — your discount applies automatically on booking.</p>
+          </div>
+        </div>
+
+        <div class="profile-card">
+          <div class="benefits-grid">
+            <div class="benefits-stat">
+              <span class="benefits-stat__num"><span id="ben-services-left">—</span> / <span id="ben-services-total">—</span></span>
+              <span class="benefits-stat__lbl">Complimentary services remaining this year</span>
+              <div class="benefits-bar"><span id="ben-services-bar"></span></div>
+            </div>
+            <div class="benefits-stat">
+              <span class="benefits-stat__num"><span id="ben-discount">—</span></span>
+              <span class="benefits-stat__lbl">Off every additional treatment</span>
+            </div>
+            <div class="benefits-stat">
+              <span class="benefits-stat__num"><span id="ben-balance">—</span></span>
+              <span class="benefits-stat__lbl">Account balance &amp; credits</span>
+            </div>
+          </div>
+
+          <h4 class="benefits-list-h">Included with your tier</h4>
+          <ul class="benefits-list" id="benefits-list"></ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Quick actions -->
+  <section class="section section--white">
+    <div class="container container-wide">
+      <div class="s-head">
+        <span class="eyebrow eyebrow--center">QUICK ACTIONS</span>
+        <h2>Manage your <em>membership</em>.</h2>
+      </div>
+
+      <div class="perks-row">
+        <a href="booking.html" class="perk-card" style="text-decoration: none;">
+          <div class="icon"><i class="far fa-calendar-plus"></i></div>
+          <h5>Book a Service</h5>
+          <p>Use your complimentary services or book additional treatments at member pricing.</p>
+        </a>
+        <a href="https://wa.me/97335194422?text=I'd%20like%20to%20transfer%20a%20guest%20pass" target="_blank" class="perk-card" style="text-decoration: none;">
+          <div class="icon"><i class="fas fa-user-friends"></i></div>
+          <h5>Use Guest Pass</h5>
+          <p>Send a guest pass to a friend or family member via WhatsApp.</p>
+        </a>
+        <a href="https://wa.me/97335194422?text=I'd%20like%20to%20upgrade%20my%20membership" target="_blank" class="perk-card" style="text-decoration: none;">
+          <div class="icon"><i class="fas fa-arrow-up"></i></div>
+          <h5>Upgrade Tier</h5>
+          <p>Move from Silver to Gold or Platinum — pro-rated upgrades available.</p>
+        </a>
+        <a href="https://wa.me/97335194422?text=I%20need%20to%20update%20my%20profile" target="_blank" class="perk-card" style="text-decoration: none;">
+          <div class="icon"><i class="far fa-edit"></i></div>
+          <h5>Update Profile</h5>
+          <p>Change contact details, preferences, or health notes via concierge.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo-frame"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></span>
+        <h4>Taj Al Sukn</h4>
+        <p data-cms="page-footer.brand.tagline">A modern wellness sanctuary in Manama, blending authentic Arabian rituals with the finest spa traditions of the world.</p>
+        <div class="socials">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://wa.me/97335194422" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Visit</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Members</h5>
+        <ul>
+          <li><a href="member-signin.html">Sign In</a></li>
+          <li><a href="member-signup.html">Become a Member</a></li>
+          <li><a href="member-portal.html">My Portal</a></li>
+          <li><a href="membership.html">Tiers &amp; Pricing</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-contact">
+        <h5>Contact</h5>
+        <p><i class="fas fa-map-marker-alt"></i><span data-cms="page-footer.contact.address" data-cms-prop="html">Al Fateh, Manama<br>Complex 324 · Road 2416 · Bld 950</span></p>
+        <p><i class="fas fa-phone"></i><a data-cms="page-footer.contact.phone" href="tel:+973 35194422">+973 35194422</a></p>
+        <p><i class="fas fa-clock"></i><span data-cms="page-footer.contact.hours">Sat – Thu · 10am – 11pm</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span><strong>© <span id="year"></span> Taj Al Sukn Spa W.L.L.</strong> — All rights reserved.</span>
+      <span>CR: 182250-1 · Crafted with care in Manama · <a href="admin-login.html" style="color: rgba(212,184,150,.5); font-weight: 500; margin-left: 8px;">Admin</a></span>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/97335194422" class="wa-float" aria-label="Chat on WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+<!-- Supabase data layer -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="assets/js/supabase-config.js?v=20260514" defer></script>
+<script src="assets/js/taj-data.js?v=20260514" defer></script>
+<script src="assets/js/page-cms.js?v=20260514" defer></script>
+<script src="assets/js/member-auth.js?v=20260511" defer></script>
+<script src="assets/js/main.js?v=20260511" defer></script>
+</body>
+</html>

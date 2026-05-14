@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Membership — Taj Al Sukn</title>
+<meta name="description" content="Become a Taj Al Sukn member — Silver, Gold, or Platinum. Annual packages with complimentary services, member-only pricing, and priority booking.">
+<link rel="icon" type="image/png" href="assets/images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="nav__logo">
+      <span class="logo-frame"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></span>
+      <span class="brand-text"><strong>Taj Al Sukn</strong><small>Spa &amp; Wellness</small></span>
+    </a>
+    <ul class="nav__menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="membership.html" class="active">Membership</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav__cta">
+      <a href="member-signin.html" class="nav__signin"><i class="far fa-user-circle"></i> Sign In</a>
+      <span class="nav__member" id="nav-member-chip" hidden>
+        <span class="nav__member-av" id="nav-member-av">—</span>
+        <span class="nav__member-name" id="nav-member-name">Member</span>
+      </span>
+      <a href="booking.html" class="btn btn--primary"><i class="far fa-calendar-check"></i> Reserve</a>
+      <button class="nav__toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+</header>
+
+<!-- Page Banner -->
+<section class="banner">
+  <div class="banner__bg" data-cms="page-membership.hero.image" data-cms-prop="bg" style="background-image:url('assets/images/spa-foyer.jpg');"></div>
+  <div class="banner__content reveal visible">
+    <div class="crumb"><a href="index.html">Home</a><span>/</span><span>Membership</span></div>
+    <h1 data-cms="page-membership.hero.title">The Taj Al Sukn <em>Membership</em>.</h1>
+    <p data-cms="page-membership.hero.subtitle">An annual circle of complimentary services, member-only pricing, and priority care — for those who make stillness a ritual.</p>
+  </div>
+</section>
+
+<!-- Intro -->
+<section class="section section--cream section--tight">
+  <div class="container" style="text-align:center; max-width: 760px;">
+    <span class="eyebrow eyebrow--center reveal">Three Tiers · One Sanctuary</span>
+    <h2 class="reveal" style="margin-bottom: 18px;">A pre-paid <em>circle of care</em>.</h2>
+    <p class="reveal" style="color: var(--c-text-soft);">Choose the tier that fits your rhythm. Each membership is purchased annually, includes a generous selection of complimentary signature services, and unlocks member-only pricing for every additional treatment, package, and product.</p>
+  </div>
+</section>
+
+<!-- Tier Cards -->
+<section class="section section--cream" style="padding-top: 30px;">
+  <div class="container">
+    <div class="mtier-grid">
+
+      <!-- SILVER -->
+      <article class="mtier mtier--silver reveal">
+        <div class="mtier__crown"><i class="fas fa-gem"></i></div>
+        <span class="mtier__tier">Silver</span>
+        <h3>The Companion</h3>
+        <p class="mtier__sub">An invitation to begin — a year of considered moments.</p>
+
+        <div class="mtier__price">
+          150<small>BHD · per year</small>
+        </div>
+
+        <div class="mtier__divider"></div>
+
+        <span class="mtier__perks-label">Included Annually</span>
+        <ul class="mtier__perks">
+          <li><strong>2 complimentary</strong> 60-min signature massages</li>
+          <li><strong>1 complimentary</strong> Foot Reflexology ritual</li>
+          <li><strong>10% off</strong> all additional treatments</li>
+          <li>Priority booking — 24 hours ahead</li>
+          <li>Welcome ritual on signup</li>
+          <li>Birthday gift — free Foot Relaxing</li>
+          <li>Member-only seasonal offers</li>
+        </ul>
+
+        <a href="member-signup.html?tier=Silver" class="btn btn--outline btn--block">
+          <i class="fas fa-gem"></i> Become Silver
+        </a>
+      </article>
+
+      <!-- GOLD (featured) -->
+      <article class="mtier mtier--gold reveal delay-1">
+        <span class="mtier__badge">Most Popular</span>
+        <div class="mtier__crown"><i class="fas fa-crown"></i></div>
+        <span class="mtier__tier">Gold</span>
+        <h3>The Sanctuary</h3>
+        <p class="mtier__sub">A generous year of regular restoration and signature care.</p>
+
+        <div class="mtier__price">
+          350<small>BHD · per year</small>
+        </div>
+
+        <div class="mtier__divider"></div>
+
+        <span class="mtier__perks-label">Included Annually</span>
+        <ul class="mtier__perks">
+          <li><strong>6 complimentary</strong> 60-min signature massages</li>
+          <li><strong>1 Royal Hammam</strong> ritual included</li>
+          <li><strong>2 complimentary</strong> foot rituals</li>
+          <li><strong>15% off</strong> all additional treatments</li>
+          <li>Priority booking — 48 hours ahead</li>
+          <li><strong>1 guest pass</strong> per year</li>
+          <li>Welcome Hammam ritual on signup</li>
+          <li>Birthday spa journey (90 min)</li>
+          <li>Members-only seasonal events</li>
+        </ul>
+
+        <a href="member-signup.html?tier=Gold" class="btn btn--gold btn--block">
+          <i class="fas fa-crown"></i> Become Gold
+        </a>
+      </article>
+
+      <!-- PLATINUM -->
+      <article class="mtier mtier--platinum reveal delay-2">
+        <div class="mtier__crown"><i class="fas fa-star"></i></div>
+        <span class="mtier__tier">Platinum</span>
+        <h3>The Royal Circle</h3>
+        <p class="mtier__sub">Unlimited stillness — the highest tier of care, for the most devoted.</p>
+
+        <div class="mtier__price">
+          750<small>BHD · per year</small>
+        </div>
+
+        <div class="mtier__divider"></div>
+
+        <span class="mtier__perks-label">Included Annually</span>
+        <ul class="mtier__perks">
+          <li><strong>Unlimited</strong> signature massages (max 2/month)</li>
+          <li><strong>12 Royal Hammams</strong> per year</li>
+          <li><strong>4 Hot Stone</strong> sessions included</li>
+          <li><strong>20% off</strong> additional treatments &amp; products</li>
+          <li>Priority booking — anytime</li>
+          <li><strong>4 guest passes</strong> per year</li>
+          <li>Welcome Sultan Suite ritual</li>
+          <li>Personal therapist match</li>
+          <li>Birthday Day at the Spa (4 hours)</li>
+          <li>Annual gift box of premium products</li>
+          <li>Concierge appointment scheduling</li>
+        </ul>
+
+        <a href="member-signup.html?tier=Platinum" class="btn btn--outline btn--block">
+          <i class="fas fa-star"></i> Become Platinum
+        </a>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- Big quote -->
+<section class="section section--dark">
+  <div class="container">
+    <div class="bigquote reveal">
+      <p data-cms="page-membership.quote.quote" data-cms-prop="html">"Membership is not a transaction — it's a <em>standing invitation</em> to your own stillness."</p>
+      <span class="by" data-cms="page-membership.quote.by">— The Taj Al Sukn Promise</span>
+    </div>
+  </div>
+</section>
+
+<!-- Comparison Table -->
+<section class="section section--white">
+  <div class="container container-wide">
+    <div class="s-head reveal">
+      <span class="eyebrow eyebrow--center" data-cms="page-membership.compare.eyebrow">Compare All Tiers</span>
+      <h2 data-cms="page-membership.compare.title">Every benefit, <em>side by side</em>.</h2>
+      <div class="ornament"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0l3 9h9l-7 5 3 10-8-6-8 6 3-10-7-5h9z"/></svg></div>
+    </div>
+
+    <div class="compare-wrap reveal">
+      <table class="compare">
+        <colgroup>
+          <col class="c-benefit">
+          <col class="c-tier">
+          <col class="c-tier">
+          <col class="c-tier">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Benefit</th>
+            <th class="ctier">Silver</th>
+            <th class="ctier ctier--gold">Gold</th>
+            <th class="ctier">Platinum</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="section-row"><td colspan="4">Annual Investment</td></tr>
+          <tr>
+            <td><strong>Price per year</strong></td>
+            <td class="tier-col"><span class="compare__price">150<small>BHD</small></span></td>
+            <td class="tier-col gold-col"><span class="compare__price">350<small>BHD</small></span></td>
+            <td class="tier-col"><span class="compare__price">750<small>BHD</small></span></td>
+          </tr>
+
+          <tr class="section-row"><td colspan="4">Complimentary Services</td></tr>
+          <tr>
+            <td>60-min signature massages</td>
+            <td class="tier-col">2</td>
+            <td class="tier-col gold-col">6</td>
+            <td class="tier-col">Unlimited (2/mo)</td>
+          </tr>
+          <tr>
+            <td>Royal Hammam rituals</td>
+            <td class="tier-col"><i class="fas fa-times"></i></td>
+            <td class="tier-col gold-col">1</td>
+            <td class="tier-col">12 per year</td>
+          </tr>
+          <tr>
+            <td>Foot rituals (reflexology)</td>
+            <td class="tier-col">1</td>
+            <td class="tier-col gold-col">2</td>
+            <td class="tier-col">Unlimited</td>
+          </tr>
+          <tr>
+            <td>Hot Stone sessions</td>
+            <td class="tier-col"><i class="fas fa-times"></i></td>
+            <td class="tier-col gold-col"><i class="fas fa-times"></i></td>
+            <td class="tier-col">4 per year</td>
+          </tr>
+
+          <tr class="section-row"><td colspan="4">Member Pricing</td></tr>
+          <tr>
+            <td>Discount on additional treatments</td>
+            <td class="tier-col">10%</td>
+            <td class="tier-col gold-col">15%</td>
+            <td class="tier-col">20%</td>
+          </tr>
+          <tr>
+            <td>Discount on retail products</td>
+            <td class="tier-col"><i class="fas fa-times"></i></td>
+            <td class="tier-col gold-col">10%</td>
+            <td class="tier-col">20%</td>
+          </tr>
+
+          <tr class="section-row"><td colspan="4">Booking &amp; Privileges</td></tr>
+          <tr>
+            <td>Priority booking window</td>
+            <td class="tier-col">24 hours</td>
+            <td class="tier-col gold-col">48 hours</td>
+            <td class="tier-col">Anytime</td>
+          </tr>
+          <tr>
+            <td>Guest passes per year</td>
+            <td class="tier-col"><i class="fas fa-times"></i></td>
+            <td class="tier-col gold-col">1</td>
+            <td class="tier-col">4</td>
+          </tr>
+          <tr>
+            <td>Personal therapist match</td>
+            <td class="tier-col"><i class="fas fa-times"></i></td>
+            <td class="tier-col gold-col"><i class="fas fa-times"></i></td>
+            <td class="tier-col"><i class="fas fa-check"></i></td>
+          </tr>
+          <tr>
+            <td>Concierge scheduling</td>
+            <td class="tier-col"><i class="fas fa-times"></i></td>
+            <td class="tier-col gold-col"><i class="fas fa-times"></i></td>
+            <td class="tier-col"><i class="fas fa-check"></i></td>
+          </tr>
+
+          <tr class="section-row"><td colspan="4">Welcome &amp; Special Occasions</td></tr>
+          <tr>
+            <td>Welcome ritual on signup</td>
+            <td class="tier-col">Foot Relaxing</td>
+            <td class="tier-col gold-col">Hammam</td>
+            <td class="tier-col">Sultan Suite</td>
+          </tr>
+          <tr>
+            <td>Birthday gift</td>
+            <td class="tier-col">Foot Relaxing</td>
+            <td class="tier-col gold-col">90-min spa journey</td>
+            <td class="tier-col">4-hour spa day</td>
+          </tr>
+          <tr>
+            <td>Annual product gift box</td>
+            <td class="tier-col"><i class="fas fa-times"></i></td>
+            <td class="tier-col gold-col"><i class="fas fa-times"></i></td>
+            <td class="tier-col"><i class="fas fa-check"></i></td>
+          </tr>
+          <tr>
+            <td>Members-only events</td>
+            <td class="tier-col"><i class="fas fa-times"></i></td>
+            <td class="tier-col gold-col"><i class="fas fa-check"></i></td>
+            <td class="tier-col"><i class="fas fa-check"></i></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="text-align: center; margin-top: 50px;" class="reveal">
+      <a href="https://wa.me/97335194422?text=I'd%20like%20to%20learn%20more%20about%20Taj%20Al%20Sukn%20Membership" target="_blank" class="btn btn--whatsapp"><i class="fab fa-whatsapp"></i> Speak with our team</a>
+    </div>
+  </div>
+</section>
+
+<!-- Member Portal Preview -->
+<section class="section section--cream">
+  <div class="container">
+    <div class="s-head reveal">
+      <span class="eyebrow eyebrow--center" data-cms="page-membership.portal.eyebrow">Your Member Account</span>
+      <h2 data-cms="page-membership.portal.title">Track everything in <em>one place</em>.</h2>
+    </div>
+
+    <div class="portal reveal">
+      <div class="portal__copy">
+        <h3>A simple, beautiful <em>member dashboard</em>.</h3>
+        <p>Every Taj Al Sukn member receives a personal account with their balance of complimentary services, upcoming bookings, and member ID for fast checkout.</p>
+        <ul>
+          <li>Track your complimentary services balance in real-time</li>
+          <li>Book using your member ID — no payment needed for included services</li>
+          <li>Apply your member discount automatically at checkout</li>
+          <li>Receive renewal reminders 30 days before expiry</li>
+          <li>Manage guest passes &amp; gift transfers</li>
+        </ul>
+        <a href="member-portal.html" class="btn btn--gold"><i class="fas fa-user-circle"></i> Preview Member Portal</a>
+      </div>
+
+      <div class="portal__card">
+        <div class="portal__card-head">
+          <div class="name">
+            Fatima A.
+            <small>Member since 2025</small>
+          </div>
+          <span class="badge">Gold</span>
+        </div>
+
+        <div class="portal__id">
+          <small>Member ID</small>
+          TAS-2025-0047
+        </div>
+
+        <div class="portal__stats">
+          <div class="portal__stat">
+            <div class="num">4</div>
+            <div class="lbl">Massages Left</div>
+          </div>
+          <div class="portal__stat">
+            <div class="num">1</div>
+            <div class="lbl">Hammams Left</div>
+          </div>
+          <div class="portal__stat">
+            <div class="num">2</div>
+            <div class="lbl">Foot Rituals</div>
+          </div>
+          <div class="portal__stat">
+            <div class="num">15%</div>
+            <div class="lbl">Member Discount</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="section section--cream">
+  <div class="container">
+    <div class="s-head reveal">
+      <span class="eyebrow eyebrow--center" data-cms="page-membership.process.eyebrow">How Membership Works</span>
+      <h2 data-cms="page-membership.process.title">Four simple <em>steps</em>.</h2>
+      <div class="ornament"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0l3 9h9l-7 5 3 10-8-6-8 6 3-10-7-5h9z"/></svg></div>
+    </div>
+
+    <div class="process">
+      <div class="process__step reveal">
+        <div class="process__num">01</div>
+        <h5>Choose Your Tier</h5>
+        <p>Silver, Gold, or Platinum — pick the package that matches your rhythm.</p>
+      </div>
+      <div class="process__step reveal delay-1">
+        <div class="process__num">02</div>
+        <h5>Pay Annually</h5>
+        <p>One-time annual payment via bank transfer or in-spa. No monthly fees.</p>
+      </div>
+      <div class="process__step reveal delay-2">
+        <div class="process__num">03</div>
+        <h5>Welcome Ritual</h5>
+        <p>Receive your member card and complimentary welcome treatment.</p>
+      </div>
+      <div class="process__step reveal delay-3">
+        <div class="process__num">04</div>
+        <h5>Enjoy &amp; Renew</h5>
+        <p>Use your services year-round. Auto-reminder before renewal.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Member Perks Highlights -->
+<section class="section section--white">
+  <div class="container container-wide">
+    <div class="s-head reveal">
+      <span class="eyebrow eyebrow--center">Why Become a Member</span>
+      <h2>The most loved <em>perks</em>.</h2>
+    </div>
+
+    <div class="perks-row">
+      <div class="perk-card reveal">
+        <div class="icon"><i class="fas fa-gift"></i></div>
+        <h5>Pay Once, Save All Year</h5>
+        <p>Up to 40% savings vs. paying per visit. Members save more, every time.</p>
+      </div>
+      <div class="perk-card reveal delay-1">
+        <div class="icon"><i class="fas fa-calendar-check"></i></div>
+        <h5>Priority Booking</h5>
+        <p>Members get first access to evenings, weekends, and seasonal slots.</p>
+      </div>
+      <div class="perk-card reveal delay-2">
+        <div class="icon"><i class="fas fa-user-friends"></i></div>
+        <h5>Bring a Guest</h5>
+        <p>Gold &amp; Platinum members receive guest passes — share the stillness.</p>
+      </div>
+      <div class="perk-card reveal delay-3">
+        <div class="icon"><i class="fas fa-birthday-cake"></i></div>
+        <h5>Birthday Treat</h5>
+        <p>A complimentary celebration ritual on or around your birthday, every year.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Big quote 2 -->
+<section class="section section--dark">
+  <div class="container">
+    <div class="bigquote reveal">
+      <p>"In a year, what feels like an indulgence today becomes <em>a quiet rhythm</em> — one that reshapes you."</p>
+      <span class="by">— Spa Director</span>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section section--cream">
+  <div class="container container-narrow">
+    <div class="s-head reveal">
+      <span class="eyebrow eyebrow--center">Frequently Asked</span>
+      <h2>Questions, <em>answered</em>.</h2>
+    </div>
+    <div class="reveal">
+      <div style="border-bottom: 1px solid var(--c-line); padding: 26px 0;">
+        <h4 style="font-family: var(--f-display); font-weight: 500; margin-bottom: 10px;">How long is membership valid?</h4>
+        <p style="color: var(--c-text-soft);">12 months from the date of activation. Reminders are sent 30 days before renewal.</p>
+      </div>
+      <div style="border-bottom: 1px solid var(--c-line); padding: 26px 0;">
+        <h4 style="font-family: var(--f-display); font-weight: 500; margin-bottom: 10px;">Can I share my membership with family?</h4>
+        <p style="color: var(--c-text-soft);">Memberships are personal, but Gold and Platinum tiers include guest passes for sharing. Family memberships available — speak with our team.</p>
+      </div>
+      <div style="border-bottom: 1px solid var(--c-line); padding: 26px 0;">
+        <h4 style="font-family: var(--f-display); font-weight: 500; margin-bottom: 10px;">What happens if I don't use all my included services?</h4>
+        <p style="color: var(--c-text-soft);">Unused services don't roll over, but you receive renewal incentives if you've used the majority of your benefits in your first year.</p>
+      </div>
+      <div style="border-bottom: 1px solid var(--c-line); padding: 26px 0;">
+        <h4 style="font-family: var(--f-display); font-weight: 500; margin-bottom: 10px;">Can I upgrade from Silver to Gold mid-year?</h4>
+        <p style="color: var(--c-text-soft);">Yes. The pro-rated difference is applied and your benefits upgrade immediately.</p>
+      </div>
+      <div style="border-bottom: 1px solid var(--c-line); padding: 26px 0;">
+        <h4 style="font-family: var(--f-display); font-weight: 500; margin-bottom: 10px;">How do I pay?</h4>
+        <p style="color: var(--c-text-soft);">Pay in person at the spa, by bank transfer, or via our secure online payment link sent over WhatsApp.</p>
+      </div>
+      <div style="padding: 26px 0;">
+        <h4 style="font-family: var(--f-display); font-weight: 500; margin-bottom: 10px;">Are corporate or wellness packages available?</h4>
+        <p style="color: var(--c-text-soft);">Yes — we offer customized corporate wellness memberships for teams of 5 or more. Contact us for details.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section class="section--tight" style="background: var(--c-cream); padding-bottom: 130px;">
+  <div class="container">
+    <div class="cta-banner reveal">
+      <div class="cta-banner__logo"><img src="assets/images/logo.png" alt="" loading="lazy" decoding="async"></div>
+      <div class="cta-banner__content">
+        <span class="eyebrow eyebrow--center" style="color: var(--c-gold);">Begin Your Year of Stillness</span>
+        <h2>Become a <em>member</em> today.</h2>
+        <p>One annual investment — a year of considered care. Choose your tier and we'll prepare everything for your welcome ritual.</p>
+        <div class="cta-banner__actions">
+          <a href="https://wa.me/97335194422?text=I'd%20like%20to%20enroll%20as%20a%20Taj%20Al%20Sukn%20member" target="_blank" class="btn btn--gold"><i class="fab fa-whatsapp"></i> Enroll via WhatsApp</a>
+          <a href="contact.html" class="btn btn--outline-light">Ask a Question</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo-frame"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></span>
+        <h4>Taj Al Sukn</h4>
+        <p data-cms="page-footer.brand.tagline">A modern wellness sanctuary in Manama, blending authentic Arabian rituals with the finest spa traditions of the world.</p>
+        <div class="socials">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://wa.me/97335194422" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Visit</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Experience</h5>
+        <ul>
+          <li><a href="booking.html">Book Online</a></li>
+          <li><a href="membership.html">Membership</a></li>
+              <li><a href="services.html#packages">Packages</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-contact">
+        <h5>Contact</h5>
+        <p><i class="fas fa-map-marker-alt"></i><span data-cms="page-footer.contact.address" data-cms-prop="html">Al Fateh, Manama<br>Complex 324 · Road 2416 · Bld 950</span></p>
+        <p><i class="fas fa-phone"></i><a data-cms="page-footer.contact.phone" href="tel:+973 35194422">+973 35194422</a></p>
+        <p><i class="fas fa-clock"></i><span data-cms="page-footer.contact.hours">Sat – Thu · 10am – 11pm</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span><strong>© <span id="year"></span> Taj Al Sukn Spa W.L.L.</strong> — All rights reserved.</span>
+      <span>CR: 182250-1 · Crafted with care in Manama · <a href="admin-login.html" style="color: rgba(212,184,150,.5); font-weight: 500; margin-left: 8px;">Admin</a></span>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/97335194422" class="wa-float" aria-label="Chat on WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+<!-- Supabase data layer -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="assets/js/supabase-config.js?v=20260514" defer></script>
+<script src="assets/js/taj-data.js?v=20260514" defer></script>
+<script src="assets/js/page-cms.js?v=20260514" defer></script>
+<script src="assets/js/member-auth.js?v=20260511" defer></script>
+<script src="assets/js/main.js?v=20260511" defer></script>
+</body>
+</html>

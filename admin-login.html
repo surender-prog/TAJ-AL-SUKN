@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Sign In — Taj Al Sukn</title>
+<link rel="icon" type="image/png" href="assets/images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="admin-login">
+
+<div class="admin-login__card">
+  <span class="logo-frame"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></span>
+  <h1>Admin Console</h1>
+  <p class="sub">Sign in to manage memberships and bookings.</p>
+
+  <form id="admin-login-form">
+    <div class="field">
+      <label>Email</label>
+      <input type="email" name="email" placeholder="admin@tasukunspa.com" required value="admin@tasukunspa.com">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" name="password" placeholder="••••••••" required value="taj-admin">
+    </div>
+    <div class="field" style="margin-top: 22px;">
+      <button type="submit" class="btn btn--primary btn--block"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+    </div>
+  </form>
+
+  <div class="demo">
+    <strong style="display:block; color: var(--c-deep); margin-bottom: 6px; letter-spacing: 0.18em; font-size: 0.7rem; text-transform: uppercase;">Demo Access</strong>
+    Email: <code>admin@tasukunspa.com</code><br>
+    Password: <code>taj-admin</code>
+  </div>
+
+  <p style="font-size: 0.82rem; color: var(--c-text-soft); margin-top: 22px;">
+    <a href="index.html" style="color: var(--c-copper); font-weight: 500;">← Back to website</a>
+  </p>
+</div>
+
+<script>
+document.getElementById('admin-login-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  if (fd.get('email') === 'admin@tasukunspa.com' && fd.get('password') === 'taj-admin') {
+    sessionStorage.setItem('taj-admin-auth', '1');
+    location.href = 'admin.html';
+  } else {
+    alert('Invalid credentials. Try the demo credentials shown.');
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Services & Treatments — Taj Al Sukn</title>
+<meta name="description" content="The complete Taj Al Sukn menu — massages, hammams, foot rituals, and curated wellness packages.">
+<link rel="icon" type="image/png" href="assets/images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="nav__logo">
+      <span class="logo-frame"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></span>
+      <span class="brand-text"><strong>Taj Al Sukn</strong><small>Spa &amp; Wellness</small></span>
+    </a>
+    <ul class="nav__menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html" class="active">Services</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="membership.html">Membership</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav__cta">
+      <a href="member-signin.html" class="nav__signin"><i class="far fa-user-circle"></i> Sign In</a>
+      <span class="nav__member" id="nav-member-chip" hidden>
+        <span class="nav__member-av" id="nav-member-av">—</span>
+        <span class="nav__member-name" id="nav-member-name">Member</span>
+      </span>
+      <a href="booking.html" class="btn btn--primary"><i class="far fa-calendar-check"></i> Reserve</a>
+      <button class="nav__toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+</header>
+
+<section class="banner">
+  <div class="banner__bg" data-cms="page-services.hero.image" data-cms-prop="bg" style="background-image:url('assets/images/deep-tissue.jpg');"></div>
+  <div class="banner__content reveal visible">
+    <div class="crumb"><a href="index.html">Home</a><span>/</span><span>Services</span></div>
+    <h1 data-cms="page-services.hero.title">Our <em>Treatments</em>.</h1>
+    <p data-cms="page-services.hero.subtitle">Every ritual is unhurried, deeply personal, and crafted to restore.</p>
+  </div>
+</section>
+
+<section class="section section--cream">
+  <div class="container-wide">
+    <div class="s-head reveal">
+      <span class="eyebrow eyebrow--center" data-cms="page-services.intro.eyebrow">Browse the Menu</span>
+      <h2 data-cms="page-services.intro.title">Find your <em>moment</em>.</h2>
+      <div class="ornament"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0l3 9h9l-7 5 3 10-8-6-8 6 3-10-7-5h9z"/></svg></div>
+    </div>
+
+    <div class="tabs reveal">
+      <button class="tab active" data-filter="all">All Treatments</button>
+      <button class="tab" data-filter="massage">Massage</button>
+      <button class="tab" data-filter="hammam">Hammam</button>
+      <button class="tab" data-filter="foot">Foot Rituals</button>
+      <button class="tab" data-filter="signature">Signature</button>
+    </div>
+
+    <div class="svc-grid" id="svc-grid" data-dynamic>
+      <article class="svc-card reveal" data-category="hammam signature">
+        <img src="assets/images/spa-detail-2.jpg" alt="Royal Hammam" loading="lazy" decoding="async">
+        <span class="tag">Signature</span>
+        <div class="svc-card__inner">
+          <h4>Royal Hammam</h4>
+          <p>An indulgent steam ritual featuring exfoliation and cleansing — purifying body and skin.</p>
+          <div class="row"><span class="dur">75 min</span><span class="price">45<small>BHD</small></span></div>
+        </div>
+      </article>
+      <article class="svc-card reveal delay-1" data-category="hammam">
+        <img src="assets/images/spa-detail-1.jpg" alt="Casablanca Hammam" loading="lazy" decoding="async">
+        <span class="tag">Hammam</span>
+        <div class="svc-card__inner">
+          <h4>Casablanca Hammam</h4>
+          <p>A signature wellness ritual combining steam, exfoliation, and cleansing for inner balance.</p>
+          <div class="row"><span class="dur">60 min</span><span class="price">25<small>BHD</small></span></div>
+        </div>
+      </article>
+      <article class="svc-card reveal delay-2" data-category="massage signature">
+        <img src="assets/images/therapist-products.jpg" alt="Argan Oil Massage" loading="lazy" decoding="async">
+        <span class="tag">Signature</span>
+        <div class="svc-card__inner">
+          <h4>Argan Oil Ritual</h4>
+          <p>A luxurious massage using nutrient-rich Moroccan argan to nourish skin and ease tension.</p>
+          <div class="row"><span class="dur">60 / 90 min</span><span class="price">40<small>BHD</small></span></div>
+        </div>
+      </article>
+      <article class="svc-card reveal" data-category="massage signature">
+        <img src="assets/images/deep-tissue.jpg" alt="Deep Tissue" loading="lazy" decoding="async">
+        <span class="tag">Signature</span>
+        <div class="svc-card__inner">
+          <h4>Deep Tissue</h4>
+          <p>Targeted release of chronic tension, improved mobility, and lasting muscular recovery.</p>
+          <div class="row"><span class="dur">60 / 90 min</span><span class="price">30<small>BHD</small></span></div>
+        </div>
+      </article>
+      <article class="svc-card reveal delay-1" data-category="massage">
+        <img src="assets/images/sanctuary-bed.jpg" alt="Swedish" loading="lazy" decoding="async">
+        <span class="tag">Massage</span>
+        <div class="svc-card__inner">
+          <h4>Swedish Massage</h4>
+          <p>A classic full-body massage using gentle to medium pressure to ease tension.</p>
+          <div class="row"><span class="dur">60 / 90 min</span><span class="price">25<small>BHD</small></span></div>
+        </div>
+      </article>
+      <article class="svc-card reveal delay-2" data-category="massage">
+        <img src="assets/images/spa-relax-1.jpg" alt="Balinese" loading="lazy" decoding="async">
+        <span class="tag">Massage</span>
+        <div class="svc-card__inner">
+          <h4>Balinese Massage</h4>
+          <p>A holistic therapy blending gentle stretches, rhythmic strokes, and aromatic oils.</p>
+          <div class="row"><span class="dur">60 / 90 min</span><span class="price">35<small>BHD</small></span></div>
+        </div>
+      </article>
+      <article class="svc-card reveal" data-category="massage">
+        <img src="assets/images/treatment-room.jpg" alt="Royal Thai" loading="lazy" decoding="async">
+        <span class="tag">Massage</span>
+        <div class="svc-card__inner">
+          <h4>Royal Thai</h4>
+          <p>Traditional rhythmic stretching and assisted movements to restore energy flow.</p>
+          <div class="row"><span class="dur">60 / 90 min</span><span class="price">30<small>BHD</small></span></div>
+        </div>
+      </article>
+      <article class="svc-card reveal delay-1" data-category="massage signature">
+        <img src="assets/images/spa-relax-2.jpg" alt="Hot Stone" loading="lazy" decoding="async">
+        <span class="tag">Signature</span>
+        <div class="svc-card__inner">
+          <h4>Hot Stone Therapy</h4>
+          <p>Warm volcanic stones relax muscles, enhance circulation, and promote complete wellbeing.</p>
+          <div class="row"><span class="dur">60 / 90 min</span><span class="price">35<small>BHD</small></span></div>
+        </div>
+      </article>
+      <article class="svc-card reveal delay-2" data-category="massage">
+        <img src="assets/images/lounge-flowers.jpg" alt="Aroma" loading="lazy" decoding="async">
+        <span class="tag">Massage</span>
+        <div class="svc-card__inner">
+          <h4>Aroma Relaxing</h4>
+          <p>A deeply calming massage using aromatic essential oils to ease stress and balance the senses.</p>
+          <div class="row"><span class="dur">60 / 90 min</span><span class="price">35<small>BHD</small></span></div>
+        </div>
+      </article>
+      <article class="svc-card reveal" data-category="foot">
+        <img src="assets/images/spa-relax-3.jpg" alt="Reflexology" loading="lazy" decoding="async">
+        <span class="tag">Foot Ritual</span>
+        <div class="svc-card__inner">
+          <h4>Reflexology</h4>
+          <p>Therapeutic foot massage applying gentle pressure to specific reflexes to ease stress.</p>
+          <div class="row"><span class="dur">30 min</span><span class="price">15<small>BHD</small></span></div>
+        </div>
+      </article>
+      <article class="svc-card reveal delay-1" data-category="foot">
+        <img src="assets/images/therapist-prep.jpg" alt="Foot Relaxing" loading="lazy" decoding="async">
+        <span class="tag">Foot Ritual</span>
+        <div class="svc-card__inner">
+          <h4>Foot Relaxing</h4>
+          <p>A soothing foot massage that relieves fatigue and supports overall balance.</p>
+          <div class="row"><span class="dur">30 min</span><span class="price">10<small>BHD</small></span></div>
+        </div>
+      </article>
+      <article class="svc-card reveal delay-2" data-category="signature massage">
+        <img src="assets/images/couples-massage.jpg" alt="Couples Sanctuary" loading="lazy" decoding="async">
+        <span class="tag">Couple</span>
+        <div class="svc-card__inner">
+          <h4>Couples Sanctuary</h4>
+          <p>A side-by-side experience for two — choose your massage in a private suite with candles &amp; tea.</p>
+          <div class="row"><span class="dur">60 / 90 min</span><span class="price">75<small>BHD</small></span></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section section--dark">
+  <div class="container">
+    <div class="bigquote reveal">
+      <p data-cms="page-services.quote.quote" data-cms-prop="html">"Choose what your body asks for today. <em>Tomorrow may want something else.</em>"</p>
+      <span class="by" data-cms="page-services.quote.by">— Spa Director</span>
+    </div>
+  </div>
+</section>
+
+<section class="section section--cream" id="packages">
+  <div class="container">
+    <div class="s-head reveal">
+      <span class="eyebrow eyebrow--center" data-cms="page-services.packages.eyebrow">Curated Packages</span>
+      <h2 data-cms="page-services.packages.title">The full <em>spa journey</em>.</h2>
+      <div class="ornament"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0l3 9h9l-7 5 3 10-8-6-8 6 3-10-7-5h9z"/></svg></div>
+      <p>Combine our most-loved rituals into one extended escape — and save.</p>
+    </div>
+
+    <div class="svc-list">
+      <div class="svc-row reveal"><span class="svc-row__num">01</span><div class="svc-row__name"><h5>Moroccan Bath + Argan Oil Massage</h5><p>The classic pairing — exfoliating Hammam followed by an argan oil massage.</p></div><span class="svc-row__dur">100 min</span><span class="svc-row__price">60<small>BHD</small></span></div>
+      <div class="svc-row reveal"><span class="svc-row__num">02</span><div class="svc-row__name"><h5>Moroccan Bath + Massage + Waxing</h5><p>A full-care ritual combining Hammam, signature massage, and waxing.</p></div><span class="svc-row__dur">120 min</span><span class="svc-row__price">60<small>BHD</small></span></div>
+      <div class="svc-row reveal"><span class="svc-row__num">03</span><div class="svc-row__name"><h5>Royal Hammam + Massage</h5><p>Our most popular pairing — Royal Hammam followed by a signature massage.</p></div><span class="svc-row__dur">120 min</span><span class="svc-row__price">50<small>BHD</small></span></div>
+      <div class="svc-row reveal"><span class="svc-row__num">04</span><div class="svc-row__name"><h5>Sultan Suite</h5><p>A premium sequence designed for full-day restoration.</p></div><span class="svc-row__dur">120 min</span><span class="svc-row__price">50<small>BHD</small></span></div>
+      <div class="svc-row reveal"><span class="svc-row__num">05</span><div class="svc-row__name"><h5>Massage + Moroccan Bath</h5><p>Choose your massage style and follow with the traditional Moroccan Hammam.</p></div><span class="svc-row__dur">100 min</span><span class="svc-row__price">50<small>BHD</small></span></div>
+      <div class="svc-row reveal"><span class="svc-row__num">06</span><div class="svc-row__name"><h5>Royal Hammam + Luxury Manicure</h5><p>Cleanse, exfoliate, and finish with a luxury manicure ritual.</p></div><span class="svc-row__dur">90 min</span><span class="svc-row__price">50<small>BHD</small></span></div>
+      <div class="svc-row reveal"><span class="svc-row__num">07</span><div class="svc-row__name"><h5>Royal Hammam + Luxury Pedicure</h5><p>The full Royal Hammam followed by a complete luxury pedicure.</p></div><span class="svc-row__dur">90 min</span><span class="svc-row__price">50<small>BHD</small></span></div>
+      <div class="svc-row reveal"><span class="svc-row__num">08</span><div class="svc-row__name"><h5>Moroccan Bath + Mani &amp; Pedicure</h5><p>Full Hammam experience with a classic manicure and pedicure.</p></div><span class="svc-row__dur">100 min</span><span class="svc-row__price">45<small>BHD</small></span></div>
+      <div class="svc-row reveal"><span class="svc-row__num">09</span><div class="svc-row__name"><h5>Balinese Massage + Body Scrub</h5><p>Aromatic Balinese massage paired with an invigorating full-body scrub.</p></div><span class="svc-row__dur">90 min</span><span class="svc-row__price">45<small>BHD</small></span></div>
+      <div class="svc-row reveal"><span class="svc-row__num">10</span><div class="svc-row__name"><h5>Swedish Massage + Brazilian Waxing</h5><p>Our gentle Swedish massage paired with a precise Brazilian wax.</p></div><span class="svc-row__dur">90 min</span><span class="svc-row__price">35<small>BHD</small></span></div>
+      <div class="svc-row reveal"><span class="svc-row__num">11</span><div class="svc-row__name"><h5>Swedish Massage + Jacuzzi</h5><p>Tension-easing Swedish massage followed by a private jacuzzi soak.</p></div><span class="svc-row__dur">90 min</span><span class="svc-row__price">35<small>BHD</small></span></div>
+      <div class="svc-row reveal"><span class="svc-row__num">12</span><div class="svc-row__name"><h5>Massage + Body Scrub</h5><p>Choose your massage and pair it with a full-body exfoliation ritual.</p></div><span class="svc-row__dur">90 min</span><span class="svc-row__price">35<small>BHD</small></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section--tight" style="background: var(--c-cream); padding-bottom: 120px;">
+  <div class="container">
+    <div class="cta-banner reveal">
+      <div class="cta-banner__logo"><img src="assets/images/logo.png" alt="" loading="lazy" decoding="async"></div>
+      <div class="cta-banner__content">
+        <span class="eyebrow eyebrow--center" style="color: var(--c-gold);" data-cms="page-services.cta.eyebrow">Need help choosing?</span>
+        <h2 data-cms="page-services.cta.title">Let our team <em>guide you</em>.</h2>
+        <p data-cms="page-services.cta.body">Tell us how you feel today — we'll recommend the perfect ritual based on your goals.</p>
+        <div class="cta-banner__actions">
+          <a href="booking.html" class="btn btn--gold"><i class="far fa-calendar-check"></i> Reserve a Ritual</a>
+          <a href="https://wa.me/97335194422" target="_blank" class="btn btn--outline-light"><i class="fab fa-whatsapp"></i> Chat with us</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo-frame"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></span>
+        <h4>Taj Al Sukn</h4>
+        <p data-cms="page-footer.brand.tagline">A modern wellness sanctuary in Manama, blending authentic Arabian rituals with the finest spa traditions of the world.</p>
+        <div class="socials">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://wa.me/97335194422" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Visit</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Experience</h5>
+        <ul>
+          <li><a href="booking.html">Book Online</a></li>
+          <li><a href="membership.html">Membership</a></li>
+              <li><a href="services.html#packages">Packages</a></li>
+          <li><a href="services.html">Treatments</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-contact">
+        <h5>Contact</h5>
+        <p><i class="fas fa-map-marker-alt"></i><span data-cms="page-footer.contact.address" data-cms-prop="html">Al Fateh, Manama<br>Complex 324 · Road 2416 · Bld 950</span></p>
+        <p><i class="fas fa-phone"></i><a data-cms="page-footer.contact.phone" href="tel:+973 35194422">+973 35194422</a></p>
+        <p><i class="fas fa-clock"></i><span data-cms="page-footer.contact.hours">Sat – Thu · 10am – 11pm</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span><strong>© <span id="year"></span> Taj Al Sukn Spa W.L.L.</strong> — All rights reserved.</span>
+      <span>CR: 182250-1 · Crafted with care in Manama · <a href="admin-login.html" style="color: rgba(212,184,150,.5); font-weight: 500; margin-left: 8px;">Admin</a></span>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/97335194422" class="wa-float" aria-label="Chat on WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+<!-- Supabase data layer -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="assets/js/supabase-config.js?v=20260514" defer></script>
+<script src="assets/js/taj-data.js?v=20260514" defer></script>
+<script src="assets/js/page-cms.js?v=20260514" defer></script>
+<script src="assets/js/member-auth.js?v=20260511" defer></script>
+<script src="assets/js/main.js?v=20260511" defer></script>
+</body>
+</html>

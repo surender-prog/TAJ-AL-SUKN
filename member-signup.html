@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Become a Member — Taj Al Sukn</title>
+<meta name="description" content="Join the Taj Al Sukn membership — Silver, Gold, or Platinum. Annual packages with complimentary services, member-only pricing, and priority care.">
+<link rel="icon" type="image/png" href="assets/images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="auth-body">
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="nav__logo">
+      <span class="logo-frame"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></span>
+      <span class="brand-text"><strong>Taj Al Sukn</strong><small>Spa &amp; Wellness</small></span>
+    </a>
+    <ul class="nav__menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="membership.html" class="active">Membership</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav__cta">
+      <a href="member-signin.html" class="nav__signin"><i class="far fa-user-circle"></i> Sign In</a>
+      <a href="booking.html" class="btn btn--primary"><i class="far fa-calendar-check"></i> Reserve</a>
+      <button class="nav__toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+</header>
+
+<section class="signup-shell">
+  <div class="signup-shell__bg" style="background-image:url('assets/images/treatment-room.jpg');"></div>
+  <div class="signup-shell__overlay"></div>
+
+  <div class="container container-wide">
+    <div class="signup-head reveal visible">
+      <span class="eyebrow eyebrow--center">JOIN THE CIRCLE</span>
+      <h1>Become a <em>Taj Al Sukn</em> Member.</h1>
+      <p>One year, three tiers, and a generous selection of complimentary signature services — plus member-only pricing on every additional treatment.</p>
+    </div>
+
+    <!-- Stepper -->
+    <div class="wizard-steps reveal visible">
+      <div class="wizard-step is-active" data-step="1">
+        <span class="wizard-step__num">1</span>
+        <span class="wizard-step__label">Your Details</span>
+      </div>
+      <div class="wizard-step__line"></div>
+      <div class="wizard-step" data-step="2">
+        <span class="wizard-step__num">2</span>
+        <span class="wizard-step__label">Choose Tier</span>
+      </div>
+      <div class="wizard-step__line"></div>
+      <div class="wizard-step" data-step="3">
+        <span class="wizard-step__num">3</span>
+        <span class="wizard-step__label">Payment</span>
+      </div>
+      <div class="wizard-step__line"></div>
+      <div class="wizard-step" data-step="4">
+        <span class="wizard-step__num">4</span>
+        <span class="wizard-step__label">Welcome</span>
+      </div>
+    </div>
+
+    <form id="signup-form" class="signup-form reveal visible" novalidate>
+
+      <!-- ========== STEP 1 · Details ========== -->
+      <section class="wizard-panel is-active" data-panel="1">
+        <div class="wizard-panel__head">
+          <h2>Tell us a little about you.</h2>
+          <p>This becomes your member profile — used only to greet you, confirm bookings, and keep your benefits balance current.</p>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="su-first">First Name *</label>
+            <div class="field__input-wrap">
+              <i class="far fa-user"></i>
+              <input type="text" id="su-first" name="first_name" placeholder="Aisha" required autocomplete="given-name">
+            </div>
+          </div>
+          <div class="field">
+            <label for="su-last">Last Name *</label>
+            <div class="field__input-wrap">
+              <i class="far fa-user"></i>
+              <input type="text" id="su-last" name="last_name" placeholder="Al Mansour" required autocomplete="family-name">
+            </div>
+          </div>
+          <div class="field">
+            <label for="su-email">Email Address *</label>
+            <div class="field__input-wrap">
+              <i class="far fa-envelope"></i>
+              <input type="email" id="su-email" name="email" placeholder="you@example.com" required autocomplete="email">
+            </div>
+          </div>
+          <div class="field">
+            <label for="su-phone">WhatsApp / Phone *</label>
+            <div class="field__input-wrap">
+              <i class="fas fa-phone-alt"></i>
+              <input type="tel" id="su-phone" name="phone" placeholder="+973 …" required autocomplete="tel">
+            </div>
+          </div>
+          <div class="field">
+            <label for="su-dob">Date of Birth</label>
+            <div class="field__input-wrap">
+              <i class="far fa-calendar"></i>
+              <input type="date" id="su-dob" name="dob">
+            </div>
+            <small class="field__note">We send a complimentary treatment on your birthday.</small>
+          </div>
+          <div class="field">
+            <label for="su-gender">Preferred Therapist</label>
+            <div class="field__input-wrap">
+              <i class="fas fa-spa"></i>
+              <select id="su-gender" name="therapist_pref">
+                <option value="">No preference</option>
+                <option value="female">Female therapist</option>
+                <option value="male">Male therapist</option>
+              </select>
+            </div>
+          </div>
+          <div class="field full">
+            <label for="su-notes">Health Notes &amp; Preferences</label>
+            <div class="field__input-wrap field__input-wrap--textarea">
+              <i class="far fa-comment-dots"></i>
+              <textarea id="su-notes" name="notes" placeholder="Allergies, sensitivities, areas to focus on, pressure preference, scents to avoid…" rows="3"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <label class="auth-remember">
+          <input type="checkbox" id="su-marketing" checked>
+          <span>Send me seasonal rituals, members-only events, and stillness notes (≈1 email a month).</span>
+        </label>
+
+        <div class="wizard-actions">
+          <div></div>
+          <button type="button" class="btn btn--primary" data-next="2">Continue <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </section>
+
+      <!-- ========== STEP 2 · Choose Tier ========== -->
+      <section class="wizard-panel" data-panel="2">
+        <div class="wizard-panel__head">
+          <h2>Choose your tier.</h2>
+          <p>Each membership is annual and includes complimentary signature services plus member-only pricing on everything else. Upgrade at any time, pro-rated.</p>
+        </div>
+
+        <div class="tier-choose">
+          <label class="tier-choose__card">
+            <input type="radio" name="tier" value="Silver" data-price="150" data-discount="10" data-services="6">
+            <div class="tier-choose__inner">
+              <div class="tier-choose__icon"><i class="fas fa-gem"></i></div>
+              <span class="tier-choose__name">Silver</span>
+              <p class="tier-choose__tag">An invitation to begin.</p>
+              <div class="tier-choose__price"><span class="num">150</span><span class="unit">BHD / year</span></div>
+              <ul>
+                <li><i class="fas fa-check"></i> 6 complimentary signature services</li>
+                <li><i class="fas fa-check"></i> 10% off additional treatments</li>
+                <li><i class="fas fa-check"></i> Priority booking window</li>
+              </ul>
+              <span class="tier-choose__pick">Select Silver</span>
+            </div>
+          </label>
+
+          <label class="tier-choose__card tier-choose__card--popular">
+            <input type="radio" name="tier" value="Gold" data-price="350" data-discount="15" data-services="14" checked>
+            <span class="tier-choose__ribbon">MOST POPULAR</span>
+            <div class="tier-choose__inner">
+              <div class="tier-choose__icon"><i class="fas fa-crown"></i></div>
+              <span class="tier-choose__name">Gold</span>
+              <p class="tier-choose__tag">A generous year of restoration.</p>
+              <div class="tier-choose__price"><span class="num">350</span><span class="unit">BHD / year</span></div>
+              <ul>
+                <li><i class="fas fa-check"></i> 14 complimentary services</li>
+                <li><i class="fas fa-check"></i> 15% off additional treatments</li>
+                <li><i class="fas fa-check"></i> 2 transferable guest passes</li>
+                <li><i class="fas fa-check"></i> Birthday ritual</li>
+              </ul>
+              <span class="tier-choose__pick">Select Gold</span>
+            </div>
+          </label>
+
+          <label class="tier-choose__card">
+            <input type="radio" name="tier" value="Platinum" data-price="750" data-discount="20" data-services="30">
+            <div class="tier-choose__inner">
+              <div class="tier-choose__icon"><i class="fas fa-star"></i></div>
+              <span class="tier-choose__name">Platinum</span>
+              <p class="tier-choose__tag">The fullest expression of care.</p>
+              <div class="tier-choose__price"><span class="num">750</span><span class="unit">BHD / year</span></div>
+              <ul>
+                <li><i class="fas fa-check"></i> 30 complimentary services</li>
+                <li><i class="fas fa-check"></i> 20% off additional treatments</li>
+                <li><i class="fas fa-check"></i> 4 guest passes + paired retreat</li>
+                <li><i class="fas fa-check"></i> Private opening hours access</li>
+              </ul>
+              <span class="tier-choose__pick">Select Platinum</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="wizard-actions">
+          <button type="button" class="btn btn--outline" data-prev="1"><i class="fas fa-arrow-left"></i> Back</button>
+          <button type="button" class="btn btn--primary" data-next="3">Continue to Payment <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </section>
+
+      <!-- ========== STEP 3 · Payment ========== -->
+      <section class="wizard-panel" data-panel="3">
+        <div class="wizard-panel__head">
+          <h2>How would you like to pay?</h2>
+          <p>Your membership begins the moment payment is confirmed. We accept Bahrain's main payment methods plus pay-on-arrival.</p>
+        </div>
+
+        <div class="signup-summary">
+          <div>
+            <span class="signup-summary__label">Selected Tier</span>
+            <div class="signup-summary__val" id="sum-tier">Gold Membership</div>
+          </div>
+          <div>
+            <span class="signup-summary__label">Annual Investment</span>
+            <div class="signup-summary__val signup-summary__val--big" id="sum-price">350 BHD</div>
+          </div>
+        </div>
+
+        <div class="pay-choose">
+          <label class="pay-choose__card">
+            <input type="radio" name="payment_method" value="Card" checked>
+            <div class="pay-choose__inner">
+              <i class="far fa-credit-card"></i>
+              <strong>Credit / Debit Card</strong>
+              <small>Visa, Mastercard, Amex</small>
+            </div>
+          </label>
+          <label class="pay-choose__card">
+            <input type="radio" name="payment_method" value="BenefitPay">
+            <div class="pay-choose__inner">
+              <i class="fas fa-mobile-alt"></i>
+              <strong>BenefitPay</strong>
+              <small>Bahrain wallet · QR</small>
+            </div>
+          </label>
+          <label class="pay-choose__card">
+            <input type="radio" name="payment_method" value="Apple Pay">
+            <div class="pay-choose__inner">
+              <i class="fab fa-apple-pay"></i>
+              <strong>Apple Pay</strong>
+              <small>Touch / Face ID</small>
+            </div>
+          </label>
+          <label class="pay-choose__card">
+            <input type="radio" name="payment_method" value="Bank Transfer">
+            <div class="pay-choose__inner">
+              <i class="fas fa-university"></i>
+              <strong>Bank Transfer</strong>
+              <small>NBB · BHD account</small>
+            </div>
+          </label>
+          <label class="pay-choose__card">
+            <input type="radio" name="payment_method" value="Cash">
+            <div class="pay-choose__inner">
+              <i class="fas fa-money-bill-wave"></i>
+              <strong>Pay on Arrival</strong>
+              <small>Reception · cash</small>
+            </div>
+          </label>
+        </div>
+
+        <!-- Card-specific fields (revealed when "Card" is chosen) -->
+        <div class="pay-detail" id="pay-detail-card">
+          <div class="form-grid">
+            <div class="field full">
+              <label for="pay-card-num">Card Number</label>
+              <div class="field__input-wrap">
+                <i class="far fa-credit-card"></i>
+                <input type="text" id="pay-card-num" placeholder="•••• •••• •••• ••••" inputmode="numeric" maxlength="19">
+              </div>
+            </div>
+            <div class="field">
+              <label for="pay-card-name">Cardholder Name</label>
+              <div class="field__input-wrap">
+                <i class="far fa-user"></i>
+                <input type="text" id="pay-card-name" placeholder="As printed on card">
+              </div>
+            </div>
+            <div class="field" style="grid-template-columns: 1fr 1fr; display:grid; gap:14px;">
+              <div class="field">
+                <label for="pay-exp">Expiry</label>
+                <input type="text" id="pay-exp" placeholder="MM / YY" maxlength="7">
+              </div>
+              <div class="field">
+                <label for="pay-cvv">CVV</label>
+                <input type="text" id="pay-cvv" placeholder="•••" maxlength="4">
+              </div>
+            </div>
+          </div>
+          <p class="field__note"><i class="fas fa-shield-alt" style="color:var(--c-copper);"></i> Card details are tokenised by our PCI-DSS payment processor. We never store full numbers.</p>
+        </div>
+
+        <div class="pay-detail" id="pay-detail-bank" hidden>
+          <div class="bank-info">
+            <h4>Bank Transfer Instructions</h4>
+            <dl>
+              <dt>Account Name</dt><dd>Taj Al Sukn Spa W.L.L.</dd>
+              <dt>Bank</dt><dd>National Bank of Bahrain (NBB)</dd>
+              <dt>Account Number</dt><dd>BH00 NBOB 0000 0000 4400 00</dd>
+              <dt>IBAN</dt><dd>BH00NBOB0000000044000</dd>
+              <dt>Reference</dt><dd>Your name + "Membership"</dd>
+            </dl>
+            <p class="field__note">Once the transfer is sent, send the receipt to <strong>+973 35194422</strong> on WhatsApp. Membership activates within 1 working hour.</p>
+          </div>
+        </div>
+
+        <div class="pay-detail" id="pay-detail-benefit" hidden>
+          <p class="field__note"><i class="fas fa-info-circle" style="color:var(--c-copper);"></i> When you confirm, you'll receive a BenefitPay QR. Scan it inside your BenefitPay app to authorise. Membership activates the moment payment clears.</p>
+        </div>
+
+        <div class="pay-detail" id="pay-detail-apple" hidden>
+          <p class="field__note"><i class="fab fa-apple-pay" style="color:var(--c-copper); font-size:1.4em; vertical-align:-2px;"></i> Touch or Face-ID on your Apple device. We'll prompt automatically when you confirm.</p>
+        </div>
+
+        <div class="pay-detail" id="pay-detail-cash" hidden>
+          <p class="field__note"><i class="fas fa-info-circle" style="color:var(--c-copper);"></i> Bring the membership fee in BHD to reception on your first visit. We'll activate your membership the moment we receive it. Your booking can still be made today — it will hold pending payment.</p>
+        </div>
+
+        <label class="auth-remember">
+          <input type="checkbox" id="su-terms" required>
+          <span>I agree to the <a href="#" style="color:var(--c-copper); text-decoration:underline;">membership terms</a> and <a href="#" style="color:var(--c-copper); text-decoration:underline;">cancellation policy</a>.</span>
+        </label>
+
+        <div class="wizard-actions">
+          <button type="button" class="btn btn--outline" data-prev="2"><i class="fas fa-arrow-left"></i> Back</button>
+          <button type="submit" class="btn btn--gold" id="su-confirm"><i class="fas fa-crown"></i> Confirm &amp; Activate</button>
+        </div>
+      </section>
+
+      <!-- ========== STEP 4 · Welcome ========== -->
+      <section class="wizard-panel wizard-panel--welcome" data-panel="4">
+        <div class="welcome-card">
+          <div class="welcome-card__crown">
+            <i class="fas fa-crown"></i>
+          </div>
+          <span class="eyebrow eyebrow--center">WELCOME TO THE CIRCLE</span>
+          <h2>You're a <em id="welcome-tier">Gold</em> member.</h2>
+          <p>Your membership card is ready. A welcome message and your first complimentary booking link are on the way via WhatsApp.</p>
+
+          <div class="welcome-card__id">
+            <span class="welcome-card__label">YOUR MEMBER ID</span>
+            <strong id="welcome-id">MBR-2026-XXXX</strong>
+          </div>
+
+          <div class="welcome-card__grid">
+            <div>
+              <span class="welcome-card__label">Email</span>
+              <div id="welcome-email">you@example.com</div>
+            </div>
+            <div>
+              <span class="welcome-card__label">WhatsApp</span>
+              <div id="welcome-phone">+973 …</div>
+            </div>
+            <div>
+              <span class="welcome-card__label">Discount</span>
+              <div id="welcome-discount">15% on every treatment</div>
+            </div>
+            <div>
+              <span class="welcome-card__label">Renews</span>
+              <div id="welcome-renews">— · —</div>
+            </div>
+          </div>
+
+          <div class="welcome-card__actions">
+            <a href="member-portal.html" class="btn btn--primary"><i class="fas fa-user-circle"></i> Open My Portal</a>
+            <a href="booking.html" class="btn btn--gold"><i class="far fa-calendar-check"></i> Book Your First Visit</a>
+            <a id="welcome-wa" href="#" target="_blank" class="btn btn--outline"><i class="fab fa-whatsapp"></i> Save Welcome Note</a>
+          </div>
+
+          <p class="field__note" style="margin-top:24px;">
+            <i class="fas fa-info-circle"></i> A copy of your membership has also been sent to <strong>reception</strong> — they'll greet you by name on arrival.
+          </p>
+        </div>
+      </section>
+
+    </form>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo-frame"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></span>
+        <h4>Taj Al Sukn</h4>
+        <p data-cms="page-footer.brand.tagline">A modern wellness sanctuary in Manama, blending authentic Arabian rituals with the finest spa traditions of the world.</p>
+        <div class="socials">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://wa.me/97335194422" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Visit</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Members</h5>
+        <ul>
+          <li><a href="member-signin.html">Sign In</a></li>
+          <li><a href="member-signup.html">Become a Member</a></li>
+          <li><a href="member-portal.html">My Portal</a></li>
+          <li><a href="membership.html">Tiers &amp; Pricing</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-contact">
+        <h5>Contact</h5>
+        <p><i class="fas fa-map-marker-alt"></i><span data-cms="page-footer.contact.address" data-cms-prop="html">Al Fateh, Manama<br>Complex 324 · Road 2416 · Bld 950</span></p>
+        <p><i class="fas fa-phone"></i><a data-cms="page-footer.contact.phone" href="tel:+973 35194422">+973 35194422</a></p>
+        <p><i class="fas fa-clock"></i><span data-cms="page-footer.contact.hours">Sat – Thu · 10am – 11pm</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span><strong>© <span id="year"></span> Taj Al Sukn Spa W.L.L.</strong> — All rights reserved.</span>
+      <span>CR: 182250-1 · Crafted with care in Manama · <a href="admin-login.html" style="color: rgba(212,184,150,.5); font-weight: 500; margin-left: 8px;">Admin</a></span>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/97335194422" class="wa-float" aria-label="Chat on WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+<!-- Supabase data layer -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="assets/js/supabase-config.js?v=20260514" defer></script>
+<script src="assets/js/taj-data.js?v=20260514" defer></script>
+<script src="assets/js/page-cms.js?v=20260514" defer></script>
+<script src="assets/js/member-auth.js?v=20260511" defer></script>
+<script src="assets/js/main.js?v=20260511" defer></script>
+</body>
+</html>

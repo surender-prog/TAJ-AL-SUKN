@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enroll New Member — Taj Al Sukn Admin</title>
+<link rel="icon" type="image/png" href="assets/images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="admin">
+
+<div class="admin-shell">
+
+  <aside class="admin-side">
+    <div class="admin-side__brand">
+      <span class="logo-frame"><img src="assets/images/logo.png" alt="" loading="lazy" decoding="async"></span>
+      <div>
+        <strong>Taj Al Sukn</strong>
+        <small>Admin Console</small>
+      </div>
+    </div>
+
+    <div class="admin-side__label">Workspace</div>
+    <ul class="admin-side__nav">
+      <li><a href="admin.html"><i class="fas fa-th-large"></i> Overview</a></li>
+      <li><a href="admin.html#bookings"><i class="far fa-calendar-check"></i> Bookings</a></li>
+      <li><a href="admin.html#members" class="active"><i class="fas fa-crown"></i> Members</a></li>
+      <li><a href="admin.html#calendar"><i class="far fa-calendar-alt"></i> Calendar</a></li>
+      <li><a href="admin.html#reports"><i class="fas fa-chart-line"></i> Reports</a></li>
+    </ul>
+
+    <div class="admin-side__label">Settings</div>
+    <ul class="admin-side__nav">
+      <li><a href="admin.html#settings"><i class="fas fa-cog"></i> Spa Settings</a></li>
+      <li><a href="index.html"><i class="fas fa-external-link-alt"></i> View Website</a></li>
+    </ul>
+
+    <div class="admin-side__user">
+      <div class="av">A</div>
+      <div>
+        <strong>Admin</strong>
+        <small>admin@tasukunspa.com</small>
+      </div>
+      <a id="admin-logout" title="Sign out" href="#"><i class="fas fa-sign-out-alt"></i></a>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+
+    <div class="admin-bar">
+      <div class="admin-bar__search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search bookings, members, services…">
+      </div>
+      <div class="admin-bar__actions">
+        <a href="admin.html#members" class="btn btn--outline" style="padding: 12px 22px; font-size: 0.7rem;"><i class="fas fa-arrow-left"></i> Back</a>
+        <a href="https://wa.me/97335194422" target="_blank" class="btn btn--primary" style="padding: 12px 22px; font-size: 0.7rem;"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+      </div>
+    </div>
+
+    <div class="admin-content">
+      <div class="admin-page__head">
+        <div>
+          <p style="font-size: 0.74rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--c-text-soft); font-weight: 700; margin-bottom: 6px;">
+            <a href="admin.html" style="color: inherit;">Admin</a> ·
+            <a href="admin.html#members" style="color: inherit;">Members</a> ·
+            <span style="color: var(--c-copper);">New Member</span>
+          </p>
+          <h1>Enroll New Member</h1>
+          <p>Create a new membership, capture payment, and schedule the welcome ritual.</p>
+        </div>
+      </div>
+
+      <div class="booking-builder">
+
+        <!-- LEFT: Form -->
+        <form id="member-form" class="builder-form">
+          <div class="panel">
+
+            <!-- 1. Personal info -->
+            <div class="builder-section">
+              <h4><span class="step-badge">1</span>Personal Information</h4>
+              <p class="help">Basic contact details and identification.</p>
+              <div class="builder-grid">
+                <div class="field"><label>Full Name *</label><input type="text" name="name" required placeholder="e.g. Fatima Ali"></div>
+                <div class="field"><label>Phone *</label><input type="tel" name="phone" required placeholder="+973 …"></div>
+                <div class="field"><label>Email *</label><input type="email" name="email" required placeholder="member@example.com"></div>
+                <div class="field"><label>Date of Birth (optional)</label><input type="date" name="dob"></div>
+                <div class="field full">
+                  <label>Communication Preference</label>
+                  <select name="comm_pref">
+                    <option value="WhatsApp">WhatsApp (preferred)</option>
+                    <option value="Phone">Phone calls</option>
+                    <option value="Email">Email only</option>
+                    <option value="No marketing">No marketing — bookings only</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Tier selection (visual cards) -->
+            <div class="builder-section">
+              <h4><span class="step-badge">2</span>Choose Membership Tier</h4>
+              <p class="help">Each tier includes complimentary services + member-only pricing on additional treatments.</p>
+              <div class="tier-select">
+
+                <label class="tier-pick silver" data-tier="Silver" data-price="150">
+                  <input type="radio" name="tier" value="Silver">
+                  <div class="tier-pick__icon"><i class="fas fa-gem"></i></div>
+                  <span class="tier-pick__tier-label">Silver</span>
+                  <h4 class="tier-pick__name">The Companion</h4>
+                  <p class="tier-pick__sub">An invitation to begin.</p>
+                  <div class="tier-pick__price">150<small>BHD · per year</small></div>
+                  <div class="tier-pick__divider"></div>
+                  <ul>
+                    <li>2 signature massages</li>
+                    <li>1 foot ritual</li>
+                    <li>10% off additional</li>
+                    <li>24-hr priority booking</li>
+                  </ul>
+                </label>
+
+                <label class="tier-pick gold selected" data-tier="Gold" data-price="350">
+                  <input type="radio" name="tier" value="Gold" checked>
+                  <span class="tier-pick__badge">Most Popular</span>
+                  <div class="tier-pick__icon"><i class="fas fa-crown"></i></div>
+                  <span class="tier-pick__tier-label">Gold</span>
+                  <h4 class="tier-pick__name">The Sanctuary</h4>
+                  <p class="tier-pick__sub">A generous year of care.</p>
+                  <div class="tier-pick__price">350<small>BHD · per year</small></div>
+                  <div class="tier-pick__divider"></div>
+                  <ul>
+                    <li>6 signature massages</li>
+                    <li>1 Royal Hammam</li>
+                    <li>2 foot rituals</li>
+                    <li>15% off · 1 guest pass</li>
+                  </ul>
+                </label>
+
+                <label class="tier-pick platinum" data-tier="Platinum" data-price="750">
+                  <input type="radio" name="tier" value="Platinum">
+                  <div class="tier-pick__icon"><i class="fas fa-star"></i></div>
+                  <span class="tier-pick__tier-label">Platinum</span>
+                  <h4 class="tier-pick__name">The Royal Circle</h4>
+                  <p class="tier-pick__sub">The ultimate care.</p>
+                  <div class="tier-pick__price">750<small>BHD · per year</small></div>
+                  <div class="tier-pick__divider"></div>
+                  <ul>
+                    <li>Unlimited massages</li>
+                    <li>12 Royal Hammams</li>
+                    <li>4 hot stone sessions</li>
+                    <li>20% off · 4 guest passes</li>
+                  </ul>
+                </label>
+
+              </div>
+            </div>
+
+            <!-- 3. Welcome Ritual -->
+            <div class="builder-section">
+              <h4><span class="step-badge">3</span>Welcome Ritual</h4>
+              <p class="help">Each new member receives a complimentary welcome treatment, included with enrollment.</p>
+              <div class="welcome-card" id="welcome-card">
+                <div class="icon"><i class="fas fa-spa"></i></div>
+                <div class="body">
+                  <strong id="welcome-ritual-name">Welcome Hammam Ritual</strong>
+                  <p id="welcome-ritual-desc">A complimentary 60-minute hammam to introduce the member to Taj Al Sukn — usually scheduled within 2 weeks of enrollment.</p>
+                </div>
+              </div>
+              <div class="builder-grid" style="margin-top: 16px;">
+                <div class="field">
+                  <label>Schedule For</label>
+                  <input type="date" name="welcome_date" id="welcome-date">
+                </div>
+                <div class="field">
+                  <label>Time</label>
+                  <input type="time" name="welcome_time" value="14:00">
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. Payment -->
+            <div class="builder-section">
+              <h4><span class="step-badge">4</span>Membership Fee Payment</h4>
+              <p class="help">Capture how the annual fee was paid — same options as treatment payments.</p>
+
+              <div class="pay-methods" style="margin-bottom: 18px;">
+                <label class="pay-method selected" data-method="cash">
+                  <input type="radio" name="pay_method" value="cash" checked>
+                  <i class="fas fa-money-bill-wave"></i>
+                  <span class="name">Cash</span>
+                </label>
+                <label class="pay-method" data-method="card">
+                  <input type="radio" name="pay_method" value="card">
+                  <i class="far fa-credit-card"></i>
+                  <span class="name">Card</span>
+                </label>
+                <label class="pay-method" data-method="benefit">
+                  <input type="radio" name="pay_method" value="benefit">
+                  <i class="fas fa-mobile-alt"></i>
+                  <span class="name">BenefitPay</span>
+                </label>
+                <label class="pay-method" data-method="bank">
+                  <input type="radio" name="pay_method" value="bank">
+                  <i class="fas fa-university"></i>
+                  <span class="name">Transfer</span>
+                </label>
+                <label class="pay-method" data-method="apple">
+                  <input type="radio" name="pay_method" value="apple">
+                  <i class="fab fa-apple-pay"></i>
+                  <span class="name">Apple Pay</span>
+                </label>
+              </div>
+
+              <div class="pay-fields show" id="pay-cash-fields">
+                <div class="builder-grid">
+                  <div class="field"><label>Cash Received (BHD)</label><input type="number" name="cash_received" step="0.001" id="cash-received"></div>
+                  <div class="field"><label>Change Given (BHD)</label><input type="number" name="cash_change" id="cash-change" step="0.001" readonly></div>
+                </div>
+              </div>
+              <div class="pay-fields" id="pay-card-fields">
+                <div class="builder-grid">
+                  <div class="field">
+                    <label>Card Type</label>
+                    <select name="card_type"><option>Visa</option><option>Mastercard</option><option>Amex</option><option>Other</option></select>
+                  </div>
+                  <div class="field"><label>Last 4 Digits</label><input type="text" name="card_last4" maxlength="4" placeholder="0000"></div>
+                  <div class="field full"><label>Authorization Code</label><input type="text" name="card_auth" placeholder="Reference / TXN ID"></div>
+                </div>
+              </div>
+              <div class="pay-fields" id="pay-benefit-fields">
+                <div class="builder-grid">
+                  <div class="field full"><label>BenefitPay Reference</label><input type="text" name="benefit_ref" placeholder="BNP-XXXXXXXX"></div>
+                  <div class="field"><label>Sender Phone</label><input type="tel" name="benefit_phone" placeholder="+973 …"></div>
+                </div>
+              </div>
+              <div class="pay-fields" id="pay-bank-fields">
+                <div class="builder-grid">
+                  <div class="field"><label>Bank Name</label><input type="text" name="bank_name" placeholder="e.g. NBB"></div>
+                  <div class="field"><label>Reference</label><input type="text" name="bank_ref" placeholder="Transfer reference"></div>
+                </div>
+              </div>
+              <div class="pay-fields" id="pay-apple-fields">
+                <div class="builder-grid">
+                  <div class="field full"><label>Apple Pay Transaction ID</label><input type="text" name="apple_id" placeholder="TXN-…"></div>
+                </div>
+              </div>
+
+              <div class="builder-grid" style="margin-top: 16px;">
+                <div class="field"><label>Payment Date</label><input type="date" name="paid_date" id="paid-date"></div>
+                <div class="field"><label>Defer Payment?</label>
+                  <select name="defer">
+                    <option value="paid">Paid now (issue receipt)</option>
+                    <option value="pending">Deferred — payment on first visit</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. Notes -->
+            <div class="builder-section">
+              <h4><span class="step-badge">5</span>Notes &amp; Preferences</h4>
+              <div class="builder-grid">
+                <div class="field full">
+                  <label>Internal Notes</label>
+                  <textarea name="notes" rows="3" placeholder="Allergies, preferred therapist, special requests…"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Save bar -->
+            <div class="save-bar">
+              <button type="button" class="btn btn--outline" onclick="history.back()"><i class="fas fa-times"></i> Cancel</button>
+              <div class="spacer"></div>
+              <button type="button" id="save-and-new" class="btn btn--outline"><i class="fas fa-plus"></i> Enroll &amp; New</button>
+              <button type="submit" class="btn btn--primary"><i class="fas fa-crown"></i> Enroll Member &amp; Issue Card</button>
+            </div>
+          </div>
+        </form>
+
+        <!-- RIGHT: Live preview -->
+        <div class="invoice-preview">
+
+          <!-- Member card preview -->
+          <div class="member-preview">
+            <div class="member-preview__head">
+              <div class="logo"><img src="assets/images/logo.png" alt="" loading="lazy" decoding="async"></div>
+              <div class="member-preview__brand">
+                Taj Al Sukn
+                <small>Member Card</small>
+              </div>
+            </div>
+            <div class="member-preview__body">
+              <div class="member-preview__avatar" id="pv-avatar">—</div>
+              <div class="member-preview__name" id="pv-name">New Member</div>
+              <div class="member-preview__id" id="pv-id">TAS-2026-XXXX</div>
+              <div class="member-preview__tier-row">
+                <span class="tier-pill gold" id="pv-tier"><i class="fas fa-crown"></i> Gold Member</span>
+              </div>
+            </div>
+            <div class="member-preview__year">
+              <div>
+                <span class="lbl">Member Since</span>
+                <span class="val" id="pv-since">—</span>
+              </div>
+              <div style="text-align: right;">
+                <span class="lbl">Renews</span>
+                <span class="val" id="pv-renews">—</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tier benefits preview -->
+          <div class="tier-perks-preview" style="margin-top: 18px;">
+            <h5 id="pv-perks-label">Gold Tier Includes</h5>
+            <ul id="pv-perks"></ul>
+          </div>
+
+          <!-- Annual fee summary -->
+          <div class="fee-summary" style="margin-top: 18px;">
+            <h4>Enrollment Summary</h4>
+            <div class="row"><span>Annual Membership Fee</span><strong id="pv-fee">350.000 BHD</strong></div>
+            <div class="row"><span>Welcome Ritual</span><strong style="color: #2a8a4a;">Complimentary</strong></div>
+            <div class="row"><span>Payment Method</span><strong id="pv-pay-method">Cash</strong></div>
+            <div class="row" id="pv-status-row"><span>Status</span><strong id="pv-status" style="color: #2a8a4a;">Paid Now</strong></div>
+            <div class="total">
+              <span class="lbl">Total Today</span>
+              <span class="amt" id="pv-total">350 BHD</span>
+            </div>
+          </div>
+
+          <div class="invoice-preview__hint">
+            <i class="fas fa-info-circle"></i>
+            Live preview — fill the form to see the member card update in real time. The Member ID auto-generates on enrollment.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Supabase data layer -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="assets/js/supabase-config.js?v=20260514" defer></script>
+<script src="assets/js/taj-data.js?v=20260514" defer></script>
+<script src="assets/js/page-cms.js?v=20260514" defer></script>
+<script src="assets/js/admin-shared.js" defer></script>
+<script src="assets/js/admin-new-member.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Approval Feedback — {{PAGE_TITLE}}</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body {
+    width:210mm; min-height:297mm;
+    font-family:'Jost', sans-serif;
+    color:#2A1810;
+    background:#F8F2E7;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+  body {
+    padding:18mm 16mm 14mm;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+  }
+  /* Decorative corner ornaments */
+  body::before, body::after {
+    content:''; position:absolute; width:48mm; height:48mm;
+    background:radial-gradient(circle at center, rgba(176,120,73,0.08) 0%, transparent 70%);
+    pointer-events:none;
+  }
+  body::before { top:-12mm; right:-12mm; }
+  body::after { bottom:-12mm; left:-12mm; }
+
+  .fb-head {
+    border-bottom:1px solid rgba(42,24,16,0.18);
+    padding-bottom:10mm;
+    margin-bottom:9mm;
+    display:flex; align-items:flex-start; justify-content:space-between;
+    gap:12mm;
+  }
+  .fb-brand { display:flex; align-items:center; gap:5mm; }
+  .fb-mark {
+    width:18mm; height:18mm;
+    background:linear-gradient(135deg, #2A1810, #4A2A1A);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    color:#D4B896;
+    font-family:'Cormorant Garamond', serif;
+    font-size:8mm; font-weight:500;
+    letter-spacing:0.3mm;
+    box-shadow:0 4px 12px rgba(42,24,16,0.18);
+  }
+  .fb-brand-text .name {
+    font-family:'Cormorant Garamond', serif;
+    font-size:6.6mm; letter-spacing:0.8mm; color:#2A1810;
+    font-weight:500;
+  }
+  .fb-brand-text .tag {
+    font-size:2.6mm; letter-spacing:2.8mm;
+    color:#B07849; text-transform:uppercase;
+    margin-top:1.4mm;
+  }
+  .fb-meta {
+    text-align:right;
+    font-size:2.8mm; line-height:1.6;
+    color:#5A4636;
+    letter-spacing:0.4mm;
+  }
+  .fb-meta .label {
+    font-size:2.2mm; text-transform:uppercase;
+    letter-spacing:2mm;
+    color:#B07849; margin-bottom:0.8mm;
+  }
+  .fb-meta .v { font-size:3.2mm; color:#2A1810; font-weight:500; }
+
+  .fb-title-block {
+    text-align:center; margin-bottom:9mm;
+  }
+  .fb-eyebrow {
+    font-size:2.6mm; letter-spacing:6mm;
+    color:#B07849; text-transform:uppercase;
+    margin-bottom:3mm;
+  }
+  .fb-title {
+    font-family:'Cormorant Garamond', serif;
+    font-size:12mm; font-weight:400; font-style:italic;
+    color:#2A1810; line-height:1.1;
+    margin-bottom:3mm;
+  }
+  .fb-subtitle {
+    font-size:3.4mm; color:#5A4636;
+    max-width:140mm; margin:0 auto;
+    line-height:1.6;
+  }
+
+  .fb-row {
+    display:grid; grid-template-columns: 1fr 1fr;
+    gap:6mm; margin-bottom:6mm;
+  }
+  .fb-card {
+    background:#FFFCF6;
+    border:1px solid rgba(176,120,73,0.22);
+    border-radius:3mm;
+    padding:6mm 6mm 5mm;
+  }
+  .fb-card-label {
+    font-size:2.4mm; letter-spacing:2.4mm;
+    color:#B07849; text-transform:uppercase;
+    margin-bottom:3mm;
+  }
+  .fb-decision-grid {
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:3mm;
+  }
+  .fb-choice {
+    border:1.2px solid rgba(42,24,16,0.16);
+    border-radius:2mm;
+    padding:4mm 2mm;
+    text-align:center;
+    font-size:3mm;
+    font-weight:500;
+    letter-spacing:0.6mm;
+    color:#2A1810;
+    background:#fff;
+  }
+  .fb-choice .box {
+    display:inline-block;
+    width:3.6mm; height:3.6mm;
+    border:1.4px solid #2A1810;
+    border-radius:0.6mm;
+    margin-right:1.6mm;
+    vertical-align:-0.6mm;
+  }
+  .fb-choice.approve { border-color:#5C7C4A; color:#3F5C2E; background:#F4F8EF; }
+  .fb-choice.revise  { border-color:#C09548; color:#7A5B25; background:#FAF4E5; }
+  .fb-choice.reject  { border-color:#A24747; color:#7C2E2E; background:#F8ECEC; }
+
+  .fb-rating { display:flex; gap:2mm; align-items:center; }
+  .fb-star {
+    width:7mm; height:7mm;
+    border:1.4px solid rgba(42,24,16,0.3);
+    border-radius:50%;
+    display:inline-flex; align-items:center; justify-content:center;
+    color:#B07849;
+    font-size:4mm;
+    background:#fff;
+  }
+  .fb-rating-scale {
+    margin-left:auto; font-size:2.6mm;
+    letter-spacing:0.6mm; color:#5A4636;
+  }
+
+  .fb-notes {
+    flex:1;
+    background:#FFFCF6;
+    border:1px solid rgba(176,120,73,0.22);
+    border-radius:3mm;
+    padding:6mm;
+    display:flex; flex-direction:column;
+    min-height:65mm;
+  }
+  .fb-notes-head {
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:4mm;
+  }
+  .fb-notes-label {
+    font-size:2.6mm; letter-spacing:2.8mm;
+    color:#B07849; text-transform:uppercase;
+  }
+  .fb-notes-hint {
+    font-size:2.4mm; color:#8B7565; font-style:italic;
+  }
+  .fb-notes-lines {
+    flex:1;
+    background-image:repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 7mm,
+      rgba(42,24,16,0.12) 7mm,
+      rgba(42,24,16,0.12) 7.15mm
+    );
+  }
+
+  .fb-checklist {
+    background:#FFFCF6;
+    border:1px solid rgba(176,120,73,0.22);
+    border-radius:3mm;
+    padding:5mm 6mm;
+    margin-bottom:6mm;
+  }
+  .fb-checklist-label {
+    font-size:2.4mm; letter-spacing:2.4mm;
+    color:#B07849; text-transform:uppercase;
+    margin-bottom:3mm;
+  }
+  .fb-checklist-grid {
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap:2mm 6mm;
+  }
+  .fb-check {
+    display:flex; align-items:center; gap:2.4mm;
+    font-size:2.9mm; color:#2A1810;
+  }
+  .fb-check .box {
+    width:3.4mm; height:3.4mm;
+    border:1.2px solid rgba(42,24,16,0.4);
+    border-radius:0.6mm;
+    flex-shrink:0;
+  }
+
+  .fb-sign {
+    margin-top:6mm;
+    display:grid; grid-template-columns: 1fr 1fr;
+    gap:8mm;
+  }
+  .fb-sign-block {
+    border-top:1.4px solid rgba(42,24,16,0.4);
+    padding-top:2.4mm;
+    font-size:2.6mm;
+    color:#5A4636;
+    letter-spacing:0.4mm;
+  }
+  .fb-sign-block .role {
+    font-size:2.2mm; text-transform:uppercase;
+    letter-spacing:1.8mm;
+    color:#B07849;
+    margin-bottom:0.8mm;
+  }
+  .fb-sign-block .name { color:#2A1810; font-weight:500; font-size:3mm; }
+
+  .fb-foot {
+    margin-top:6mm;
+    padding-top:5mm;
+    border-top:1px solid rgba(42,24,16,0.14);
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:2.4mm; color:#8B7565;
+    letter-spacing:0.6mm;
+  }
+  .fb-foot .center {
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic; font-size:3.2mm; color:#B07849;
+  }
+</style>
+</head>
+<body>
+
+<div class="fb-head">
+  <div class="fb-brand">
+    <div class="fb-mark">T</div>
+    <div class="fb-brand-text">
+      <div class="name">TAJ AL SUKN</div>
+      <div class="tag">SPA &amp; WELLNESS</div>
+    </div>
+  </div>
+  <div class="fb-meta">
+    <div class="label">VERSION</div>
+    <div class="v">{{VERSION}}</div>
+    <div style="margin-top:3mm;" class="label">PAGE</div>
+    <div class="v">{{PAGE_TITLE}}</div>
+    <div style="margin-top:3mm;" class="label">DATE</div>
+    <div class="v">{{DATE}}</div>
+  </div>
+</div>
+
+<div class="fb-title-block">
+  <div class="fb-eyebrow">CLIENT APPROVAL</div>
+  <div class="fb-title">Your review &amp; comments</div>
+  <div class="fb-subtitle">Please mark your decision below, rate the design, note any revisions, and sign at the bottom. We'll incorporate every change into the next version.</div>
+</div>
+
+<div class="fb-row">
+  <div class="fb-card">
+    <div class="fb-card-label">DECISION</div>
+    <div class="fb-decision-grid">
+      <div class="fb-choice approve"><span class="box"></span>Approve</div>
+      <div class="fb-choice revise"><span class="box"></span>Revise</div>
+      <div class="fb-choice reject"><span class="box"></span>Redo</div>
+    </div>
+  </div>
+  <div class="fb-card">
+    <div class="fb-card-label">RATING</div>
+    <div class="fb-rating">
+      <span class="fb-star">★</span>
+      <span class="fb-star">★</span>
+      <span class="fb-star">★</span>
+      <span class="fb-star">★</span>
+      <span class="fb-star">★</span>
+      <span class="fb-rating-scale">/ 5</span>
+    </div>
+  </div>
+</div>
+
+<div class="fb-checklist">
+  <div class="fb-checklist-label">QUICK CHECKLIST</div>
+  <div class="fb-checklist-grid">
+    <div class="fb-check"><span class="box"></span>Brand colors look right</div>
+    <div class="fb-check"><span class="box"></span>Typography reads well</div>
+    <div class="fb-check"><span class="box"></span>Imagery matches our story</div>
+    <div class="fb-check"><span class="box"></span>Layout flows naturally</div>
+    <div class="fb-check"><span class="box"></span>Copy is accurate &amp; tone-true</div>
+    <div class="fb-check"><span class="box"></span>Pricing &amp; offers correct</div>
+    <div class="fb-check"><span class="box"></span>Contact details correct</div>
+    <div class="fb-check"><span class="box"></span>Mobile experience considered</div>
+  </div>
+</div>
+
+<div class="fb-notes">
+  <div class="fb-notes-head">
+    <div class="fb-notes-label">COMMENTS &amp; CHANGE REQUESTS</div>
+    <div class="fb-notes-hint">Please be as specific as possible · reference section, element, copy line</div>
+  </div>
+  <div class="fb-notes-lines"></div>
+</div>
+
+<div class="fb-sign">
+  <div class="fb-sign-block">
+    <div class="role">REVIEWED BY</div>
+    <div class="name">&nbsp;</div>
+  </div>
+  <div class="fb-sign-block">
+    <div class="role">SIGNATURE &amp; DATE</div>
+    <div class="name">&nbsp;</div>
+  </div>
+</div>
+
+<div class="fb-foot">
+  <div>Taj Al Sukn Spa &amp; Wellness · Manama, Bahrain</div>
+  <div class="center">"the crown of stillness"</div>
+  <div>WhatsApp +973 35194422</div>
+</div>
+
+</body>
+</html>

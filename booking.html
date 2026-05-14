@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book an Appointment — Taj Al Sukn</title>
+<meta name="description" content="Reserve your spa ritual at Taj Al Sukn online. Choose service, date, and time.">
+<link rel="icon" type="image/png" href="assets/images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="nav__logo">
+      <span class="logo-frame"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></span>
+      <span class="brand-text"><strong>Taj Al Sukn</strong><small>Spa &amp; Wellness</small></span>
+    </a>
+    <ul class="nav__menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="membership.html">Membership</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav__cta">
+      <a href="member-signin.html" class="nav__signin"><i class="far fa-user-circle"></i> Sign In</a>
+      <span class="nav__member" id="nav-member-chip" hidden>
+        <span class="nav__member-av" id="nav-member-av">—</span>
+        <span class="nav__member-name" id="nav-member-name">Member</span>
+      </span>
+      <a href="booking.html" class="btn btn--primary"><i class="far fa-calendar-check"></i> Reserve</a>
+      <button class="nav__toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+</header>
+
+<section class="banner" style="min-height: 50vh;">
+  <div class="banner__bg" style="background-image:url('assets/images/treatment-room.jpg');"></div>
+  <div class="banner__content reveal visible">
+    <div class="crumb"><a href="index.html">Home</a><span>/</span><span>Reserve</span></div>
+    <h1>Reserve your <em>moment</em>.</h1>
+    <p>Pick a treatment, date, and time — we'll confirm via WhatsApp instantly.</p>
+  </div>
+</section>
+
+<section class="section section--cream">
+  <div class="container">
+
+    <div class="steps reveal">
+      <div class="step active"><div class="step__num">1</div><div class="step__label">Member Status</div></div>
+      <div class="step active"><div class="step__num">2</div><div class="step__label">Choose Service</div></div>
+      <div class="step active"><div class="step__num">3</div><div class="step__label">Date &amp; Details</div></div>
+      <div class="step"><div class="step__num"><i class="fas fa-check" style="font-size: 14px;"></i></div><div class="step__label">Confirm</div></div>
+    </div>
+
+    <div class="editorial" style="gap: 50px; align-items: flex-start;">
+
+      <form id="booking-form" class="form-card reveal">
+
+        <!-- Signed-in member banner (shown when a member session is active) -->
+        <div id="member-banner" class="member-banner" hidden>
+          <div class="member-banner__left">
+            <span class="member-banner__avatar" id="mb-avatar">—</span>
+            <div>
+              <span class="member-banner__hello">Welcome back, <strong id="mb-first">Member</strong></span>
+              <div class="member-banner__meta">
+                <span id="mb-tier-chip" class="member-banner__chip">Gold Member</span>
+                <span class="member-banner__id">· <strong id="mb-id">MBR-—</strong></span>
+                <span class="member-banner__discount">· <strong id="mb-discount">15%</strong> off auto-applied</span>
+              </div>
+            </div>
+          </div>
+          <div class="member-banner__right">
+            <a href="member-portal.html" class="member-banner__link"><i class="fas fa-user-circle"></i> My Portal</a>
+            <a href="#" id="mb-switch" class="member-banner__link member-banner__link--ghost"><i class="fas fa-sign-out-alt"></i> Not you?</a>
+          </div>
+          <!-- Hidden form fields so the booking still carries the member info -->
+          <input type="hidden" name="member_tier" id="member-tier-hidden">
+          <input type="hidden" name="member_id" id="member-id-hidden">
+        </div>
+
+        <!-- Guest member-toggle (shown when NOT signed in) -->
+        <div id="member-toggle" class="member-toggle">
+          <div class="member-toggle__head" id="member-toggle-head">
+            <span class="label"><i class="fas fa-crown"></i> Are you a Taj Al Sukn member?</span>
+            <span class="switch"></span>
+          </div>
+          <div class="member-toggle__body">
+            <p style="color: rgba(255,255,255,.78); font-size: 0.92rem; margin-bottom: 18px;">Welcome back. Enter your tier and member ID to apply your benefits and discount automatically. Or <a href="member-signin.html" style="color: var(--c-gold); font-weight: 600; text-decoration: underline;">sign in</a> to skip this step next time.</p>
+            <div class="member-toggle__row">
+              <div>
+                <label>Membership Tier</label>
+                <select name="member_tier" id="member-tier">
+                  <option value="">Select tier…</option>
+                  <option value="Silver" data-discount="10">Silver — 10% off</option>
+                  <option value="Gold" data-discount="15">Gold — 15% off</option>
+                  <option value="Platinum" data-discount="20">Platinum — 20% off</option>
+                </select>
+              </div>
+              <div>
+                <label>Member ID</label>
+                <input type="text" name="member_id" id="member-id" placeholder="TAS-2025-XXXX">
+              </div>
+            </div>
+            <p style="font-size: 0.82rem; color: rgba(255,255,255,.65); margin-top: 14px;">
+              <i class="fas fa-info-circle" style="color: var(--c-gold); margin-right: 6px;"></i>
+              Don't have a membership yet? <a href="membership.html" style="color: var(--c-gold); font-weight: 600; text-decoration: underline;">Become a member</a> and start saving today.
+            </p>
+          </div>
+        </div>
+
+        <h3 style="font-family: var(--f-display); font-weight: 500; margin-bottom: 8px;">Choose Your Treatment</h3>
+        <p style="color: var(--c-text-soft); font-size: 0.94rem; margin-bottom: 24px;">Select one — you can refine details further down.</p>
+
+        <div class="svc-pick" id="svc-pick" data-dynamic>
+          <label class="pick selected" data-name="Royal Hammam" data-price="45">
+            <input type="radio" name="service" value="Royal Hammam" checked>
+            <span class="dot"></span>
+            <div class="info"><h6>Royal Hammam</h6><span>75 min · Signature</span></div>
+            <span class="price">45<small style="font-size:0.65rem; letter-spacing:0.18em; color:var(--c-text-soft); margin-left:4px; font-style:normal; font-family: var(--f-body); font-weight: 600;">BHD</small></span>
+          </label>
+          <label class="pick" data-name="Casablanca Hammam" data-price="25">
+            <input type="radio" name="service" value="Casablanca Hammam">
+            <span class="dot"></span>
+            <div class="info"><h6>Casablanca Hammam</h6><span>60 min</span></div>
+            <span class="price">25<small style="font-size:0.65rem; letter-spacing:0.18em; color:var(--c-text-soft); margin-left:4px; font-style:normal; font-family: var(--f-body); font-weight: 600;">BHD</small></span>
+          </label>
+          <label class="pick" data-name="Argan Oil Massage" data-price="40">
+            <input type="radio" name="service" value="Argan Oil Massage">
+            <span class="dot"></span>
+            <div class="info"><h6>Argan Oil Ritual</h6><span>60 min · Signature</span></div>
+            <span class="price">40<small style="font-size:0.65rem; letter-spacing:0.18em; color:var(--c-text-soft); margin-left:4px; font-style:normal; font-family: var(--f-body); font-weight: 600;">BHD</small></span>
+          </label>
+          <label class="pick" data-name="Hot Stone Massage" data-price="35">
+            <input type="radio" name="service" value="Hot Stone Massage">
+            <span class="dot"></span>
+            <div class="info"><h6>Hot Stone Therapy</h6><span>60 min · Signature</span></div>
+            <span class="price">35<small style="font-size:0.65rem; letter-spacing:0.18em; color:var(--c-text-soft); margin-left:4px; font-style:normal; font-family: var(--f-body); font-weight: 600;">BHD</small></span>
+          </label>
+          <label class="pick" data-name="Aroma Relaxing Massage" data-price="35">
+            <input type="radio" name="service" value="Aroma Relaxing Massage">
+            <span class="dot"></span>
+            <div class="info"><h6>Aroma Relaxing</h6><span>60 min</span></div>
+            <span class="price">35<small style="font-size:0.65rem; letter-spacing:0.18em; color:var(--c-text-soft); margin-left:4px; font-style:normal; font-family: var(--f-body); font-weight: 600;">BHD</small></span>
+          </label>
+          <label class="pick" data-name="Balinese Massage" data-price="35">
+            <input type="radio" name="service" value="Balinese Massage">
+            <span class="dot"></span>
+            <div class="info"><h6>Balinese Massage</h6><span>60 min</span></div>
+            <span class="price">35<small style="font-size:0.65rem; letter-spacing:0.18em; color:var(--c-text-soft); margin-left:4px; font-style:normal; font-family: var(--f-body); font-weight: 600;">BHD</small></span>
+          </label>
+          <label class="pick" data-name="Swedish Massage" data-price="25">
+            <input type="radio" name="service" value="Swedish Massage">
+            <span class="dot"></span>
+            <div class="info"><h6>Swedish Massage</h6><span>60 min</span></div>
+            <span class="price">25<small style="font-size:0.65rem; letter-spacing:0.18em; color:var(--c-text-soft); margin-left:4px; font-style:normal; font-family: var(--f-body); font-weight: 600;">BHD</small></span>
+          </label>
+          <label class="pick" data-name="Deep Tissue Massage" data-price="30">
+            <input type="radio" name="service" value="Deep Tissue Massage">
+            <span class="dot"></span>
+            <div class="info"><h6>Deep Tissue</h6><span>60 min · Signature</span></div>
+            <span class="price">30<small style="font-size:0.65rem; letter-spacing:0.18em; color:var(--c-text-soft); margin-left:4px; font-style:normal; font-family: var(--f-body); font-weight: 600;">BHD</small></span>
+          </label>
+          <label class="pick" data-name="Reflexology" data-price="15">
+            <input type="radio" name="service" value="Reflexology Foot Massage">
+            <span class="dot"></span>
+            <div class="info"><h6>Reflexology</h6><span>30 min</span></div>
+            <span class="price">15<small style="font-size:0.65rem; letter-spacing:0.18em; color:var(--c-text-soft); margin-left:4px; font-style:normal; font-family: var(--f-body); font-weight: 600;">BHD</small></span>
+          </label>
+          <label class="pick" data-name="Royal Hammam + Massage Package" data-price="50">
+            <input type="radio" name="service" value="Royal Hammam + Massage Package">
+            <span class="dot"></span>
+            <div class="info"><h6>Hammam + Massage</h6><span>120 min · Package</span></div>
+            <span class="price">50<small style="font-size:0.65rem; letter-spacing:0.18em; color:var(--c-text-soft); margin-left:4px; font-style:normal; font-family: var(--f-body); font-weight: 600;">BHD</small></span>
+          </label>
+        </div>
+
+        <h3 style="font-family: var(--f-display); font-weight: 500; margin: 36px 0 8px;">Pick Date &amp; Time</h3>
+        <div class="form-grid">
+          <div class="field">
+            <label>Date</label>
+            <input type="date" name="date" required>
+          </div>
+          <div class="field">
+            <label>Time</label>
+            <select name="time" required>
+              <option value="">Select…</option>
+              <option>10:00 AM</option><option>11:00 AM</option><option>12:00 PM</option>
+              <option>1:00 PM</option><option>2:00 PM</option><option>3:00 PM</option>
+              <option>4:00 PM</option><option>5:00 PM</option><option>6:00 PM</option>
+              <option>7:00 PM</option><option>8:00 PM</option><option>9:00 PM</option><option>10:00 PM</option>
+            </select>
+          </div>
+        </div>
+
+        <h3 style="font-family: var(--f-display); font-weight: 500; margin: 36px 0 8px;">Your Details</h3>
+        <div class="form-grid">
+          <div class="field"><label>Full Name</label><input type="text" name="name" required placeholder="Your name"></div>
+          <div class="field"><label>Phone</label><input type="tel" name="phone" required placeholder="+973 …"></div>
+          <div class="field full"><label>Email (optional)</label><input type="email" name="email" placeholder="you@email.com"></div>
+          <div class="field full"><label>Notes / Special Requests</label><textarea name="notes" placeholder="Any preferences or notes for your visit?"></textarea></div>
+          <div class="full">
+            <button type="submit" class="btn btn--primary btn--block"><i class="fab fa-whatsapp"></i> Confirm via WhatsApp</button>
+          </div>
+        </div>
+
+        <p style="margin-top: 22px; color: var(--c-text-soft); font-size: 0.88rem; text-align: center;">
+          <i class="fas fa-lock" style="color: var(--c-copper); margin-right: 6px;"></i>
+          Your details go directly to our reception team. We'll confirm within minutes.
+        </p>
+      </form>
+
+      <div class="summary reveal delay-1">
+        <h4>Booking Summary</h4>
+        <div class="row"><span>Guest</span><strong id="sum-name">—</strong></div>
+        <div class="row"><span>Service</span><strong id="sum-service">Royal Hammam</strong></div>
+        <div class="row"><span>Date</span><strong id="sum-date">—</strong></div>
+        <div class="row"><span>Time</span><strong id="sum-time">—</strong></div>
+        <div class="row"><span>Service Fee</span><strong id="sum-price">45 BHD</strong></div>
+        <div class="row discount" id="sum-member-row" style="display:none;"><span id="sum-member-label">Member Discount</span><strong id="sum-discount">— 0 BHD</strong></div>
+        <div class="total">
+          <span class="lbl">Total</span>
+          <span class="amt" id="sum-total">45 BHD</span>
+        </div>
+
+        <div id="sum-member-badge" style="display:none; background: linear-gradient(135deg, var(--c-gold), var(--c-copper-2)); color: var(--c-deep); padding: 12px 18px; border-radius: var(--r-sm); margin-top: 22px; text-align: center; font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700;">
+          <i class="fas fa-crown" style="margin-right: 8px;"></i><span id="sum-member-tier">Gold</span> Member Pricing Applied
+        </div>
+
+        <div style="background: #fff; padding: 22px; border-radius: var(--r-md); margin-top: 22px; border: 1px solid var(--c-line);">
+          <h5 style="font-family: var(--f-body); font-size: 0.72rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--c-text-soft); margin-bottom: 12px; font-weight: 600;">Need Help?</h5>
+          <p style="font-size: 0.92rem; color: var(--c-text-soft); margin-bottom: 14px;">Our team is on WhatsApp now and happy to help you choose.</p>
+          <a href="https://wa.me/97335194422" target="_blank" class="btn btn--whatsapp btn--block"><i class="fab fa-whatsapp"></i> Chat with us</a>
+        </div>
+
+        <div style="margin-top: 24px; font-size: 0.85rem; color: var(--c-text-soft);">
+          <p style="margin-bottom: 8px;"><i class="fas fa-clock" style="color: var(--c-copper); margin-right: 8px;"></i>Sat–Thu 10am–11pm · Fri 2pm–11pm</p>
+          <p><i class="fas fa-map-marker-alt" style="color: var(--c-copper); margin-right: 8px;"></i>Al Fateh, Manama · Bld 950</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why Book Online -->
+<section class="section section--white">
+  <div class="container">
+    <div class="s-head reveal">
+      <span class="eyebrow eyebrow--center">Why Book Online</span>
+      <h2>Simple, fast, <em>flexible</em>.</h2>
+    </div>
+    <div class="values">
+      <div class="value reveal"><span class="num"><i class="far fa-clock" style="font-size: 2.4rem;"></i></span><h4>Instant Confirmation</h4><p>Booking confirmed within minutes via WhatsApp.</p></div>
+      <div class="value reveal delay-1"><span class="num"><i class="fas fa-redo-alt" style="font-size: 2.4rem;"></i></span><h4>Free Reschedule</h4><p>Change plans? Let us know up to 4 hours in advance.</p></div>
+      <div class="value reveal delay-2"><span class="num"><i class="fas fa-shield-alt" style="font-size: 2.4rem;"></i></span><h4>No Pre-Payment</h4><p>Pay securely on-site at the time of your visit.</p></div>
+      <div class="value reveal delay-3"><span class="num"><i class="fas fa-headset" style="font-size: 2.4rem;"></i></span><h4>Real Humans</h4><p>A real person from our team will reply — not an auto-bot.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Member upsell -->
+<section class="section--tight" style="background: var(--c-cream); padding: 60px 0 120px;">
+  <div class="container">
+    <div class="cta-banner reveal">
+      <div class="cta-banner__logo"><img src="assets/images/logo.png" alt="" loading="lazy" decoding="async"></div>
+      <div class="cta-banner__content">
+        <span class="eyebrow eyebrow--center" style="color: var(--c-gold);">Save 10–20% on Every Visit</span>
+        <h2>Become a <em>member</em>, save on every booking.</h2>
+        <p>Silver, Gold, or Platinum — annual memberships include free services and member-only pricing.</p>
+        <div class="cta-banner__actions">
+          <a href="membership.html" class="btn btn--gold"><i class="fas fa-crown"></i> Explore Memberships</a>
+          <a href="https://wa.me/97335194422" target="_blank" class="btn btn--outline-light"><i class="fab fa-whatsapp"></i> Ask a Question</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo-frame"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></span>
+        <h4>Taj Al Sukn</h4>
+        <p data-cms="page-footer.brand.tagline">A modern wellness sanctuary in Manama, blending authentic Arabian rituals with the finest spa traditions of the world.</p>
+        <div class="socials">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://wa.me/97335194422" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Visit</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Experience</h5>
+        <ul>
+          <li><a href="booking.html">Book Online</a></li>
+          <li><a href="membership.html">Membership</a></li>
+              <li><a href="services.html#packages">Packages</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-contact">
+        <h5>Contact</h5>
+        <p><i class="fas fa-map-marker-alt"></i><span data-cms="page-footer.contact.address" data-cms-prop="html">Al Fateh, Manama<br>Complex 324 · Road 2416 · Bld 950</span></p>
+        <p><i class="fas fa-phone"></i><a data-cms="page-footer.contact.phone" href="tel:+973 35194422">+973 35194422</a></p>
+        <p><i class="fas fa-clock"></i><span data-cms="page-footer.contact.hours">Sat – Thu · 10am – 11pm</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span><strong>© <span id="year"></span> Taj Al Sukn Spa W.L.L.</strong> — All rights reserved.</span>
+      <span>CR: 182250-1 · Crafted with care in Manama · <a href="admin-login.html" style="color: rgba(212,184,150,.5); font-weight: 500; margin-left: 8px;">Admin</a></span>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/97335194422" class="wa-float" aria-label="Chat on WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+<!-- Supabase data layer -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="assets/js/supabase-config.js?v=20260514" defer></script>
+<script src="assets/js/taj-data.js?v=20260514" defer></script>
+<script src="assets/js/page-cms.js?v=20260514" defer></script>
+<script src="assets/js/member-auth.js?v=20260511" defer></script>
+<script src="assets/js/main.js?v=20260511" defer></script>
+</body>
+</html>

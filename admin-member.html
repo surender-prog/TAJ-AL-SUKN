@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Member Profile — Taj Al Sukn Admin</title>
+<link rel="icon" type="image/png" href="assets/images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="admin">
+
+<div class="admin-shell">
+
+  <aside class="admin-side">
+    <div class="admin-side__brand">
+      <span class="logo-frame"><img src="assets/images/logo.png" alt="" loading="lazy" decoding="async"></span>
+      <div>
+        <strong>Taj Al Sukn</strong>
+        <small>Admin Console</small>
+      </div>
+    </div>
+
+    <div class="admin-side__label">Workspace</div>
+    <ul class="admin-side__nav">
+      <li><a href="admin.html"><i class="fas fa-th-large"></i> Overview</a></li>
+      <li><a href="admin.html#bookings"><i class="far fa-calendar-check"></i> Bookings</a></li>
+      <li><a href="admin.html#members" class="active"><i class="fas fa-crown"></i> Members</a></li>
+      <li><a href="admin.html#calendar"><i class="far fa-calendar-alt"></i> Calendar</a></li>
+      <li><a href="admin.html#reports"><i class="fas fa-chart-line"></i> Reports</a></li>
+    </ul>
+
+    <div class="admin-side__label">Settings</div>
+    <ul class="admin-side__nav">
+      <li><a href="admin.html#settings"><i class="fas fa-cog"></i> Spa Settings</a></li>
+      <li><a href="index.html"><i class="fas fa-external-link-alt"></i> View Website</a></li>
+    </ul>
+
+    <div class="admin-side__user">
+      <div class="av">A</div>
+      <div>
+        <strong>Admin</strong>
+        <small>admin@tasukunspa.com</small>
+      </div>
+      <a id="admin-logout" title="Sign out" href="#"><i class="fas fa-sign-out-alt"></i></a>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+
+    <div class="admin-bar">
+      <div class="admin-bar__search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search bookings, members, services…">
+      </div>
+      <div class="admin-bar__actions">
+        <a href="admin.html#members" class="btn btn--outline" style="padding: 12px 22px; font-size: 0.7rem;"><i class="fas fa-arrow-left"></i> Back</a>
+        <a href="https://wa.me/97335194422" target="_blank" class="btn btn--primary" style="padding: 12px 22px; font-size: 0.7rem;"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+      </div>
+    </div>
+
+    <div class="admin-content">
+
+      <div class="admin-page__head">
+        <div>
+          <p style="font-size: 0.74rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--c-text-soft); font-weight: 700; margin-bottom: 6px;">
+            <a href="admin.html" style="color: inherit;">Admin</a> ·
+            <a href="admin.html#members" style="color: inherit;">Members</a> ·
+            <span style="color: var(--c-copper);" id="crumb-id">—</span>
+          </p>
+          <h1>Member Profile</h1>
+          <p>View benefits, usage, booking history, and manage this member's account.</p>
+        </div>
+      </div>
+
+      <!-- Member Banner -->
+      <div class="member-banner">
+        <div class="member-banner__avatar" id="mb-avatar">FA</div>
+        <div class="member-banner__copy">
+          <span class="member-banner__id" id="mb-id">TAS-2025-XXXX</span>
+          <h1 id="mb-name">Member Name</h1>
+          <div class="meta">
+            <span><i class="far fa-calendar-alt"></i><span id="mb-since">Member since —</span></span>
+            <span><i class="fas fa-redo-alt"></i><span id="mb-renews">Renews —</span></span>
+            <span><i class="fas fa-percent"></i><span id="mb-discount">— member discount</span></span>
+          </div>
+        </div>
+        <div class="member-banner__side">
+          <span class="tier-pill" id="mb-tier">TIER</span>
+          <strong id="mb-lifetime">— BHD</strong>
+          <span class="lvl-label">Lifetime Spend</span>
+        </div>
+      </div>
+
+      <!-- Year progress -->
+      <div class="year-progress">
+        <div class="year-progress__head">
+          <span class="lbl">Membership Year Progress</span>
+          <span class="pct" id="yp-pct">0%</span>
+        </div>
+        <div class="year-progress__bar">
+          <div class="year-progress__fill" id="yp-fill" style="width: 0%;"></div>
+        </div>
+        <div class="year-progress__foot">
+          <span><strong id="yp-start">—</strong> <span style="color:var(--c-text-soft); margin-left:4px;">started</span></span>
+          <span id="yp-days">— days remaining</span>
+          <span><span style="color:var(--c-text-soft); margin-right:4px;">renews</span> <strong id="yp-end">—</strong></span>
+        </div>
+      </div>
+
+      <!-- Two-column detail -->
+      <div class="book-detail">
+
+        <!-- LEFT: main content -->
+        <div class="book-detail__main">
+
+          <!-- Personal info -->
+          <div class="info-block">
+            <div class="info-block__head">
+              <h3><i class="fas fa-user"></i> Personal Information</h3>
+              <button class="edit"><i class="fas fa-pen" style="margin-right:6px;"></i> Edit</button>
+            </div>
+            <div class="info-row">
+              <div>
+                <span class="lbl">Full Name</span>
+                <span class="val lg" id="p-name">—</span>
+              </div>
+              <div>
+                <span class="lbl">Phone</span>
+                <span class="val"><a id="p-phone-link" href="tel:">—</a></span>
+              </div>
+              <div>
+                <span class="lbl">Email</span>
+                <span class="val"><a id="p-email-link" href="mailto:">—</a></span>
+              </div>
+              <div>
+                <span class="lbl">Member ID</span>
+                <span class="val"><code style="font-family: 'Courier New', monospace; color: var(--c-copper); font-weight: 600;" id="p-id">—</code></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Membership Plan & Balance -->
+          <div class="info-block">
+            <div class="info-block__head">
+              <h3><i class="fas fa-crown"></i> Membership Balance</h3>
+              <button class="edit" id="edit-balance"><i class="fas fa-pen" style="margin-right:6px;"></i> Adjust</button>
+            </div>
+            <p style="color:var(--c-text-soft); font-size:0.92rem; margin-bottom:18px; margin-top:-8px;">Complimentary services remaining for this membership year.</p>
+            <ul class="balance-list" id="balance-list"></ul>
+          </div>
+
+          <!-- Tier perks -->
+          <div class="info-block">
+            <div class="info-block__head">
+              <h3><i class="fas fa-gem"></i> Tier Perks</h3>
+              <a href="membership.html" target="_blank" class="edit"><i class="fas fa-external-link-alt" style="margin-right:6px;"></i> Compare Tiers</a>
+            </div>
+            <ul class="perks-list-mini" id="perks-list"></ul>
+          </div>
+
+          <!-- Booking history -->
+          <div class="info-block">
+            <div class="info-block__head">
+              <h3><i class="far fa-calendar-check"></i> Booking History</h3>
+              <span style="color:var(--c-text-soft); font-size:0.78rem; letter-spacing:0.18em; text-transform:uppercase; font-weight:600;" id="bh-count">0 bookings</span>
+            </div>
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Date</th>
+                  <th>Service</th>
+                  <th class="r">Total</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="history-body"></tbody>
+            </table>
+          </div>
+
+          <!-- Notes -->
+          <div class="info-block">
+            <div class="info-block__head">
+              <h3><i class="fas fa-sticky-note"></i> Member Notes &amp; Preferences</h3>
+              <button class="edit" id="save-notes"><i class="fas fa-save" style="margin-right:6px;"></i> Save</button>
+            </div>
+            <textarea class="notes-area" id="notes" placeholder="Allergies, preferred therapist, communication preferences, special accommodations…"></textarea>
+          </div>
+
+          <!-- Activity timeline -->
+          <div class="info-block">
+            <div class="info-block__head">
+              <h3><i class="far fa-clock"></i> Activity History</h3>
+            </div>
+            <ul class="timeline" id="timeline"></ul>
+          </div>
+
+        </div>
+
+        <!-- RIGHT: sidebar -->
+        <div class="book-detail__side">
+
+          <!-- Lifetime stats -->
+          <div class="action-card">
+            <h4>Lifetime Statistics</h4>
+            <div class="lifetime-stats">
+              <div class="lifetime-stat">
+                <div class="num" id="ls-visits">0</div>
+                <span class="lbl">Total Visits</span>
+              </div>
+              <div class="lifetime-stat">
+                <div class="num" id="ls-spend">0</div>
+                <span class="lbl">Total Spent (BHD)</span>
+              </div>
+              <div class="lifetime-stat">
+                <div class="num" id="ls-saved">0</div>
+                <span class="lbl">Discount Saved</span>
+              </div>
+              <div class="lifetime-stat">
+                <div class="num" id="ls-avg">0</div>
+                <span class="lbl">Avg / Visit</span>
+              </div>
+            </div>
+            <div class="renew-callout" id="ls-fav" style="margin-top: 16px;">
+              <strong>Most Booked</strong>
+              <p id="ls-favorite">—</p>
+            </div>
+          </div>
+
+          <!-- Quick actions -->
+          <div class="action-card">
+            <h4>Membership Actions</h4>
+            <div class="stack">
+              <a id="qa-book" href="#" class="btn btn--primary"><i class="far fa-calendar-plus"></i> Create Booking</a>
+              <button class="btn btn--gold" id="renew-btn"><i class="fas fa-redo-alt"></i> Renew Membership</button>
+              <button class="btn btn--outline" id="upgrade-btn"><i class="fas fa-arrow-up"></i> Upgrade Tier</button>
+              <button class="btn btn--outline" id="freeze-btn"><i class="fas fa-pause"></i> Freeze Membership</button>
+              <button class="btn btn--outline" id="cancel-btn" style="border-color:#c44a3d; color:#c44a3d;"><i class="fas fa-times"></i> Cancel Membership</button>
+            </div>
+          </div>
+
+          <!-- Communication -->
+          <div class="action-card">
+            <h4>Contact Member</h4>
+            <div class="stack">
+              <a id="ac-call" href="tel:" class="btn btn--outline"><i class="fas fa-phone"></i> Call</a>
+              <a id="ac-wa" target="_blank" href="#" class="btn btn--whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+              <a id="ac-email" href="mailto:" class="btn btn--outline"><i class="fas fa-envelope"></i> Email</a>
+            </div>
+          </div>
+
+          <!-- Renewal info -->
+          <div class="action-card">
+            <h4>Renewal Status</h4>
+            <div id="renewal-info">
+              <div style="font-family: var(--f-display); font-size: 1.6rem; color: var(--c-deep); font-weight: 500; line-height: 1.2;" id="renewal-status">Active</div>
+              <p style="font-size: 0.85rem; color: var(--c-text-soft); margin-top: 6px;" id="renewal-detail">— days until renewal</p>
+              <div class="renew-callout" id="renewal-callout" style="display:none;">
+                <strong id="rc-title">—</strong>
+                <p id="rc-msg">—</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- Supabase data layer -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="assets/js/supabase-config.js?v=20260514" defer></script>
+<script src="assets/js/taj-data.js?v=20260514" defer></script>
+<script src="assets/js/page-cms.js?v=20260514" defer></script>
+<script src="assets/js/admin-shared.js" defer></script>
+<script src="assets/js/admin-member.js" defer></script>
+</body>
+</html>

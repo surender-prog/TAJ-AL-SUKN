@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Member Sign In — Taj Al Sukn</title>
+<meta name="description" content="Sign in to your Taj Al Sukn member account — view your benefits, balance, bookings, and complimentary services.">
+<link rel="icon" type="image/png" href="assets/images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="auth-body">
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="nav__logo">
+      <span class="logo-frame"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></span>
+      <span class="brand-text"><strong>Taj Al Sukn</strong><small>Spa &amp; Wellness</small></span>
+    </a>
+    <ul class="nav__menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="membership.html">Membership</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav__cta">
+      <a href="member-signin.html" class="nav__signin active"><i class="far fa-user-circle"></i> Sign In</a>
+      <a href="booking.html" class="btn btn--primary"><i class="far fa-calendar-check"></i> Reserve</a>
+      <button class="nav__toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+</header>
+
+<section class="auth-shell">
+  <div class="auth-shell__bg" style="background-image:url('assets/images/spa-foyer.jpg');"></div>
+  <div class="auth-shell__overlay"></div>
+
+  <div class="auth-shell__inner">
+    <!-- Brand panel -->
+    <aside class="auth-side reveal visible">
+      <div class="auth-side__crown">
+        <i class="fas fa-crown"></i>
+      </div>
+      <span class="auth-side__eyebrow">MEMBER ACCESS</span>
+      <h1>Welcome back<br>to your <em>sanctuary</em>.</h1>
+      <p>Sign in to see your benefits balance, upcoming visits, and member-only pricing. Every member is part of a quiet circle of regulars who know us by name.</p>
+
+      <ul class="auth-side__bullets">
+        <li><i class="fas fa-check-circle"></i> View your annual complimentary services</li>
+        <li><i class="fas fa-check-circle"></i> Track upcoming bookings and history</li>
+        <li><i class="fas fa-check-circle"></i> Apply member-only pricing automatically</li>
+        <li><i class="fas fa-check-circle"></i> Send guest passes and gift treatments</li>
+      </ul>
+
+      <div class="auth-side__quote">
+        <span class="auth-side__quote-mark">"</span>
+        I forget what city I'm in when I close the door behind me. Stillness, on schedule.
+        <span class="auth-side__quote-attr">— Mariam H. · Gold Member, 2 years</span>
+      </div>
+    </aside>
+
+    <!-- Form panel -->
+    <main class="auth-main">
+      <div class="auth-card reveal visible">
+        <div class="auth-card__crown">
+          <span class="logo-frame"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></span>
+        </div>
+        <div class="auth-card__head">
+          <span class="eyebrow eyebrow--center">SIGN IN</span>
+          <h2>Your stillness, <em>organized</em>.</h2>
+          <p>Enter your member ID and the phone number you registered with.</p>
+        </div>
+
+        <form id="signin-form" class="auth-form" novalidate>
+          <div class="field">
+            <label for="si-id">Member ID</label>
+            <div class="field__input-wrap">
+              <i class="fas fa-id-card"></i>
+              <input type="text" id="si-id" name="member_id" placeholder="MBR-001 or TAS-2025-XXXX" autocomplete="username" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="si-phone">
+              Phone Number
+              <a href="#" class="field__hint" id="forgot-id">Forgot ID?</a>
+            </label>
+            <div class="field__input-wrap">
+              <i class="fas fa-phone-alt"></i>
+              <input type="tel" id="si-phone" name="phone" placeholder="+973 …" autocomplete="tel" required>
+            </div>
+          </div>
+
+          <label class="auth-remember">
+            <input type="checkbox" id="si-remember" checked>
+            <span>Keep me signed in on this device</span>
+          </label>
+
+          <div class="auth-error" id="si-error" hidden>
+            <i class="fas fa-exclamation-circle"></i>
+            <span>We couldn't find that combination. Please check and try again.</span>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--block">
+            <i class="fas fa-arrow-right-to-bracket"></i> Sign In
+          </button>
+
+          <div class="auth-or"><span>or</span></div>
+
+          <a href="https://wa.me/97335194422?text=I%20need%20help%20signing%20in%20to%20my%20Taj%20Al%20Sukn%20member%20account" target="_blank" class="btn btn--outline btn--block">
+            <i class="fab fa-whatsapp"></i> Sign in via WhatsApp
+          </a>
+        </form>
+
+        <p class="auth-foot">
+          New to Taj Al Sukn?
+          <a href="member-signup.html"><strong>Become a member</strong> <i class="fas fa-arrow-right" style="font-size:0.7em;"></i></a>
+        </p>
+
+        <div class="auth-demo" id="auth-demo">
+          <span class="auth-demo__label">
+            DEMO CREDENTIALS
+            <a href="#" id="reset-demo" class="auth-demo__reset" title="Reset demo data">Reset</a>
+          </span>
+          <div class="auth-demo__row">
+            <div>
+              <code>MBR-001</code> · <code>+973 39112233</code>
+              <span class="auth-demo__tier">Gold</span>
+            </div>
+            <button type="button" class="auth-demo__btn" data-fill="MBR-001|+973 39112233">Use</button>
+          </div>
+          <div class="auth-demo__row">
+            <div>
+              <code>MBR-002</code> · <code>+973 33558822</code>
+              <span class="auth-demo__tier auth-demo__tier--platinum">Platinum</span>
+            </div>
+            <button type="button" class="auth-demo__btn" data-fill="MBR-002|+973 33558822">Use</button>
+          </div>
+          <p class="auth-demo__hint">Click <strong>Use</strong> to instantly sign in. Or type the ID and phone above and tap Sign In.</p>
+        </div>
+      </div>
+
+      <p class="auth-meta">
+        <i class="fas fa-shield-alt"></i> Your details are kept private and used only to verify your membership.
+      </p>
+    </main>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo-frame"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></span>
+        <h4>Taj Al Sukn</h4>
+        <p data-cms="page-footer.brand.tagline">A modern wellness sanctuary in Manama, blending authentic Arabian rituals with the finest spa traditions of the world.</p>
+        <div class="socials">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://wa.me/97335194422" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Visit</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Members</h5>
+        <ul>
+          <li><a href="member-signin.html">Sign In</a></li>
+          <li><a href="member-signup.html">Become a Member</a></li>
+          <li><a href="member-portal.html">My Portal</a></li>
+          <li><a href="membership.html">Tiers &amp; Pricing</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-contact">
+        <h5>Contact</h5>
+        <p><i class="fas fa-map-marker-alt"></i><span data-cms="page-footer.contact.address" data-cms-prop="html">Al Fateh, Manama<br>Complex 324 · Road 2416 · Bld 950</span></p>
+        <p><i class="fas fa-phone"></i><a data-cms="page-footer.contact.phone" href="tel:+973 35194422">+973 35194422</a></p>
+        <p><i class="fas fa-clock"></i><span data-cms="page-footer.contact.hours">Sat – Thu · 10am – 11pm</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span><strong>© <span id="year"></span> Taj Al Sukn Spa W.L.L.</strong> — All rights reserved.</span>
+      <span>CR: 182250-1 · Crafted with care in Manama · <a href="admin-login.html" style="color: rgba(212,184,150,.5); font-weight: 500; margin-left: 8px;">Admin</a></span>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/97335194422" class="wa-float" aria-label="Chat on WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+<!-- Supabase data layer -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="assets/js/supabase-config.js?v=20260514" defer></script>
+<script src="assets/js/taj-data.js?v=20260514" defer></script>
+<script src="assets/js/page-cms.js?v=20260514" defer></script>
+<script src="assets/js/member-auth.js?v=20260511" defer></script>
+<script src="assets/js/main.js?v=20260511" defer></script>
+</body>
+</html>

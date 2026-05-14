@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Editor — Taj Al Sukn Admin</title>
+<link rel="icon" type="image/png" href="assets/images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="admin">
+
+<div class="admin-shell">
+
+  <!-- Sidebar -->
+  <aside class="admin-side">
+    <div class="admin-side__brand">
+      <span class="logo-frame"><img src="assets/images/logo.png" alt="" loading="lazy" decoding="async"></span>
+      <div>
+        <strong>Taj Al Sukn</strong>
+        <small>Admin Console</small>
+      </div>
+    </div>
+    <div class="admin-side__label">Workspace</div>
+    <ul class="admin-side__nav">
+      <li><a href="admin.html"><i class="fas fa-th-large"></i> Overview</a></li>
+      <li><a href="admin.html#bookings"><i class="far fa-calendar-check"></i> Bookings</a></li>
+      <li><a href="admin.html#members"><i class="fas fa-crown"></i> Members</a></li>
+      <li><a href="admin.html#calendar"><i class="far fa-calendar-alt"></i> Calendar</a></li>
+      <li><a href="admin.html#reports"><i class="fas fa-chart-line"></i> Reports</a></li>
+    </ul>
+    <div class="admin-side__label">Settings</div>
+    <ul class="admin-side__nav">
+      <li><a href="admin.html#settings" class="active"><i class="fas fa-cog"></i> Spa Settings</a></li>
+      <li><a href="index.html"><i class="fas fa-external-link-alt"></i> View Website</a></li>
+    </ul>
+    <div class="admin-side__user">
+      <div class="av">A</div>
+      <div><strong>Admin</strong><small>admin@tasukunspa.com</small></div>
+      <a id="admin-logout" title="Sign out" href="#"><i class="fas fa-sign-out-alt"></i></a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="admin-main">
+
+    <div class="admin-bar">
+      <div class="admin-bar__search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search services…">
+      </div>
+      <div class="admin-bar__actions">
+        <a href="admin.html#settings" class="btn btn--outline" style="padding: 12px 22px; font-size: 0.7rem;"><i class="fas fa-arrow-left"></i> Back to Settings</a>
+      </div>
+    </div>
+
+    <div class="admin-content service-editor-page">
+      <div class="admin-page__head">
+        <div>
+          <p style="font-size: 0.74rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--c-text-soft); font-weight: 700; margin-bottom: 6px;">
+            <a href="admin.html" style="color: inherit;">Admin</a> ·
+            <a href="admin.html#settings" style="color: inherit;">Settings</a> ·
+            <a href="admin.html#sg-services" style="color: inherit;">Services</a> ·
+            <span style="color: var(--c-copper);" id="crumb-mode">New Service</span>
+          </p>
+          <h1 id="page-title">Add a New Service</h1>
+          <p id="page-sub">Define the treatment, its categories, pricing, and where it appears across the site.</p>
+        </div>
+        <div class="pay-status-pill" id="service-status-pill">
+          <i class="far fa-clock"></i> Draft
+        </div>
+      </div>
+
+      <form id="service-form" class="pay-grid">
+
+        <!-- ============ LEFT: Main fields ============ -->
+        <section class="pay-main">
+
+          <!-- Identity -->
+          <div class="panel">
+            <div class="panel__head">
+              <h3><i class="fas fa-spa" style="color:var(--c-copper); margin-right:10px;"></i>Service Details</h3>
+            </div>
+            <div class="form-grid">
+              <div class="field full">
+                <label for="sv-name">Service Name *</label>
+                <div class="field__input-wrap">
+                  <i class="fas fa-tag"></i>
+                  <input type="text" id="sv-name" name="name" placeholder="e.g. Royal Hammam" required>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="sv-category">Category *</label>
+                <div class="field__input-wrap">
+                  <i class="fas fa-layer-group"></i>
+                  <select id="sv-category" name="category" required>
+                    <option value="Hammam">Hammam</option>
+                    <option value="Massage">Massage</option>
+                    <option value="Foot">Foot Ritual</option>
+                    <option value="Face">Face / Skincare</option>
+                    <option value="Body">Body Treatment</option>
+                    <option value="Couple">Couple</option>
+                    <option value="Package">Package</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="sv-tag">Highlight Tag (optional)</label>
+                <div class="field__input-wrap">
+                  <i class="fas fa-star"></i>
+                  <select id="sv-tag" name="tag">
+                    <option value="">— None —</option>
+                    <option value="Signature">Signature</option>
+                    <option value="Most Popular">Most Popular</option>
+                    <option value="New">New</option>
+                    <option value="Limited">Limited</option>
+                    <option value="Member Only">Member Only</option>
+                  </select>
+                </div>
+                <small class="field__note">Shown on the service card on the public site.</small>
+              </div>
+
+              <div class="field full">
+                <label for="sv-description">Description *</label>
+                <div class="field__input-wrap field__input-wrap--textarea">
+                  <i class="far fa-comment-alt"></i>
+                  <textarea id="sv-description" name="description" rows="3" placeholder="A short, evocative description shown on the service card and booking page." required></textarea>
+                </div>
+              </div>
+
+              <div class="field full">
+                <label for="sv-long">Full Description (optional)</label>
+                <div class="field__input-wrap field__input-wrap--textarea">
+                  <i class="far fa-file-alt"></i>
+                  <textarea id="sv-long" name="long_description" rows="4" placeholder="Longer copy for the booking detail page — benefits, what to expect, contraindications."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pricing & duration -->
+          <div class="panel">
+            <div class="panel__head">
+              <h3><i class="fas fa-clock" style="color:var(--c-copper); margin-right:10px;"></i>Duration &amp; Pricing</h3>
+            </div>
+            <div class="form-grid">
+              <div class="field">
+                <label for="sv-duration">Duration *</label>
+                <div class="field__input-wrap">
+                  <i class="far fa-clock"></i>
+                  <input type="text" id="sv-duration" name="duration" placeholder="e.g. 60 min or 60 / 90 min" required>
+                </div>
+                <small class="field__note">For dual options, write <code>60 / 90 min</code>.</small>
+              </div>
+
+              <div class="field">
+                <label for="sv-price">Starting Price (BHD) *</label>
+                <div class="field__input-wrap">
+                  <i class="fas fa-tag"></i>
+                  <input type="number" id="sv-price" name="price" min="0" step="0.001" placeholder="35" required>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="sv-price2">Alt Price (BHD, optional)</label>
+                <div class="field__input-wrap">
+                  <i class="fas fa-tag"></i>
+                  <input type="number" id="sv-price2" name="price_alt" min="0" step="0.001" placeholder="e.g. 50">
+                </div>
+                <small class="field__note">For 60/90 min — alt is the longer-duration price.</small>
+              </div>
+
+              <div class="field">
+                <label for="sv-member-price">Member Price (BHD, optional)</label>
+                <div class="field__input-wrap">
+                  <i class="fas fa-crown"></i>
+                  <input type="number" id="sv-member-price" name="member_price" min="0" step="0.001" placeholder="Auto = base × (1 − tier discount)">
+                </div>
+                <small class="field__note">Leave blank to use tier discount automatically.</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Image -->
+          <div class="panel">
+            <div class="panel__head">
+              <h3><i class="far fa-image" style="color:var(--c-copper); margin-right:10px;"></i>Service Image</h3>
+            </div>
+            <div class="svc-img-row">
+              <div class="svc-img-preview" id="svc-img-preview">
+                <span class="svc-img-preview__placeholder"><i class="far fa-image"></i> No image set</span>
+              </div>
+              <div style="flex:1;">
+                <div class="field">
+                  <label for="sv-image">Image URL</label>
+                  <div class="field__input-wrap">
+                    <i class="far fa-image"></i>
+                    <input type="text" id="sv-image" name="image" placeholder="assets/images/spa-detail-2.jpg or https://…">
+                  </div>
+                </div>
+                <div class="svc-img-suggest">
+                  <span class="svc-img-suggest__label">QUICK PICKS</span>
+                  <div class="svc-img-suggest__grid" id="svc-img-suggest"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visibility & flags -->
+          <div class="panel">
+            <div class="panel__head">
+              <h3><i class="fas fa-eye" style="color:var(--c-copper); margin-right:10px;"></i>Visibility &amp; Flags</h3>
+            </div>
+            <div class="svc-flags">
+              <label class="svc-flag">
+                <input type="checkbox" id="sv-show-web" checked>
+                <div>
+                  <strong>Show on Website</strong>
+                  <small>Appears in <code>services.html</code> grid &amp; on home page.</small>
+                </div>
+              </label>
+              <label class="svc-flag">
+                <input type="checkbox" id="sv-show-book" checked>
+                <div>
+                  <strong>Bookable</strong>
+                  <small>Appears in the booking-form treatment picker.</small>
+                </div>
+              </label>
+              <label class="svc-flag">
+                <input type="checkbox" id="sv-featured">
+                <div>
+                  <strong>Featured</strong>
+                  <small>Promoted to the home page "Treatments" rail.</small>
+                </div>
+              </label>
+              <label class="svc-flag">
+                <input type="checkbox" id="sv-member-only">
+                <div>
+                  <strong>Member Only</strong>
+                  <small>Hidden from guests; visible &amp; bookable for members only.</small>
+                </div>
+              </label>
+            </div>
+
+            <div class="form-grid" style="margin-top:18px;">
+              <div class="field">
+                <label for="sv-status">Status</label>
+                <div class="field__input-wrap">
+                  <i class="fas fa-toggle-on"></i>
+                  <select id="sv-status" name="status">
+                    <option value="active">Active</option>
+                    <option value="hidden">Hidden</option>
+                    <option value="draft">Draft</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field">
+                <label for="sv-sort">Sort Order</label>
+                <div class="field__input-wrap">
+                  <i class="fas fa-sort-numeric-down"></i>
+                  <input type="number" id="sv-sort" name="sort" min="0" step="1" value="100">
+                </div>
+                <small class="field__note">Lower numbers appear first.</small>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ============ RIGHT: Live preview ============ -->
+        <aside class="pay-summary">
+          <div class="panel">
+            <div class="panel__head">
+              <h3><i class="fas fa-window-maximize" style="color:var(--c-copper); margin-right:10px;"></i>Card Preview</h3>
+            </div>
+            <p class="panel__hint" style="margin: 0 0 14px;">How this service will appear on the public site:</p>
+
+            <article class="svc-card svc-card--preview">
+              <img id="prev-img" src="assets/images/spa-detail-1.jpg" alt="" loading="lazy" decoding="async">
+              <span class="tag" id="prev-tag" style="display:none;">Signature</span>
+              <div class="svc-card__inner">
+                <h4 id="prev-name">Service Name</h4>
+                <p id="prev-desc">Short description.</p>
+                <div class="row">
+                  <span class="dur" id="prev-dur">— min</span>
+                  <span class="price"><span id="prev-price">0</span><small>BHD</small></span>
+                </div>
+              </div>
+            </article>
+
+            <div class="svc-preview-meta">
+              <div><span>Category</span><strong id="prev-cat">—</strong></div>
+              <div><span>Status</span><strong id="prev-status">—</strong></div>
+              <div><span>Member Discount</span><strong id="prev-mdisc">Auto</strong></div>
+              <div><span>Visible to</span><strong id="prev-aud">Everyone</strong></div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Footer actions -->
+        <div class="pay-footer">
+          <a href="admin.html#sg-services" class="btn btn--outline"><i class="fas fa-times"></i> Cancel</a>
+          <button type="button" class="btn btn--outline" id="delete-svc" hidden><i class="fas fa-trash"></i> Delete</button>
+          <div class="spacer" style="flex:1"></div>
+          <button type="submit" class="btn btn--gold pay-footer__primary">
+            <i class="fas fa-check-circle"></i>
+            <span id="save-label">Save Service</span>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </main>
+</div>
+
+<!-- Supabase data layer -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="assets/js/supabase-config.js?v=20260514" defer></script>
+<script src="assets/js/taj-data.js?v=20260514" defer></script>
+<script src="assets/js/page-cms.js?v=20260514" defer></script>
+<script src="assets/js/admin-shared.js" defer></script>
+<script src="assets/js/admin-service.js" defer></script>
+</body>
+</html>

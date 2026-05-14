@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Taj Al Sukn</title>
+<meta name="description" content="Reach Taj Al Sukn — phone, WhatsApp, location, and inquiry form.">
+<link rel="icon" type="image/png" href="assets/images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="nav__logo">
+      <span class="logo-frame"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></span>
+      <span class="brand-text"><strong>Taj Al Sukn</strong><small>Spa &amp; Wellness</small></span>
+    </a>
+    <ul class="nav__menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="membership.html">Membership</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+    <div class="nav__cta">
+      <a href="member-signin.html" class="nav__signin"><i class="far fa-user-circle"></i> Sign In</a>
+      <span class="nav__member" id="nav-member-chip" hidden>
+        <span class="nav__member-av" id="nav-member-av">—</span>
+        <span class="nav__member-name" id="nav-member-name">Member</span>
+      </span>
+      <a href="booking.html" class="btn btn--primary"><i class="far fa-calendar-check"></i> Reserve</a>
+      <button class="nav__toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+</header>
+
+<section class="banner">
+  <div class="banner__bg" data-cms="page-contact.hero.image" data-cms-prop="bg" style="background-image:url('assets/images/reception-desk.jpg');"></div>
+  <div class="banner__content reveal visible">
+    <div class="crumb"><a href="index.html">Home</a><span>/</span><span>Contact</span></div>
+    <h1 data-cms="page-contact.hero.title">We'd love to <em>hear from you</em>.</h1>
+    <p data-cms="page-contact.hero.subtitle">Reach us by phone, WhatsApp, or the form below — we reply quickly.</p>
+  </div>
+</section>
+
+<section class="section section--cream">
+  <div class="container">
+    <div class="info-grid">
+      <div class="info-card reveal">
+        <div class="icon"><i class="fas fa-phone"></i></div>
+        <h5>Call Us</h5>
+        <p><a href="tel:+97335194422" style="color: inherit;">+973 35194422</a></p>
+        <p style="font-size: 0.85rem; color: var(--c-muted); margin-top: 6px;"><a href="tel:+97377924422" style="color: inherit;">+973 77924422</a></p>
+      </div>
+      <div class="info-card reveal delay-1">
+        <div class="icon"><i class="fab fa-whatsapp"></i></div>
+        <h5>WhatsApp</h5>
+        <p><a href="https://wa.me/97335194422" target="_blank" style="color: inherit;">+973 35194422</a></p>
+        <p style="font-size: 0.85rem; color: var(--c-muted); margin-top: 6px;">Fastest response</p>
+      </div>
+      <div class="info-card reveal delay-2">
+        <div class="icon"><i class="fas fa-envelope"></i></div>
+        <h5>Email</h5>
+        <p><a href="mailto:hello@tasukunspa.com" style="color: inherit;">hello@tasukunspa.com</a></p>
+        <p style="font-size: 0.85rem; color: var(--c-muted); margin-top: 6px;">Within 24 hours</p>
+      </div>
+      <div class="info-card reveal delay-3">
+        <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+        <h5>Location</h5>
+        <p>Al Fateh, Manama</p>
+        <p style="font-size: 0.85rem; color: var(--c-muted); margin-top: 6px;">Complex 324 · Bld 950</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--white">
+  <div class="container">
+    <div class="editorial">
+      <div class="editorial__copy reveal">
+        <div class="numlabel"><span class="num">01</span><span class="lbl">Send a Message</span></div>
+        <h2>Inquire or <em>reserve</em>.</h2>
+        <p style="margin-bottom: 36px;">Tell us how we can help — pricing questions, group bookings, membership inquiries, or anything else. We'll send your message directly to our reception team via WhatsApp.</p>
+
+        <form id="contact-form" class="form-grid">
+          <div class="field"><label>Full Name</label><input type="text" name="name" required placeholder="Your name"></div>
+          <div class="field"><label>Phone</label><input type="tel" name="phone" required placeholder="+973 …"></div>
+          <div class="field full"><label>Email</label><input type="email" name="email" placeholder="you@email.com"></div>
+          <div class="field full">
+            <label>Subject</label>
+            <select name="subject">
+              <option>General Inquiry</option>
+              <option>Booking Question</option>
+              <option>Group / Couple Booking</option>
+              <option>Membership Inquiry</option>
+              <option>Corporate / Event</option>
+              <option>Feedback</option>
+            </select>
+          </div>
+          <div class="field full"><label>Message</label><textarea name="message" placeholder="How can we help?" required></textarea></div>
+          <div class="full"><button type="submit" class="btn btn--primary btn--block"><i class="fab fa-whatsapp"></i> Send via WhatsApp</button></div>
+        </form>
+      </div>
+
+      <div class="reveal delay-1">
+        <div class="numlabel"><span class="num">02</span><span class="lbl">Opening Hours</span></div>
+        <h2>When to <em>visit</em>.</h2>
+        <div class="hours" style="margin-top: 30px;">
+          <ul style="padding: 0; list-style: none;">
+            <li><span class="day">Saturday</span> <span class="time">10:00 AM – 11:00 PM</span></li>
+            <li><span class="day">Sunday</span> <span class="time">10:00 AM – 11:00 PM</span></li>
+            <li><span class="day">Monday</span> <span class="time">10:00 AM – 11:00 PM</span></li>
+            <li><span class="day">Tuesday</span> <span class="time">10:00 AM – 11:00 PM</span></li>
+            <li><span class="day">Wednesday</span> <span class="time">10:00 AM – 11:00 PM</span></li>
+            <li><span class="day">Thursday</span> <span class="time">10:00 AM – 11:00 PM</span></li>
+            <li><span class="day">Friday</span> <span class="time">2:00 PM – 11:00 PM</span></li>
+          </ul>
+        </div>
+
+        <div style="background: var(--c-cream); padding: 30px; border-radius: var(--r-md); margin-top: 30px; border-left: 3px solid var(--c-copper);">
+          <h4 style="font-family: var(--f-display); margin-bottom: 10px;"><i class="fas fa-info-circle" style="color: var(--c-copper); margin-right: 10px;"></i>Walk-Ins Welcome</h4>
+          <p style="color: var(--c-muted); font-size: 0.95rem;">We do our best to accommodate walk-ins. For guaranteed time slots, especially evenings and weekends, please book in advance.</p>
+        </div>
+
+        <div style="margin-top: 36px;">
+          <h4 style="font-family: var(--f-display); margin-bottom: 16px;">Follow Us</h4>
+          <div class="socials" style="justify-content: flex-start;">
+            <a href="#" aria-label="Instagram" style="border-color: var(--c-line); color: var(--c-deep);"><i class="fab fa-instagram"></i></a>
+            <a href="https://wa.me/97335194422" aria-label="WhatsApp" target="_blank" style="border-color: var(--c-line); color: var(--c-deep);"><i class="fab fa-whatsapp"></i></a>
+            <a href="#" aria-label="Facebook" style="border-color: var(--c-line); color: var(--c-deep);"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="TikTok" style="border-color: var(--c-line); color: var(--c-deep);"><i class="fab fa-tiktok"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--cream">
+  <div class="container">
+    <div class="s-head reveal">
+      <span class="eyebrow eyebrow--center" data-cms="page-contact.visit.eyebrow">Find Us</span>
+      <h2 data-cms="page-contact.visit.title">Building <em>950</em>.</h2>
+      <p>Al Fateh, Manama · Complex 324 · Road 2416 · Building 950 · Kingdom of Bahrain</p>
+    </div>
+    <div class="map reveal">
+      <iframe src="https://www.google.com/maps?q=Manama+Al+Fateh+Bahrain&output=embed" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+    <div style="text-align: center; margin-top: 36px;" class="reveal">
+      <a href="https://www.google.com/maps/dir/?api=1&destination=Manama+Al+Fateh+Bahrain" target="_blank" class="btn btn--outline"><i class="fas fa-directions"></i> Get Directions</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo-frame"><img src="assets/images/logo.png" alt="Taj Al Sukn" loading="lazy" decoding="async"></span>
+        <h4>Taj Al Sukn</h4>
+        <p data-cms="page-footer.brand.tagline">A modern wellness sanctuary in Manama, blending authentic Arabian rituals with the finest spa traditions of the world.</p>
+        <div class="socials">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://wa.me/97335194422" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Visit</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Experience</h5>
+        <ul>
+          <li><a href="booking.html">Book Online</a></li>
+          <li><a href="membership.html">Membership</a></li>
+              <li><a href="services.html#packages">Packages</a></li>
+          <li><a href="services.html">Treatments</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-contact">
+        <h5>Contact</h5>
+        <p><i class="fas fa-map-marker-alt"></i><span data-cms="page-footer.contact.address" data-cms-prop="html">Al Fateh, Manama<br>Complex 324 · Road 2416 · Bld 950</span></p>
+        <p><i class="fas fa-phone"></i><a data-cms="page-footer.contact.phone" href="tel:+973 35194422">+973 35194422</a></p>
+        <p><i class="fas fa-clock"></i><span data-cms="page-footer.contact.hours">Sat – Thu · 10am – 11pm</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span><strong>© <span id="year"></span> Taj Al Sukn Spa W.L.L.</strong> — All rights reserved.</span>
+      <span>CR: 182250-1 · Crafted with care in Manama · <a href="admin-login.html" style="color: rgba(212,184,150,.5); font-weight: 500; margin-left: 8px;">Admin</a></span>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/97335194422" class="wa-float" aria-label="Chat on WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+<!-- Supabase data layer -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="assets/js/supabase-config.js?v=20260514" defer></script>
+<script src="assets/js/taj-data.js?v=20260514" defer></script>
+<script src="assets/js/page-cms.js?v=20260514" defer></script>
+<script src="assets/js/member-auth.js?v=20260511" defer></script>
+<script src="assets/js/main.js?v=20260511" defer></script>
+</body>
+</html>
