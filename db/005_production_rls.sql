@@ -1,5 +1,5 @@
 -- ============================================================
--- Patch 005: PRODUCTION Row-Level Security
+-- Patch 005: PRODUCTION Row-Level Security  (idempotent / re-runnable)
 -- ============================================================
 -- Replaces the v1-permissive "to public" policies with a real model:
 --
@@ -22,33 +22,61 @@
 --      → Users → Add user → tick "Auto Confirm User").
 --   4. Confirm admin login works.
 -- Only THEN run this patch.
+--
+-- This script is fully idempotent: it drops every policy (both the v1
+-- "to public" names AND its own production names) before creating them,
+-- so it is safe to run repeatedly / after a partial apply.
 -- ============================================================
 
--- ---------- drop the v1-permissive public policies ----------
-drop policy if exists "public insert bookings"  on public.bookings;
-drop policy if exists "public update bookings"  on public.bookings;
-drop policy if exists "public read bookings"    on public.bookings;
-drop policy if exists "anon insert bookings"    on public.bookings;
+-- ---------- drop EVERY policy (v1 + any partial 005) so this is re-runnable ----------
+-- bookings
+drop policy if exists "public insert bookings"   on public.bookings;
+drop policy if exists "public update bookings"   on public.bookings;
+drop policy if exists "public read bookings"     on public.bookings;
+drop policy if exists "anon insert bookings"     on public.bookings;
 drop policy if exists "member read own bookings" on public.bookings;
-
-drop policy if exists "public insert members"   on public.members;
-drop policy if exists "public update members"   on public.members;
-drop policy if exists "public read members"     on public.members;
-drop policy if exists "anon insert members"     on public.members;
-drop policy if exists "member self read"        on public.members;
-drop policy if exists "member self update"      on public.members;
-
-drop policy if exists "public write services"   on public.services;
-drop policy if exists "public write therapists" on public.therapists;
-drop policy if exists "public write settings"   on public.settings;
-drop policy if exists "public write hours"      on public.hours;
-drop policy if exists "public write tiers"      on public.tiers;
+drop policy if exists "auth all bookings"        on public.bookings;
+-- members
+drop policy if exists "public insert members"    on public.members;
+drop policy if exists "public update members"    on public.members;
+drop policy if exists "public read members"      on public.members;
+drop policy if exists "anon insert members"      on public.members;
+drop policy if exists "member self read"         on public.members;
+drop policy if exists "member self update"       on public.members;
+drop policy if exists "auth all members"         on public.members;
+-- activity
+drop policy if exists "public insert activity"   on public.activity;
+drop policy if exists "public read activity"     on public.activity;
+drop policy if exists "anon insert activity"     on public.activity;
+drop policy if exists "auth all activity"        on public.activity;
+-- services
+drop policy if exists "public write services"    on public.services;
+drop policy if exists "anon read services"       on public.services;
+drop policy if exists "auth all services"        on public.services;
+-- therapists
+drop policy if exists "public write therapists"  on public.therapists;
+drop policy if exists "anon read therapists"     on public.therapists;
+drop policy if exists "auth all therapists"      on public.therapists;
+-- hours
+drop policy if exists "public write hours"       on public.hours;
+drop policy if exists "anon read hours"          on public.hours;
+drop policy if exists "auth all hours"           on public.hours;
+-- tiers
+drop policy if exists "public write tiers"       on public.tiers;
+drop policy if exists "anon read tiers"          on public.tiers;
+drop policy if exists "auth all tiers"           on public.tiers;
+-- payment_methods
 drop policy if exists "public write payment_methods" on public.payment_methods;
-drop policy if exists "public write admins"     on public.admins;
-drop policy if exists "public read settings"    on public.settings;
-drop policy if exists "public insert activity"  on public.activity;
-drop policy if exists "public read activity"    on public.activity;
-drop policy if exists "anon insert activity"    on public.activity;
+drop policy if exists "anon read payment_methods"    on public.payment_methods;
+drop policy if exists "auth all payment_methods"     on public.payment_methods;
+-- settings
+drop policy if exists "public write settings"    on public.settings;
+drop policy if exists "public read settings"     on public.settings;
+drop policy if exists "anon read settings"       on public.settings;
+drop policy if exists "auth all settings"        on public.settings;
+-- admins
+drop policy if exists "public write admins"      on public.admins;
+drop policy if exists "auth all admins"          on public.admins;
 
 -- ---------- BOOKINGS ----------
 -- anon: insert only (website booking). reads happen via member_bookings RPC.
@@ -73,29 +101,24 @@ create policy "auth all activity" on public.activity
 
 -- ---------- PUBLIC-FACING CATALOG (anon may read, admin writes) ----------
 -- services: only active + show_on_website to anon
-drop policy if exists "anon read services" on public.services;
 create policy "anon read services" on public.services
   for select to anon using (status = 'active' and show_on_website = true);
 create policy "auth all services" on public.services
   for all to authenticated using (true) with check (true);
 
 -- therapists: only active to anon
-drop policy if exists "anon read therapists" on public.therapists;
 create policy "anon read therapists" on public.therapists
   for select to anon using (status = 'active');
 create policy "auth all therapists" on public.therapists
   for all to authenticated using (true) with check (true);
 
 -- hours / tiers / payment_methods: public read, admin write
-drop policy if exists "anon read hours" on public.hours;
 create policy "anon read hours" on public.hours for select to anon using (true);
 create policy "auth all hours" on public.hours for all to authenticated using (true) with check (true);
 
-drop policy if exists "anon read tiers" on public.tiers;
 create policy "anon read tiers" on public.tiers for select to anon using (true);
 create policy "auth all tiers" on public.tiers for all to authenticated using (true) with check (true);
 
-drop policy if exists "anon read payment_methods" on public.payment_methods;
 create policy "anon read payment_methods" on public.payment_methods
   for select to anon using (enabled = true);
 create policy "auth all payment_methods" on public.payment_methods
@@ -108,7 +131,6 @@ create policy "auth all settings" on public.settings
   for all to authenticated using (true) with check (true);
 
 -- admins table: authenticated only
-drop policy if exists "auth all admins" on public.admins;
 create policy "auth all admins" on public.admins
   for all to authenticated using (true) with check (true);
 
