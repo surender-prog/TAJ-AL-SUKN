@@ -1,4 +1,4 @@
-# Taj Al Sukn — Supabase Setup
+# Taj Al Sukun — Supabase Setup
 
 This connects the spa site & admin to your Supabase project at
 **https://vrljiousxfvjvkhkftwt.supabase.co**.

@@ -1,4 +1,4 @@
-/* Taj Al Sukn — Supabase connection config
+/* Taj Al Sukun — Supabase connection config
    ============================================================
    ONE-TIME SETUP
    --------------

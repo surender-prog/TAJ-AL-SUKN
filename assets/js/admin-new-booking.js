@@ -1,4 +1,4 @@
-/* Taj Al Sukn — Admin New Booking (full page) */
+/* Taj Al Sukun — Admin New Booking (full page) */
 
 if (sessionStorage.getItem('taj-admin-auth') !== '1') {
   location.replace('admin-login.html');

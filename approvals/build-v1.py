@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-Build Taj Al Sukn approval deck v1.
+Build Taj Al Sukun approval deck v1.
 
 Pipeline:
 1. Render the feedback-template.html into a feedback PDF per page (Chrome).
 2. Merge each page PDF + its feedback PDF using pypdf.
 3. Build a combined master deck (cover + per-page sections).
 
-Run from /Users/surender/Downloads/Taj Al Sukn/website/approvals/
+Run from /Users/surender/Downloads/Taj Al Sukun/website/approvals/
 """
 import os
 import subprocess
@@ -95,7 +95,7 @@ def merge_page_and_feedback(slug: str, page_pdf: Path, fb_pdf: Path) -> Path:
 
 def build_combined_deck():
     """Build one combined deck of every page + its feedback, in order."""
-    out = V1 / "Taj-Al-Sukn-Approval-Deck-v1.pdf"
+    out = V1 / "Taj-Al-Sukun-Approval-Deck-v1.pdf"
     writer = pypdf.PdfWriter()
     for slug, title, section in PAGES:
         final = FINAL_DIR / f"{slug}.pdf"

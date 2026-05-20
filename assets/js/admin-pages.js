@@ -1,4 +1,4 @@
-/* Taj Al Sukn — Website Pages CMS (admin tab)
+/* Taj Al Sukun — Website Pages CMS (admin tab)
    ============================================================
    Drives #tab-website in admin.html. Renders the editor for the
    currently selected page, loads its content from TajData.settings,

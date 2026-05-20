@@ -1,4 +1,4 @@
-/* Taj Al Sukn — Record Payment (full-page view)
+/* Taj Al Sukun — Record Payment (full-page view)
    ============================================================
    URL: admin-payment.html?id=<booking id>
    Reads the booking, computes the invoice total, lets the user

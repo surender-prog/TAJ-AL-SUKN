@@ -1,4 +1,4 @@
-/* Taj Al Sukn — Admin New Member (full page) */
+/* Taj Al Sukun — Admin New Member (full page) */
 
 if (sessionStorage.getItem('taj-admin-auth') !== '1') {
   location.replace('admin-login.html');
@@ -65,7 +65,7 @@ const PERKS = {
 };
 
 const WELCOME = {
-  Silver:   { name: 'Welcome Foot Relaxing Ritual', desc: 'A complimentary 30-minute foot relaxing ritual to introduce the member to Taj Al Sukn.' },
+  Silver:   { name: 'Welcome Foot Relaxing Ritual', desc: 'A complimentary 30-minute foot relaxing ritual to introduce the member to Taj Al Sukun.' },
   Gold:     { name: 'Welcome Hammam Ritual',         desc: 'A complimentary Casablanca Hammam (60 min) included with Gold enrollment.' },
   Platinum: { name: 'Welcome Sultan Suite Ritual',   desc: 'The signature 2-hour Sultan Suite ritual — included with Platinum enrollment.' }
 };

@@ -1,4 +1,4 @@
-/* Taj Al Sukn — Front-end interactions */
+/* Taj Al Sukun — Front-end interactions */
 
 /* ---------- Header (sticky / transparent over hero) ---------- */
 (function () {
@@ -500,7 +500,7 @@ function showToast(msg) {
     }
 
     const lines = [
-      'Hello Taj Al Sukn Spa, I would like to book an appointment.',
+      'Hello Taj Al Sukun Spa, I would like to book an appointment.',
       '',
       'Booking #: ' + bookingId,
       'Service: ' + sel.dataset.name + ' (' + basePrice + ' BHD)',
@@ -542,7 +542,7 @@ function showToast(msg) {
         localStorage.setItem('taj-membership-signups', JSON.stringify(existing));
       } catch (_) {}
 
-      const text = `Hello Taj Al Sukn Spa, I'd like to enroll as a *${tier}* Member (${price} BHD/year). Please share next steps for payment and welcome ritual scheduling.`;
+      const text = `Hello Taj Al Sukun Spa, I'd like to enroll as a *${tier}* Member (${price} BHD/year). Please share next steps for payment and welcome ritual scheduling.`;
       window.open('https://wa.me/97335194422?text=' + encodeURIComponent(text), '_blank');
       showToast('Enrollment request sent — admin will follow up shortly');
     });
@@ -556,7 +556,7 @@ function showToast(msg) {
   f.addEventListener('submit', e => {
     e.preventDefault();
     const d = new FormData(f);
-    const text = `Hello Taj Al Sukn Spa, I'd like to access my member account.\n\nMember ID: ${d.get('member_id')}\nPhone: ${d.get('phone')}`;
+    const text = `Hello Taj Al Sukun Spa, I'd like to access my member account.\n\nMember ID: ${d.get('member_id')}\nPhone: ${d.get('phone')}`;
     window.open('https://wa.me/97335194422?text=' + encodeURIComponent(text), '_blank');
     showToast('Opening WhatsApp to verify…');
   });
@@ -568,7 +568,7 @@ function showToast(msg) {
     b.addEventListener('click', e => {
       e.preventDefault();
       const tier = b.dataset.gift, price = b.dataset.price;
-      const text = `Hello Taj Al Sukn Spa, I'd like to purchase the *${tier}* Gift Certificate (${price} BHD). Please share the next steps.`;
+      const text = `Hello Taj Al Sukun Spa, I'd like to purchase the *${tier}* Gift Certificate (${price} BHD). Please share the next steps.`;
       window.open('https://wa.me/97335194422?text=' + encodeURIComponent(text), '_blank');
     });
   });
@@ -582,7 +582,7 @@ function showToast(msg) {
     e.preventDefault();
     const d = new FormData(f);
     const lines = [
-      'Hello Taj Al Sukn Spa,',
+      'Hello Taj Al Sukun Spa,',
       '',
       'Name: '    + (d.get('name')    || ''),
       'Phone: '   + (d.get('phone')   || ''),
@@ -604,7 +604,7 @@ function showToast(msg) {
   f.addEventListener('submit', e => {
     e.preventDefault();
     const d = new FormData(f);
-    const text = `Hello Taj Al Sukn Spa, I'd like to claim my 10% welcome offer.\n\nName: ${d.get('name')}\nEmail: ${d.get('email')}\nPhone: ${d.get('phone') || '—'}`;
+    const text = `Hello Taj Al Sukun Spa, I'd like to claim my 10% welcome offer.\n\nName: ${d.get('name')}\nEmail: ${d.get('email')}\nPhone: ${d.get('phone') || '—'}`;
     window.open('https://wa.me/97335194422?text=' + encodeURIComponent(text), '_blank');
     showToast('Opening WhatsApp to claim your offer…');
   });

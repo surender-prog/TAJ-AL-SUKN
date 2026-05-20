@@ -1,4 +1,4 @@
-/* Taj Al Sukn — Admin Member Profile (full page) */
+/* Taj Al Sukun — Admin Member Profile (full page) */
 
 if (sessionStorage.getItem('taj-admin-auth') !== '1') {
   location.replace('admin-login.html');
@@ -254,7 +254,7 @@ function render() {
   const phone = (member.phone || '').replace(/\D/g, '');
   document.getElementById('ac-call').href = 'tel:' + phone;
   document.getElementById('ac-email').href = 'mailto:' + (member.email || '');
-  const waText = encodeURIComponent(`Hello ${member.name}, this is Taj Al Sukn Spa. Your ${member.tier} membership is active until ${fmtShort(member.renews)}.`);
+  const waText = encodeURIComponent(`Hello ${member.name}, this is Taj Al Sukun Spa. Your ${member.tier} membership is active until ${fmtShort(member.renews)}.`);
   document.getElementById('ac-wa').href = `https://wa.me/${phone}?text=${waText}`;
 
   // Activity timeline

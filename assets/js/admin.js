@@ -1,4 +1,4 @@
-/* Taj Al Sukn — Admin Console */
+/* Taj Al Sukun — Admin Console */
 
 /* ---------- Auth check ---------- */
 if (sessionStorage.getItem('taj-admin-auth') !== '1') {
@@ -443,13 +443,13 @@ function renderInvoice(b) {
   lines.push(`VAT (10%): ${fmtMoney(tax)}`);
   lines.push(`*Total ${isPaid ? 'Paid' : 'Due'}: ${fmtMoney(total)}*`);
   lines.push('');
-  lines.push('Thank you for choosing Taj Al Sukn.');
+  lines.push('Thank you for choosing Taj Al Sukun.');
 
   const waMsg = encodeURIComponent(lines.join('\n'));
   const phone = (b.phone || '').replace(/\D/g, '');
   document.getElementById('inv-wa').href = phone ? `https://wa.me/${phone}?text=${waMsg}` : '#';
 
-  const subject = encodeURIComponent(`${isReceipt ? 'Payment Receipt' : 'Invoice'} from Taj Al Sukn — ${b.invoice.number}`);
+  const subject = encodeURIComponent(`${isReceipt ? 'Payment Receipt' : 'Invoice'} from Taj Al Sukun — ${b.invoice.number}`);
   const body = encodeURIComponent(lines.join('\n'));
   document.getElementById('inv-email').href = `mailto:?subject=${subject}&body=${body}`;
 }

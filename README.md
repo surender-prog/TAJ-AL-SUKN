@@ -1,9 +1,9 @@
-# Taj Al Sukn — Spa &amp; Wellness Website
+# Taj Al Sukun — Spa &amp; Wellness Website
 
-A luxury spa website and admin console for **Taj Al Sukn Spa &amp; Wellness**
+A luxury spa website and admin console for **Taj Al Sukun Spa &amp; Wellness**
 in Al Fateh, Manama, Kingdom of Bahrain.
 
-> *"Taj — the crown. Al Sukn — the stillness. Together, the highest form of inner peace."*
+> *"Taj — the crown. Al Sukun — the stillness. Together, the highest form of inner peace."*
 
 🌐 Live preview: `http://127.0.0.1:8090/` after `python3 serve.py`
 📞 Bookings: WhatsApp [+973 35194422](https://wa.me/97335194422)
@@ -121,4 +121,4 @@ See `db/README.md` for the walkthrough.
 
 ## License
 
-© Taj Al Sukn Spa W.L.L. — All rights reserved.
+© Taj Al Sukun Spa W.L.L. — All rights reserved.

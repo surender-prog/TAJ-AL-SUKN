@@ -1,4 +1,4 @@
-/* Taj Al Sukn — Member Authentication & Portal
+/* Taj Al Sukun — Member Authentication & Portal
    ============================================================
    Powers: member-signin.html, member-signup.html, member-portal.html
    plus the optional nav chip on every public page.
@@ -241,7 +241,7 @@
     // "Forgot ID?" — opens WhatsApp
     document.getElementById('forgot-id')?.addEventListener('click', e => {
       e.preventDefault();
-      window.open('https://wa.me/97335194422?text=' + encodeURIComponent('Hello Taj Al Sukn, I\'ve forgotten my member ID. Could you help me retrieve it?'), '_blank');
+      window.open('https://wa.me/97335194422?text=' + encodeURIComponent('Hello Taj Al Sukun, I\'ve forgotten my member ID. Could you help me retrieve it?'), '_blank');
     });
 
     // "Reset" demo data — wipes member/session/bookings, then re-seeds the demo set.
@@ -554,7 +554,7 @@
       document.getElementById('welcome-phone').textContent= phone;
       document.getElementById('welcome-discount').textContent = disc + '% on every treatment';
       document.getElementById('welcome-renews').textContent = fmtDate(newMember.endDate);
-      const waMsg = `Hello Taj Al Sukn, I've just enrolled as a *${tier}* member (${newId}). Looking forward to my first visit.`;
+      const waMsg = `Hello Taj Al Sukun, I've just enrolled as a *${tier}* member (${newId}). Looking forward to my first visit.`;
       document.getElementById('welcome-wa').href = 'https://wa.me/97335194422?text=' + encodeURIComponent(waMsg);
 
       goStep(4);

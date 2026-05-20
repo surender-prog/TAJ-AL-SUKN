@@ -1,4 +1,4 @@
-/* Taj Al Sukn — Shared admin utilities (activity log, formatting) */
+/* Taj Al Sukun — Shared admin utilities (activity log, formatting) */
 
 /* ============================================================
    PRINT / APPROVAL-PDF MODE

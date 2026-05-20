@@ -1,4 +1,4 @@
-/* Taj Al Sukn — Unified Data Layer
+/* Taj Al Sukun — Unified Data Layer
    ============================================================
    Single source of truth for reading/writing app data.
    Backed by Supabase when ANON_KEY is configured; otherwise

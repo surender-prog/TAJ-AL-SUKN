@@ -1,4 +1,4 @@
-/* Taj Al Sukn — Page CMS loader
+/* Taj Al Sukun — Page CMS loader
    ============================================================
    Public-facing loader that swaps DOM content from values stored
    in the Supabase `settings` table (key: 'page-<slug>') or in
@@ -33,7 +33,7 @@
       hero: {
         eyebrow:  'Manama · Bahrain · Est. 2024',
         title:    'Immerse *yourself* in the atmosphere of stillness & harmony.',
-        subtitle: "Step into Taj Al Sukn — a private sanctuary where Arabian rituals meet the world's finest spa traditions. Authentic Hammams, signature massages, and unhurried care.",
+        subtitle: "Step into Taj Al Sukun — a private sanctuary where Arabian rituals meet the world's finest spa traditions. Authentic Hammams, signature massages, and unhurried care.",
         image:    'assets/images/sanctuary-bed.jpg'
       },
       loving: {
@@ -51,7 +51,7 @@
       welcome: {
         eyebrow: 'Welcome',
         title:   'A modern sanctuary in *Manama*.',
-        body:    'Taj Al Sukn is more than a spa — it is a refuge crafted for those who value stillness. Our therapists are trained in authentic Arabian techniques, complemented by the world\'s finest spa traditions.'
+        body:    'Taj Al Sukun is more than a spa — it is a refuge crafted for those who value stillness. Our therapists are trained in authentic Arabian techniques, complemented by the world\'s finest spa traditions.'
       },
       treatments: {
         eyebrow: 'Signature Rituals',
@@ -69,7 +69,7 @@
         eyebrow: 'A Word from Our Director',
         name:    'Sofia Marini',
         role:    'Spa Director · 14 yrs',
-        quote:   '"Every detail at Taj Al Sukn is chosen with care — every fragrance, every silence, every fabric. We don\'t simply offer treatments; we curate moments of stillness."',
+        quote:   '"Every detail at Taj Al Sukun is chosen with care — every fragrance, every silence, every fabric. We don\'t simply offer treatments; we curate moments of stillness."',
         image:   'assets/images/manager-portrait.jpg'
       },
       testimonials: {
@@ -97,17 +97,17 @@
       hero: {
         eyebrow: 'OUR STORY',
         title:   'The story of *stillness*.',
-        subtitle:'Taj — the crown. Al Sukn — the stillness. Together, the highest form of inner peace.',
+        subtitle:'Taj — the crown. Al Sukun — the stillness. Together, the highest form of inner peace.',
         image:   'assets/images/spa-corridor.jpg'
       },
       story: {
         eyebrow: 'Beginnings',
         title:   'Crafted with *intention*.',
-        body:    'Taj Al Sukn was born from a simple belief: that wellness is a practice, not a luxury. Every room, every fragrance, every silence is deliberate.'
+        body:    'Taj Al Sukun was born from a simple belief: that wellness is a practice, not a luxury. Every room, every fragrance, every silence is deliberate.'
       },
       quote: {
         quote: '"In stillness, we *return* — to ourselves, to silence, to the quiet truth of our bodies."',
-        by:    '— Taj Al Sukn'
+        by:    '— Taj Al Sukun'
       },
       values: {
         eyebrow: 'Our Values',
@@ -121,7 +121,7 @@
       cta: {
         eyebrow: 'Ready to experience the difference?',
         title:   'Step into the *sanctuary*.',
-        body:    'Book your first ritual — let us craft the perfect introduction to Taj Al Sukn.',
+        body:    'Book your first ritual — let us craft the perfect introduction to Taj Al Sukun.',
         button:  'Reserve a Ritual'
       }
     },
@@ -166,7 +166,7 @@
       },
       quote: {
         quote: '"Every detail is composed — every fragrance, every sound, every silence. *It all leads here*."',
-        by:    '— Taj Al Sukn'
+        by:    '— Taj Al Sukun'
       },
       instagram: {
         eyebrow: 'Follow Our Journey',
@@ -178,7 +178,7 @@
     'page-membership': {
       hero: {
         eyebrow: 'MEMBERSHIP',
-        title:   'The Taj Al Sukn *Membership*.',
+        title:   'The Taj Al Sukun *Membership*.',
         subtitle:'An annual circle of complimentary services, member-only pricing, and priority care.',
         image:   'assets/images/sanctuary-bed.jpg'
       },
@@ -201,7 +201,7 @@
         title:   'Simple, *transparent*, generous.'
       },
       quote: {
-        quote: '"Membership at Taj Al Sukn means *coming home* — to a team that knows your preferences, your pressure points, and your favorite tea."',
+        quote: '"Membership at Taj Al Sukun means *coming home* — to a team that knows your preferences, your pressure points, and your favorite tea."',
         by:    '— A Gold Member'
       },
       cta: {

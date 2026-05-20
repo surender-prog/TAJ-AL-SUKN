@@ -1,4 +1,4 @@
-/* Taj Al Sukn — Admin Booking Detail (full page) */
+/* Taj Al Sukun — Admin Booking Detail (full page) */
 
 if (sessionStorage.getItem('taj-admin-auth') !== '1') {
   location.replace('admin-login.html');
@@ -194,9 +194,9 @@ function render() {
   document.getElementById('ac-call').href = 'tel:' + phone;
   document.getElementById('ac-email').href = 'mailto:' + (booking.email || '');
   const waBase = `https://wa.me/${phone}?text=`;
-  const waText = encodeURIComponent(`Hello ${booking.name}, this is Taj Al Sukn Spa regarding your booking ${booking.id} on ${fmtFullDate(booking.date)} at ${fmtTime(booking.time)}.`);
+  const waText = encodeURIComponent(`Hello ${booking.name}, this is Taj Al Sukun Spa regarding your booking ${booking.id} on ${fmtFullDate(booking.date)} at ${fmtTime(booking.time)}.`);
   document.getElementById('ac-wa').href = waBase + waText;
-  const reminderText = encodeURIComponent(`Hello ${booking.name}, just a friendly reminder of your appointment for ${booking.service} on ${fmtFullDate(booking.date)} at ${fmtTime(booking.time)}. We look forward to welcoming you. — Taj Al Sukn Spa`);
+  const reminderText = encodeURIComponent(`Hello ${booking.name}, just a friendly reminder of your appointment for ${booking.service} on ${fmtFullDate(booking.date)} at ${fmtTime(booking.time)}. We look forward to welcoming you. — Taj Al Sukun Spa`);
   document.getElementById('ac-reminder').href = waBase + reminderText;
 
   // Metadata

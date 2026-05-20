@@ -1,4 +1,4 @@
-/* Taj Al Sukn — Admin Invoice (full page) */
+/* Taj Al Sukun — Admin Invoice (full page) */
 
 if (sessionStorage.getItem('taj-admin-auth') !== '1') {
   location.replace('admin-login.html');
@@ -108,7 +108,7 @@ function render() {
   document.getElementById('page-sub').textContent = isReceipt
     ? 'Payment confirmed. Print, send, or download for your records.'
     : 'Apply discount, mark as paid, or send to the guest.';
-  document.title = (isReceipt ? 'Receipt' : 'Invoice') + ' — Taj Al Sukn Admin';
+  document.title = (isReceipt ? 'Receipt' : 'Invoice') + ' — Taj Al Sukun Admin';
 
   document.getElementById('inv-type').textContent = isReceipt ? 'Receipt' : 'Invoice';
   const docNo = isReceipt ? booking.invoice.number.replace('INV-', 'RCP-') : booking.invoice.number;
@@ -194,13 +194,13 @@ function render() {
   lines.push(`VAT (10%): ${fmtMoney(tax)}`);
   lines.push(`*Total ${isPaid ? 'Paid' : 'Due'}: ${fmtMoney(total)}*`);
   lines.push('');
-  lines.push('Thank you for choosing Taj Al Sukn.');
+  lines.push('Thank you for choosing Taj Al Sukun.');
 
   const waMsg = encodeURIComponent(lines.join('\n'));
   const phone = (booking.phone || '').replace(/\D/g, '');
   document.getElementById('inv-wa').href = phone ? `https://wa.me/${phone}?text=${waMsg}` : '#';
 
-  const subject = encodeURIComponent(`${isReceipt ? 'Payment Receipt' : 'Invoice'} from Taj Al Sukn — ${docNo}`);
+  const subject = encodeURIComponent(`${isReceipt ? 'Payment Receipt' : 'Invoice'} from Taj Al Sukun — ${docNo}`);
   const body = encodeURIComponent(lines.join('\n'));
   document.getElementById('inv-email').href = `mailto:?subject=${subject}&body=${body}`;
 }

@@ -1,5 +1,5 @@
 -- ============================================================
--- Taj Al Sukn Spa — Initial database schema
+-- Taj Al Sukun Spa — Initial database schema
 -- Run this once in the Supabase SQL Editor.
 -- Safe to re-run: uses CREATE TABLE IF NOT EXISTS + ON CONFLICT.
 -- ============================================================
@@ -339,8 +339,8 @@ on conflict (id) do nothing;
 
 insert into public.settings (key, value) values
   ('spa-info', jsonb_build_object(
-    'name', 'Taj Al Sukn Spa & Wellness',
-    'tradingName', 'Taj Al Sukn Spa W.L.L.',
+    'name', 'Taj Al Sukun Spa & Wellness',
+    'tradingName', 'Taj Al Sukun Spa W.L.L.',
     'whatsapp', '+973 35194422',
     'phone', '+973 77924422',
     'email', 'hello@tasukunspa.com',
