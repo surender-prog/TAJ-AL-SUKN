@@ -31,11 +31,18 @@ if (!member) {
 member.joined = member.joined || member.startDate || member.start_date || '';
 member.renews = member.renews || member.endDate   || member.end_date   || '';
 
-function persist() {
+async function persist() {
   // Mirror the editable date fields back to the canonical names so the record
-  // stays consistent for re-renders and any later Supabase sync.
+  // stays consistent for re-renders and the Supabase sync below.
   if (member.joined) { member.startDate = member.joined; member.start_date = member.joined; }
   if (member.renews) { member.endDate   = member.renews; member.end_date   = member.renews; }
+  // Route through the data layer so admin edits reach Supabase and survive the
+  // next re-hydration. upsert mirrors localStorage itself; the direct write
+  // below is the offline / no-data-layer fallback.
+  if (window.TajData) {
+    try { await TajData.members.upsert(member); return; }
+    catch (err) { console.warn('[admin-member] member sync failed, using localStorage:', err); }
+  }
   localStorage.setItem('taj-members', JSON.stringify(members));
 }
 
@@ -376,10 +383,21 @@ document.getElementById('freeze-btn')?.addEventListener('click', () => {
   showToast(member.frozen ? 'Membership frozen' : 'Membership reactivated');
 });
 
-document.getElementById('cancel-btn')?.addEventListener('click', () => {
+document.getElementById('cancel-btn')?.addEventListener('click', async () => {
   if (!confirm(`Cancel ${member.name}'s membership permanently? This cannot be undone.`)) return;
-  members = members.filter(m => m.id !== member.id);
-  localStorage.setItem('taj-members', JSON.stringify(members));
+  // Route the delete through the data layer (Supabase + localStorage mirror) and
+  // await it so the row is gone before we navigate back to the roster.
+  if (window.TajData) {
+    try { await TajData.members.remove(member.id); }
+    catch (err) {
+      console.warn('[admin-member] member delete failed, using localStorage:', err);
+      members = members.filter(m => m.id !== member.id);
+      localStorage.setItem('taj-members', JSON.stringify(members));
+    }
+  } else {
+    members = members.filter(m => m.id !== member.id);
+    localStorage.setItem('taj-members', JSON.stringify(members));
+  }
   location.href = 'admin.html#members';
 });
 

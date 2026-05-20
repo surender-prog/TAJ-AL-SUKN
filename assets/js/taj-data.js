@@ -17,6 +17,7 @@
      TajData.members.get(id)                → row|null
      TajData.members.findByPhone(phone)     → row|null
      TajData.members.upsert(row)            → row
+     TajData.members.remove(id)             → void
 
      TajData.services.list()                → []
      TajData.services.upsert(row)           → row
@@ -159,12 +160,26 @@
     if (error) { console.warn('[TajData]', table, error.message); return null; }
     return data;
   }
+  function isRlsError(e) {
+    return !!e && (e.code === '42501' || /row-level security/i.test(e.message || ''));
+  }
   async function sbUpsert(table, row) {
     if (!sb) return null;
     const payload = pickSchema(table, row);
     const { data, error } = await sb.from(table).upsert(payload).select().maybeSingle();
-    if (error) { console.warn('[TajData]', table, 'upsert', error.message, payload); return null; }
-    return data;
+    if (!error) return data;
+    // Production RLS: anon may INSERT but not SELECT (bookings / members / activity).
+    // The .select() representation is what RLS rejects — retry the write WITHOUT
+    // reading the row back (Prefer: return=minimal) and echo the payload so the
+    // public booking / signup / activity-log flows still persist + return usable data.
+    if (isRlsError(error)) {
+      const { error: e2 } = await sb.from(table).upsert(payload);
+      if (!e2) return payload;
+      console.warn('[TajData]', table, 'insert(minimal)', e2.message, payload);
+      return null;
+    }
+    console.warn('[TajData]', table, 'upsert', error.message, payload);
+    return null;
   }
   async function sbDelete(table, id) {
     if (!sb) return false;
@@ -255,6 +270,11 @@
       if (idx >= 0) all[idx] = final; else all.unshift(final);
       LS.set(K.members, all);
       return final;
+    },
+    async remove(id) {
+      if (sb) await sbDelete('members', id);
+      const all = (LS.get(K.members, []) || []).filter(m => m.id !== id);
+      LS.set(K.members, all);
     },
 
     // -------- Member self-service (RPC-backed; works pre- and post-lockdown) --------
