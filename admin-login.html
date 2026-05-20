@@ -22,19 +22,23 @@
   <form id="admin-login-form">
     <div class="field">
       <label>Email</label>
-      <input type="email" name="email" placeholder="admin@tasukunspa.com" required value="admin@tasukunspa.com">
+      <input type="email" name="email" placeholder="admin@tasukunspa.com" autocomplete="username" required>
     </div>
     <div class="field">
       <label>Password</label>
-      <input type="password" name="password" placeholder="••••••••" required value="taj-admin">
+      <input type="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
+    </div>
+    <div class="auth-error" id="login-error" hidden style="margin-top:14px;">
+      <i class="fas fa-exclamation-circle"></i>
+      <span>Invalid credentials. Please try again.</span>
     </div>
     <div class="field" style="margin-top: 22px;">
-      <button type="submit" class="btn btn--primary btn--block"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+      <button type="submit" class="btn btn--primary btn--block" id="login-btn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
     </div>
   </form>
 
-  <div class="demo">
-    <strong style="display:block; color: var(--c-deep); margin-bottom: 6px; letter-spacing: 0.18em; font-size: 0.7rem; text-transform: uppercase;">Demo Access</strong>
+  <div class="demo" id="demo-box" hidden>
+    <strong style="display:block; color: var(--c-deep); margin-bottom: 6px; letter-spacing: 0.18em; font-size: 0.7rem; text-transform: uppercase;">Demo Access (offline mode)</strong>
     Email: <code>admin@tasukunspa.com</code><br>
     Password: <code>taj-admin</code>
   </div>
@@ -44,16 +48,50 @@
   </p>
 </div>
 
+<!-- Supabase + config + auth -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="assets/js/supabase-config.js?v=20260520c" defer></script>
+<script src="assets/js/admin-auth.js?v=20260520c" defer></script>
 <script>
-document.getElementById('admin-login-form').addEventListener('submit', e => {
-  e.preventDefault();
-  const fd = new FormData(e.target);
-  if (fd.get('email') === 'admin@tasukunspa.com' && fd.get('password') === 'taj-admin') {
-    sessionStorage.setItem('taj-admin-auth', '1');
-    location.href = 'admin.html';
-  } else {
-    alert('Invalid credentials. Try the demo credentials shown.');
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('admin-login-form');
+  const errEl = document.getElementById('login-error');
+  const btn  = document.getElementById('login-btn');
+
+  // Show demo hint only when Supabase is NOT configured
+  if (!(window.TajAdmin && window.TajAdmin.isSupabase)) {
+    document.getElementById('demo-box').hidden = false;
   }
+
+  // If already signed in, skip straight to the console
+  (async () => {
+    if (window.TajAdmin && await TajAdmin.session()) location.replace('admin.html');
+  })();
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    errEl.hidden = true;
+    const fd = new FormData(form);
+    const orig = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in…';
+
+    const res = await (window.TajAdmin
+      ? TajAdmin.signIn(fd.get('email'), fd.get('password'))
+      : Promise.resolve({ ok: false, error: 'Auth not loaded — please reload.' }));
+
+    btn.disabled = false;
+    btn.innerHTML = orig;
+
+    if (res.ok) {
+      btn.innerHTML = '<i class="fas fa-check"></i> Welcome';
+      location.href = 'admin.html';
+    } else {
+      const msg = errEl.querySelector('span');
+      if (msg) msg.textContent = res.error || 'Invalid credentials. Please try again.';
+      errEl.hidden = false;
+    }
+  });
 });
 </script>
 </body>

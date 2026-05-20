@@ -84,9 +84,21 @@ function tierBadge(tier) {
   return '<span class="badge-tier ' + tier.toLowerCase() + '">' + tier + '</span>';
 }
 function fmtDate(d) {
+  if (!d || typeof d !== 'string') return '—';
   const [y, m, day] = d.split('-');
+  if (!y || !m || !day) return '—';
   const dt = new Date(parseInt(y), parseInt(m)-1, parseInt(day));
+  if (isNaN(dt)) return '—';
   return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+// Member date fields differ by source: legacy demo uses joined/renews,
+// Supabase-backed records use startDate/endDate (and raw start_date/end_date).
+function mJoined(m) { return (m && (m.joined || m.startDate || m.start_date)) || ''; }
+function mRenews(m) { return (m && (m.renews || m.endDate   || m.end_date))   || ''; }
+function fmtDateYear(d) {
+  const base = fmtDate(d);
+  const yr = (typeof d === 'string' && d.length >= 4) ? d.substring(0, 4) : '';
+  return (base !== '—' && yr) ? base + ', ' + yr : base;
 }
 function initials(name) {
   return name.trim().split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
@@ -528,7 +540,7 @@ function renderMembers() {
 
   const rows = members.filter(m => {
     if (memberFilter === 'expiring') {
-      const r = new Date(m.renews);
+      const r = new Date(mRenews(m));
       if (r > expCutoff || r < today) return false;
     } else if (memberFilter !== 'all' && m.tier !== memberFilter) return false;
     if (q && !(m.name + m.id + m.phone + m.email).toLowerCase().includes(q)) return false;
@@ -540,8 +552,8 @@ function renderMembers() {
       <td><div class="cell-name"><div class="av">${initials(m.name)}</div><div><strong>${m.name}</strong><small>${m.email}</small></div></div></td>
       <td><code style="font-family:'Courier New', monospace; color:var(--c-copper); font-weight:600; font-size:0.85rem;">${m.id}</code></td>
       <td>${tierBadge(m.tier)}</td>
-      <td>${fmtDate(m.joined)}, ${m.joined.substring(0,4)}</td>
-      <td>${fmtDate(m.renews)}, ${m.renews.substring(0,4)}</td>
+      <td>${fmtDateYear(mJoined(m))}</td>
+      <td>${fmtDateYear(mRenews(m))}</td>
       <td><small style="color:var(--c-text-soft);">${m.balance}</small></td>
       <td class="cell-actions">
         <a class="icon-btn view-mb" title="View"><i class="fas fa-eye"></i></a>
@@ -588,8 +600,8 @@ function showMemberModal(id) {
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px;">
       <div><small style="color:var(--c-text-soft); letter-spacing:0.18em; font-size:0.7rem; text-transform:uppercase; font-weight:600;">Phone</small><div style="margin-top:4px;">${m.phone}</div></div>
       <div><small style="color:var(--c-text-soft); letter-spacing:0.18em; font-size:0.7rem; text-transform:uppercase; font-weight:600;">Email</small><div style="margin-top:4px;">${m.email}</div></div>
-      <div><small style="color:var(--c-text-soft); letter-spacing:0.18em; font-size:0.7rem; text-transform:uppercase; font-weight:600;">Joined</small><div style="margin-top:4px;">${fmtDate(m.joined)}, ${m.joined.substring(0,4)}</div></div>
-      <div><small style="color:var(--c-text-soft); letter-spacing:0.18em; font-size:0.7rem; text-transform:uppercase; font-weight:600;">Renews</small><div style="margin-top:4px;">${fmtDate(m.renews)}, ${m.renews.substring(0,4)}</div></div>
+      <div><small style="color:var(--c-text-soft); letter-spacing:0.18em; font-size:0.7rem; text-transform:uppercase; font-weight:600;">Joined</small><div style="margin-top:4px;">${fmtDateYear(mJoined(m))}</div></div>
+      <div><small style="color:var(--c-text-soft); letter-spacing:0.18em; font-size:0.7rem; text-transform:uppercase; font-weight:600;">Renews</small><div style="margin-top:4px;">${fmtDateYear(mRenews(m))}</div></div>
       <div class="full" style="grid-column: 1 / -1;"><small style="color:var(--c-text-soft); letter-spacing:0.18em; font-size:0.7rem; text-transform:uppercase; font-weight:600;">Current Balance</small><div style="margin-top:4px; padding: 14px 18px; background: var(--c-cream); border-radius: var(--r-sm); font-weight: 500;">${m.balance}</div></div>
     </div>
     <div style="display:flex; gap:10px; flex-wrap:wrap;">
@@ -837,6 +849,7 @@ document.getElementById('add-member-form')?.addEventListener('submit', e => {
 /* ---------- Sign out ---------- */
 document.getElementById('admin-logout')?.addEventListener('click', e => {
   e.preventDefault();
+  if (window.TajAdmin) { TajAdmin.signOut(); return; }
   sessionStorage.removeItem('taj-admin-auth');
   location.href = 'admin-login.html';
 });
@@ -1167,7 +1180,7 @@ function renderHours() {
   const list = document.getElementById('hours-editor');
   if (!list) return;
   list.innerHTML = DAYS.map(day => {
-    const d = hoursData[day];
+    const d = hoursData[day] || (hoursData[day] = { open: false, start: '10:00', end: '23:00' });
     return `
       <li class="${d.open ? 'open' : ''}" data-day="${day}">
         <span class="day">${day}</span>
@@ -1285,7 +1298,7 @@ function renderOverview() {
   // Active members
   const activeMembers = members.length;
   // New this month
-  const newMembersMonth = members.filter(m => m.joined && m.joined.substring(0, 7) === yMonth).length;
+  const newMembersMonth = members.filter(m => { const j = mJoined(m); return j && j.substring(0, 7) === yMonth; }).length;
 
   // Revenue this month
   const monthBks = bookings.filter(b => b.date && b.date.substring(0, 7) === yMonth && b.status !== 'cancel');

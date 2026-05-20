@@ -37,8 +37,14 @@
 
   const cfg = window.TAJ_SUPABASE || { URL: '', ANON_KEY: '', ENABLED: false };
   const HAS_REMOTE = !!cfg.ENABLED;
+  // Prefer the shared client created by admin-auth.js so an authenticated
+  // admin session (JWT) flows through to every query. Fall back to creating
+  // our own client on the public site (anon role). Both share the default
+  // session storage on the same origin, so auth state is consistent.
   const sb = HAS_REMOTE && window.supabase
-              ? window.supabase.createClient(cfg.URL, cfg.ANON_KEY)
+              ? (window.__tajSb || (window.__tajSb = window.supabase.createClient(cfg.URL, cfg.ANON_KEY, {
+                  auth: { persistSession: true, autoRefreshToken: true }
+                })))
               : null;
 
   // ---------------------------------------------------------- storage helpers
@@ -249,6 +255,80 @@
       if (idx >= 0) all[idx] = final; else all.unshift(final);
       LS.set(K.members, all);
       return final;
+    },
+
+    // -------- Member self-service (RPC-backed; works pre- and post-lockdown) --------
+    // Authenticate / fetch a member by ID + phone. After the production RLS
+    // patch, anon has no direct SELECT on members — these RPCs are the only
+    // way a member reads their own record.
+    async login(id, phone) {
+      if (sb) {
+        try {
+          const { data, error } = await sb.rpc('member_login', { p_id: id || '', p_phone: phone || '' });
+          if (!error && data && data[0]) return fromMember(data[0]);
+          if (!error) return null; // RPC ran, no match
+        } catch (_) { /* fall through to legacy path */ }
+        // Legacy fallback (RLS still open / RPC not deployed yet)
+        const direct = await this.get(id);
+        if (direct) return direct;
+      }
+      // Offline cache
+      const norm = s => (s || '').replace(/[^\d]/g, '').replace(/^973/, '');
+      return (LS.get(K.members, []) || []).find(m =>
+        (m.id || '').toLowerCase() === (id || '').toLowerCase() &&
+        (!phone || norm(m.phone) === norm(phone))) || null;
+    },
+    async loginByPhone(phone) {
+      if (sb) {
+        try {
+          const { data, error } = await sb.rpc('member_find_by_phone', { p_phone: phone || '' });
+          if (!error && data && data[0]) return fromMember(data[0]);
+          if (!error) return null;
+        } catch (_) { /* fall through */ }
+        const direct = await this.findByPhone(phone);
+        if (direct) return direct;
+      }
+      const norm = s => (s || '').replace(/[^\d]/g, '').replace(/^973/, '');
+      return (LS.get(K.members, []) || []).find(m => norm(m.phone) === norm(phone)) || null;
+    },
+    async bookingsFor(id, phone) {
+      if (sb) {
+        try {
+          const { data, error } = await sb.rpc('member_bookings', { p_id: id || '', p_phone: phone || '' });
+          if (!error && data) return data.map(fromBooking);
+        } catch (_) { /* fall through */ }
+        // Legacy fallback
+        try {
+          const { data } = await sb.from('bookings').select('*').eq('member_id', id).order('date', { ascending: false });
+          if (data) return data.map(fromBooking);
+        } catch (_) {}
+      }
+      const norm = s => (s || '').replace(/[^\d]/g, '').replace(/^973/, '');
+      return (LS.get(K.bookings, []) || []).filter(b =>
+        b.memberId === id || b.member_id === id || (phone && norm(b.phone) === norm(phone)));
+    },
+    async save(id, phone, payload) {
+      if (sb) {
+        try {
+          const { data, error } = await sb.rpc('member_save', { p_id: id || '', p_phone: phone || '', p_payload: payload });
+          if (!error && data && data[0]) {
+            const m = fromMember(data[0]);
+            // refresh local cache copy
+            const all = LS.get(K.members, []) || [];
+            const idx = all.findIndex(x => x.id === m.id);
+            if (idx >= 0) all[idx] = m; else all.unshift(m);
+            LS.set(K.members, all);
+            return m;
+          }
+        } catch (_) { /* fall through */ }
+        // Legacy fallback: direct upsert (works while RLS open)
+        return this.upsert(Object.assign({ id }, payload));
+      }
+      // Offline
+      const all = LS.get(K.members, []) || [];
+      const idx = all.findIndex(x => x.id === id);
+      if (idx >= 0) { all[idx] = Object.assign({}, all[idx], payload); LS.set(K.members, all); return all[idx]; }
+      return null;
     }
   };
 

@@ -19,6 +19,8 @@
   const ST = {
     members:   'taj-members',
     session:   'taj-member-session',
+    token:     'taj-member-token',    // member's phone — the auth secret for self-service RPCs
+    current:   'taj-member-current',  // cached copy of THIS member's own record (survives RLS lockdown)
     bookings:  'taj-bookings',
     activity:  'taj-activity'
   };
@@ -38,14 +40,49 @@
   function setMembers(a)  { setJSON(ST.members, a); }
   function getBookings()  { return getJSON(ST.bookings, []) || []; }
   function getSession()   { return localStorage.getItem(ST.session) || null; }
-  function setSession(id) {
-    if (id) localStorage.setItem(ST.session, id);
-    else    localStorage.removeItem(ST.session);
+  function getToken()     { return localStorage.getItem(ST.token)   || null; }
+  function setSession(id, phone) {
+    if (id) {
+      localStorage.setItem(ST.session, id);
+      if (phone) localStorage.setItem(ST.token, phone);
+    } else {
+      localStorage.removeItem(ST.session);
+      localStorage.removeItem(ST.token);
+      localStorage.removeItem(ST.current);
+    }
   }
+  function cacheCurrent(m) { if (m && m.id) setJSON(ST.current, m); }
   function findMember(id) { return getMembers().find(m => m.id === id) || null; }
+
+  // Synchronous read of the signed-in member. Prefers the cached own-record
+  // (the ONLY source that survives the production RLS lockdown), then falls
+  // back to the shared members cache by session id (legacy / open-RLS mode).
   function currentMember() {
+    const cached = getJSON(ST.current, null);
+    if (cached && cached.id) return cached;
     const sid = getSession();
     return sid ? findMember(sid) : null;
+  }
+
+  // Async refresh of the signed-in member via the id+phone RPC. After the
+  // production RLS patch, anon has no direct SELECT on members — this RPC is
+  // the only way a member reads their own record.
+  async function fetchCurrentMember() {
+    const sid = getSession();
+    if (!sid) return null;
+    let tok = getToken();
+    if (!tok) {
+      // Upgrade a legacy (id-only) session: adopt the phone from the cached record.
+      const c = currentMember();
+      if (c && c.phone) { tok = c.phone; localStorage.setItem(ST.token, tok); }
+    }
+    if (window.TajData && TajData.members && typeof TajData.members.login === 'function') {
+      try {
+        const m = await TajData.members.login(sid, tok || '');
+        if (m && m.id) { cacheCurrent(m); return m; }
+      } catch (_) { /* fall back to cache */ }
+    }
+    return currentMember();
   }
 
   /* Shared activity log (graceful even if admin-shared.js isn't loaded) */
@@ -65,6 +102,7 @@
   /* Expose minimal API for other scripts (e.g. booking.html) */
   window.TajMember = {
     current: currentMember,
+    refresh: fetchCurrentMember,
     isSignedIn: () => !!currentMember(),
     signOut: () => { setSession(null); logActivity({ type:'note', title:'Member signed out', desc:'Public website portal', ref:'AUTH', refType:'member' }); }
   };
@@ -277,23 +315,27 @@
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Looking up…';
       }
 
-      // 1) Local lookup first (instant)
+      // 1) Authenticate via the id+phone RPC (works pre- AND post-RLS-lockdown).
+      //    Both fields are required by the form, so member_login(id, phone)
+      //    is the primary path; we keep phone-only / id-only as graceful fallbacks.
       let member = null;
-      if (id) {
-        member = getMembers().find(m => (m.id || '').toLowerCase() === id.toLowerCase());
-      } else if (phone) {
-        member = getMembers().find(m => normalisePhone(m.phone) === normalisePhone(phone));
+      if (window.TajData && TajData.members) {
+        try {
+          if (id && phone)  member = await TajData.members.login(id, phone);
+          else if (phone)   member = await TajData.members.loginByPhone(phone);
+          else if (id)      member = await TajData.members.login(id, '');
+        } catch (_) { /* fall through to offline lookup */ }
       }
 
-      // 2) If miss, consult Supabase via TajData
-      if (!member && window.TajData) {
-        try {
-          if (id) {
-            member = await TajData.members.get(id);
-          } else if (phone) {
-            member = await TajData.members.findByPhone(phone);
-          }
-        } catch (_) { /* fall through */ }
+      // 2) Offline / no-data-layer fallback: match against the local cache.
+      if (!member) {
+        const all = getMembers();
+        if (id && phone) {
+          member = all.find(m => (m.id || '').toLowerCase() === id.toLowerCase()
+                                && normalisePhone(m.phone) === normalisePhone(phone));
+        }
+        if (!member && id)    member = all.find(m => (m.id || '').toLowerCase() === id.toLowerCase());
+        if (!member && phone) member = all.find(m => normalisePhone(m.phone) === normalisePhone(phone));
       }
 
       if (submitBtn) {
@@ -313,7 +355,8 @@
       }
       if (err) err.hidden = true;
 
-      setSession(member.id);
+      setSession(member.id, member.phone || phone);
+      cacheCurrent(member);
       // Fire-and-forget activity log (don't block the redirect)
       if (window.TajData) {
         TajData.activity.log({
@@ -540,7 +583,8 @@
         } catch (_) {}
       }
 
-      setSession(newId);
+      setSession(newId, phone);
+      cacheCurrent(newMember);
 
       if (confirmBtn) {
         confirmBtn.disabled = false;
@@ -565,12 +609,22 @@
   /* ------------------------------------------------------------ *
    * MEMBER PORTAL                                                *
    * ------------------------------------------------------------ */
-  (function portalPage() {
+  (async function portalPage() {
     const shell = document.getElementById('portal-shell');
     if (!shell) return;
     const gate = document.getElementById('portal-gate');
 
-    const member = currentMember();
+    // Resolve the signed-in member. Cache gives an instant first paint; when
+    // there's no cache we MUST await the id+phone RPC before deciding (under
+    // the production RLS lockdown the cache is the only synchronous source).
+    let member = currentMember();
+    if (!member) {
+      member = await fetchCurrentMember();
+    } else {
+      // Have a cached copy — refresh from source in the background (non-blocking).
+      fetchCurrentMember().then(fresh => { if (fresh) { Object.assign(member, fresh); cacheCurrent(member); } });
+    }
+
     if (!member) {
       if (gate) gate.hidden = false;
       // After a brief moment, redirect to signin
@@ -607,13 +661,25 @@
     const used  = member.servicesUsed || 0;
     const inc   = member.servicesIncluded || tierDefault(member.tier, 'services');
     const left  = Math.max(0, inc - used);
-    const myBookings = getBookings().filter(b =>
-      sameMember(b, member)
-    );
+    // Instant from cache; refreshed from the member_bookings RPC by loadBookings().
+    let myBookings = getBookings().filter(b => sameMember(b, member));
     document.getElementById('stat-services').textContent = left;
     document.getElementById('stat-discount').textContent = (member.discount || tierDefault(member.tier, 'discount')) + '%';
     document.getElementById('stat-balance').textContent  = fmtBHD(member.balance || 0);
     document.getElementById('stat-bookings').textContent = myBookings.length;
+
+    // Pull this member's bookings via the gated RPC (the only path once anon
+    // loses direct SELECT on bookings). Falls back to the cache filter above.
+    async function loadBookings() {
+      if (window.TajData && TajData.members && typeof TajData.members.bookingsFor === 'function') {
+        try {
+          const rows = await TajData.members.bookingsFor(member.id, getToken() || member.phone || '');
+          if (Array.isArray(rows) && rows.length) myBookings = rows;
+        } catch (_) { /* keep cache */ }
+      }
+      document.getElementById('stat-bookings').textContent = myBookings.length;
+      renderBookings();
+    }
 
     /* ---- Bookings tabs ---- */
     let activeTab = 'upcoming';
@@ -671,7 +737,8 @@
         renderBookings();
       });
     });
-    renderBookings();
+    renderBookings();   // instant paint from cache
+    loadBookings();     // then refresh from the gated RPC
 
     /* ---- Top-level tabs (Bookings / Profile / Benefits) ---- */
     function activatePortalTab(name) {
@@ -827,55 +894,60 @@
         return;
       }
 
-      // Patch the member record (shared with admin)
-      const all = getMembers();
-      const idx = all.findIndex(x => x.id === member.id);
-      if (idx < 0) { toast('Could not find your record. Please refresh.'); return; }
-
-      const patched = Object.assign({}, all[idx], {
+      // Only the member-editable fields. Persisted via the member_save RPC,
+      // which is gated by id + phone — anon has no direct UPDATE post-lockdown.
+      const payload = {
         name: (first + ' ' + last).trim(),
         email,
         phone,
         dob: document.getElementById('pf-dob').value,
         therapist_pref: document.getElementById('pf-therapist').value,
         notes: document.getElementById('pf-notes').value.trim()
-      });
+      };
 
-      // Persist via data layer (Supabase + localStorage mirror)
+      const saveBtn = document.getElementById('profile-save-btn');
+      const lbl = saveBtn ? saveBtn.innerHTML : null;
+      if (saveBtn) { saveBtn.disabled = true; saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving…'; }
+
+      let updated = Object.assign({}, member, payload);
       try {
-        if (window.TajData) {
-          await TajData.members.upsert(patched);
-          await TajData.activity.log({
+        if (window.TajData && TajData.members && typeof TajData.members.save === 'function') {
+          // Authenticate the write with the stored phone token (fall back to the
+          // freshly-typed phone, since the member may be changing their number).
+          const res = await TajData.members.save(member.id, getToken() || member.phone || phone, payload);
+          if (res && res.id) updated = res;
+          TajData.activity.log({
             type: 'note',
             title: 'Member profile updated',
-            desc:  `${patched.name} · ${patched.id}`,
-            ref:   patched.id,
+            desc:  `${updated.name} · ${updated.id}`,
+            ref:   updated.id,
             refType: 'member'
-          });
+          }).catch(() => {});
         } else {
-          all[idx] = patched;
-          setMembers(all);
+          const all = getMembers();
+          const idx = all.findIndex(x => x.id === member.id);
+          if (idx >= 0) { all[idx] = updated; setMembers(all); }
           logActivity({
             type: 'note',
             title: 'Member profile updated',
-            desc:  `${patched.name} · ${patched.id}`,
-            ref:   patched.id,
+            desc:  `${updated.name} · ${updated.id}`,
+            ref:   updated.id,
             refType: 'member'
           });
         }
       } catch (err) {
         console.warn('[profile-save] failed:', err);
-        all[idx] = patched;
-        setMembers(all);
       }
 
-      // Always update the local cache copy used by render functions
-      all[idx] = patched;
+      if (saveBtn) { saveBtn.disabled = false; saveBtn.innerHTML = lbl || '<i class="fas fa-save"></i> Save Changes'; }
 
-      // Refresh visuals
-      Object.assign(member, all[idx]);
-      const firstName = (member.name || '').split(' ')[0] || 'Member';
-      document.getElementById('hero-name').textContent = firstName;
+      // Update in-memory + cache (the source the render fns read), then the phone
+      // token in case the number changed, then refresh visuals.
+      Object.assign(member, updated);
+      cacheCurrent(member);
+      if (member.phone) localStorage.setItem(ST.token, member.phone);
+
+      document.getElementById('hero-name').textContent = (member.name || '').split(' ')[0] || 'Member';
       refreshNav();
       renderProfile();
 

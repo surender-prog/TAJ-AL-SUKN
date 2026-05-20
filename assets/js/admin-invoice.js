@@ -449,6 +449,7 @@ function renderPaymentBlock(b, total) {
 /* Sign out */
 document.getElementById('admin-logout')?.addEventListener('click', e => {
   e.preventDefault();
+  if (window.TajAdmin) { TajAdmin.signOut(); return; }
   sessionStorage.removeItem('taj-admin-auth');
   location.href = 'admin-login.html';
 });

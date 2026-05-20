@@ -25,7 +25,17 @@ if (!member) {
   throw new Error('Member not found');
 }
 
+// Normalize date fields across schema variants so the page renders correctly.
+// Supabase-backed records expose startDate/endDate (+ raw start_date/end_date);
+// the legacy demo used joined/renews. Backfill joined/renews from whichever exists.
+member.joined = member.joined || member.startDate || member.start_date || '';
+member.renews = member.renews || member.endDate   || member.end_date   || '';
+
 function persist() {
+  // Mirror the editable date fields back to the canonical names so the record
+  // stays consistent for re-renders and any later Supabase sync.
+  if (member.joined) { member.startDate = member.joined; member.start_date = member.joined; }
+  if (member.renews) { member.endDate   = member.renews; member.end_date   = member.renews; }
   localStorage.setItem('taj-members', JSON.stringify(members));
 }
 
@@ -381,6 +391,7 @@ document.getElementById('save-notes')?.addEventListener('click', () => {
 
 document.getElementById('admin-logout')?.addEventListener('click', e => {
   e.preventDefault();
+  if (window.TajAdmin) { TajAdmin.signOut(); return; }
   sessionStorage.removeItem('taj-admin-auth');
   location.href = 'admin-login.html';
 });
