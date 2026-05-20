@@ -305,19 +305,26 @@
       if (dot > 0) needed.add(addr.slice(0, dot));
     });
 
-    // Try Supabase via TajData; fall back to localStorage cache
+    // Resolve content for each needed key.
+    //
+    // When Supabase is connected we read REMOTE-ONLY: a key that has no row
+    // in the DB resolves to the shipped DEFAULTS, NOT a stale localStorage
+    // mirror. This prevents old cached CMS content (e.g. a deleted page-home
+    // override) from masking the current defaults. We only fall back to the
+    // localStorage mirror when there is no live database connection.
     const got = {};
-    if (window.TajData && window.TajData.settings) {
+    const connected = !!(window.TajData && window.TajData.connected && window.TajData._sb);
+
+    if (connected) {
       try {
-        await Promise.all([...needed].map(async key => {
-          const val = await TajData.settings.get(key);
-          if (val) got[key] = val;
-        }));
+        const { data } = await window.TajData._sb
+          .from('settings').select('key,value').in('key', [...needed]);
+        (data || []).forEach(row => { if (row.value) got[row.key] = row.value; });
       } catch (e) {
         console.warn('[PageCMS] settings load failed:', e);
       }
     } else {
-      // No data layer (yet) — read directly from LS mirror
+      // Offline / unconfigured — use the localStorage mirror as the source.
       try {
         const ls = JSON.parse(localStorage.getItem('taj-settings') || '{}');
         [...needed].forEach(k => { if (ls[k]) got[k] = ls[k]; });
