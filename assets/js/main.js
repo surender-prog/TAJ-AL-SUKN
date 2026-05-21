@@ -146,6 +146,8 @@
   if (!cards.length) return;
 
   cards.forEach(card => {
+    // Skip cards routed to a WhatsApp enquiry (services not in the bookable catalog).
+    if (card.hasAttribute('data-wa')) return;
     // Get the service title from the heading inside
     const heading = card.querySelector('h4, h5');
     if (!heading) return;
@@ -164,6 +166,42 @@
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); }
     });
   });
+})();
+
+/* ---------- WhatsApp enquiry cards ----------
+   Cards/rows tagged with data-wa aren't in the bookable single-price catalog
+   (e.g. salon services with TBC prices, men's grooming with dual prices).
+   Tapping them opens a prefilled WhatsApp enquiry instead of the booking flow. */
+(function () {
+  const items = document.querySelectorAll('[data-wa]');
+  if (!items.length) return;
+  items.forEach(el => {
+    el.setAttribute('role', 'button');
+    el.setAttribute('tabindex', '0');
+    el.classList.add('svc-card--clickable');
+    const name = el.getAttribute('data-wa') || 'a service';
+    const url = 'https://wa.me/97335194422?text=' +
+      encodeURIComponent('Hello Taj Al Sukun Spa, I would like to enquire about ' + name + '.');
+    const go = () => window.open(url, '_blank');
+    el.addEventListener('click', go);
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); }
+    });
+  });
+})();
+
+/* ---------- Services audience tabs (Common / Ladies / Men) ----------
+   Switches the [data-svcpanel] sections on the Services page. */
+(function () {
+  const tabs = document.querySelectorAll('[data-svctab]');
+  if (!tabs.length) return;
+  const panels = document.querySelectorAll('[data-svcpanel]');
+  tabs.forEach(t => t.addEventListener('click', () => {
+    tabs.forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    const name = t.dataset.svctab;
+    panels.forEach(p => { p.hidden = (p.dataset.svcpanel !== name); });
+  }));
 })();
 
 /* ---------- Lightbox ---------- */
