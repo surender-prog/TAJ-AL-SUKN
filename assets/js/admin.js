@@ -1165,13 +1165,13 @@ document.getElementById('export-services')?.addEventListener('click', () => {
 /* ---------- Operating hours ---------- */
 const DAYS = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 const SEED_HOURS = {
-  Saturday:  { open: true,  start: '10:00', end: '23:00' },
-  Sunday:    { open: true,  start: '10:00', end: '23:00' },
-  Monday:    { open: true,  start: '10:00', end: '23:00' },
-  Tuesday:   { open: true,  start: '10:00', end: '23:00' },
-  Wednesday: { open: true,  start: '10:00', end: '23:00' },
-  Thursday:  { open: true,  start: '10:00', end: '23:00' },
-  Friday:    { open: true,  start: '14:00', end: '23:00' }
+  Saturday:  { open: true,  start: '10:00', end: '18:00' },
+  Sunday:    { open: true,  start: '10:00', end: '18:00' },
+  Monday:    { open: true,  start: '10:00', end: '18:00' },
+  Tuesday:   { open: true,  start: '10:00', end: '18:00' },
+  Wednesday: { open: true,  start: '10:00', end: '18:00' },
+  Thursday:  { open: true,  start: '10:00', end: '18:00' },
+  Friday:    { open: true,  start: '10:00', end: '18:00' }
 };
 let hoursData = JSON.parse(localStorage.getItem('taj-hours') || 'null') || SEED_HOURS;
 function persistHours() { localStorage.setItem('taj-hours', JSON.stringify(hoursData)); }

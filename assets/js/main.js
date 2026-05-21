@@ -499,26 +499,29 @@ function showToast(msg) {
       submitBtn.innerHTML = originalLabel || '<i class="fab fa-whatsapp"></i> Send via WhatsApp';
     }
 
+    const amountStr = finalPrice.toFixed(finalPrice % 1 ? 2 : 0) + ' BHD';
     const lines = [
-      'Hello Taj Al Sukun Spa, I would like to book an appointment.',
+      'Hello Taj Al Sukun Spa, I would like to book and pay for an appointment.',
       '',
       'Booking #: ' + bookingId,
       'Service: ' + sel.dataset.name + ' (' + basePrice + ' BHD)',
       isMember ? 'Member: ' + tier + ' tier · ID ' + id + ' (' + discountPct + '% off)' : 'Guest booking',
-      isMember ? 'Total after discount: ' + finalPrice.toFixed(finalPrice % 1 ? 2 : 0) + ' BHD' : 'Total: ' + basePrice + ' BHD',
+      '*Amount to pay: ' + amountStr + '*',
       '',
       'Name: ' + (d.get('name') || ''),
       'Phone: ' + (d.get('phone') || ''),
       'Email: ' + (d.get('email') || ''),
       'Date: ' + (d.get('date') || ''),
       'Time: ' + (d.get('time') || ''),
-      'Notes: ' + (d.get('notes') || '—')
+      'Notes: ' + (d.get('notes') || '—'),
+      '',
+      'Please share the payment details (Benefit Pay / bank transfer) so I can pay and confirm my booking.'
     ];
     const url = 'https://wa.me/97335194422?text=' + encodeURIComponent(lines.join('\n'));
     window.open(url, '_blank');
     showToast(savedRemote
-      ? 'Booking saved — admin notified via WhatsApp'
-      : 'Booking sent — admin notified via WhatsApp');
+      ? 'Booking sent on WhatsApp — complete payment there to confirm'
+      : 'Booking sent on WhatsApp — complete payment there to confirm');
   });
   update();
 })();

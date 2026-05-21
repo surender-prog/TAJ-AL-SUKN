@@ -237,7 +237,7 @@
       contact: {
         address:  'Al Fateh, Manama<br>Complex 324 · Road 2416 · Bld 950',
         phone:    '+973 35194422',
-        hours:    'Sat – Thu · 10am – 11pm',
+        hours:    'Daily · 10am – 6pm',
         whatsapp: '+973 35194422',
         email:    'hello@tasukunspa.com'
       }
