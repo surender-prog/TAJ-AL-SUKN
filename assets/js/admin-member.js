@@ -183,6 +183,21 @@ function render() {
     callout.style.display = 'none';
   }
 
+  // Frozen membership overrides the renewal-status display and flips the button.
+  const freezeBtn = document.getElementById('freeze-btn');
+  if (member.status === 'frozen') {
+    status.textContent = 'Frozen';
+    status.style.color = '#6b7280';
+    detail.textContent = 'Membership frozen — booking paused';
+    callout.className = 'renew-callout warn';
+    callout.style.display = '';
+    document.getElementById('rc-title').textContent = 'Membership frozen';
+    document.getElementById('rc-msg').textContent = 'Reactivate to allow booking again.';
+    if (freezeBtn) freezeBtn.innerHTML = '<i class="fas fa-play"></i> Reactivate Membership';
+  } else if (freezeBtn) {
+    freezeBtn.innerHTML = '<i class="fas fa-pause"></i> Freeze Membership';
+  }
+
   // Balance list
   const allowance = tierAllowance(member.tier);
   const used = parseUsedFromBalance(member.balance, allowance);
@@ -376,11 +391,17 @@ document.getElementById('upgrade-btn')?.addEventListener('click', () => {
 });
 
 document.getElementById('freeze-btn')?.addEventListener('click', () => {
-  if (!confirm(`Freeze ${member.name}'s membership? They won't be able to book until reactivated.`)) return;
-  member.frozen = !member.frozen;
+  // Freeze is persisted on the existing `status` column (status='frozen'); on
+  // reactivate we restore to 'active'. No dedicated `frozen` column needed.
+  const willFreeze = member.status !== 'frozen';
+  const msg = willFreeze
+    ? `Freeze ${member.name}'s membership? They won't be able to book until reactivated.`
+    : `Reactivate ${member.name}'s membership?`;
+  if (!confirm(msg)) return;
+  member.status = willFreeze ? 'frozen' : 'active';
   persist();
   render();
-  showToast(member.frozen ? 'Membership frozen' : 'Membership reactivated');
+  showToast(willFreeze ? 'Membership frozen' : 'Membership reactivated');
 });
 
 document.getElementById('cancel-btn')?.addEventListener('click', async () => {

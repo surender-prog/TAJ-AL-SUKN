@@ -132,6 +132,15 @@
     if (r.servicesUsed !== undefined)     { o.services_used     = r.servicesUsed;     delete o.servicesUsed; }
     if (r.joinedVia !== undefined)        { o.joined_via        = r.joinedVia;        delete o.joinedVia; }
     if (r.paymentMethod !== undefined)    { o.payment_method    = r.paymentMethod;    delete o.paymentMethod; }
+    // `balance` is numeric(10,3) in Postgres. Some legacy admin flows stored a
+    // descriptive "services remaining" string here (e.g. "2 massages · 1 foot
+    // ritual"). Sending non-numeric text to the numeric column raises 22P02 and
+    // rejects the whole row, so drop it from the remote payload when it isn't a
+    // finite number. The local cache (members.upsert) keeps the original value.
+    if (o.balance !== undefined && o.balance !== null &&
+        (o.balance === '' || !Number.isFinite(Number(o.balance)))) {
+      delete o.balance;
+    }
     return o;
   }
   function fromActivity(r) { return Object.assign({}, r, {
