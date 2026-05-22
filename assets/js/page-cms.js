@@ -332,6 +332,8 @@
     }
 
     applyContent(got);
+    // Signal that CMS content is on the page so the i18n layer can (re)translate.
+    try { document.dispatchEvent(new CustomEvent('taj-cms-applied')); } catch (_) {}
   }
 
   // Expose for the admin Website tab to invoke after a save (live preview),

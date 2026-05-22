@@ -15,3 +15,20 @@
 .price-menu__note{margin-top:14px;text-align:right;font-size:.78rem;color:var(--c-muted);letter-spacing:.04em}
 .price-menu__cta{text-align:center;margin-top:8px}
 @media(max-width:600px){.price-menu{padding:24px 20px}.price-menu__table th,.price-menu__table td{font-size:.92rem}}
+
+/* ===== Language toggle + RTL (Arabic) ===== */
+.lang-toggle{display:inline-flex;align-items:center;gap:6px;padding:8px 13px;border:1px solid currentColor;border-radius:999px;background:transparent;color:inherit;font-family:var(--f-body);font-weight:600;font-size:.8rem;letter-spacing:.05em;cursor:pointer;opacity:.78;transition:opacity .3s var(--ease),background .3s var(--ease),color .3s var(--ease)}
+.lang-toggle:hover{opacity:1;background:var(--c-copper);color:#fff;border-color:var(--c-copper)}
+.lang-toggle .lang-label{font-size:.9rem;line-height:1;font-weight:700}
+@media(max-width:900px){.lang-toggle{padding:7px 10px}}
+
+[dir=rtl] body{font-family:'Tajawal',var(--f-body)}
+[dir=rtl] h1,[dir=rtl] h2,[dir=rtl] h3,[dir=rtl] h4,[dir=rtl] h5,[dir=rtl] h6{font-family:'Amiri','Tajawal',var(--f-display);letter-spacing:0}
+[dir=rtl] em{font-style:normal}
+[dir=rtl] .eyebrow{letter-spacing:.06em}
+[dir=rtl] .btn{letter-spacing:.02em}
+[dir=rtl] .nav__menu{flex-direction:row-reverse}
+[dir=rtl] .marquee__track{direction:ltr}
+[dir=rtl] .price-menu__table th,[dir=rtl] .price-menu__table td{text-align:left}
+[dir=rtl] .price-menu__table th:first-child,[dir=rtl] .price-menu__table td:first-child{text-align:right}
+[dir=rtl] .price-menu__note{text-align:left}
