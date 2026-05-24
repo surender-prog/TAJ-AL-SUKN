@@ -185,6 +185,36 @@
     if (reserve) cta.insertBefore(btn, reserve); else cta.appendChild(btn);
   }
 
+  // Pull Arabic overrides the admin saved in Supabase (key: page-X_ar).
+  // Each row's JSON value mirrors the English page-X shape; we fold the
+  // dotted paths back into CMS[] so translations admin-saves take effect.
+  async function loadRemoteOverrides() {
+    if (!window.TajData || !window.TajData._sb) return;
+    const needed = new Set(['page-footer']);
+    document.querySelectorAll('[data-cms],[data-i18n]').forEach(function (el) {
+      const k = el.getAttribute('data-cms') || el.getAttribute('data-i18n') || '';
+      const dot = k.indexOf('.');
+      if (dot > 0) needed.add(k.slice(0, dot));
+    });
+    const arKeys = Array.from(needed).map(function (k) { return k + '_ar'; });
+    try {
+      const { data } = await window.TajData._sb
+        .from('settings').select('key,value').in('key', arKeys);
+      (data || []).forEach(function (row) {
+        if (!row.value || typeof row.value !== 'object') return;
+        const pageKey = row.key.replace(/_ar$/, '');
+        (function walk(val, prefix) {
+          Object.keys(val).forEach(function (k) {
+            const v = val[k];
+            const newKey = prefix + '.' + k;
+            if (v && typeof v === 'object' && !Array.isArray(v)) walk(v, newKey);
+            else if (typeof v === 'string' && v.trim()) CMS[newKey] = v;
+          });
+        })(row.value, pageKey);
+      });
+    } catch (_) { /* offline / RLS / not connected — keep hardcoded defaults */ }
+  }
+
   function boot() {
     injectToggle();
     apply(lang(), false); // sets dir + translates + correct toggle label
@@ -196,6 +226,14 @@
     // Safety net in case the event is missed (e.g. offline / no page-cms).
     if (lang() === 'ar') {
       window.addEventListener('load', function () { setTimeout(function () { apply('ar', false); }, 400); });
+    }
+    // Pull admin-saved Arabic overrides (page-X_ar) and re-translate when done.
+    if (window.TajData && typeof window.TajData.ready === 'function') {
+      window.TajData.ready().then(loadRemoteOverrides).then(function () {
+        if (lang() === 'ar') apply('ar', false);
+      });
+    } else {
+      loadRemoteOverrides().then(function () { if (lang() === 'ar') apply('ar', false); });
     }
   }
 

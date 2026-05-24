@@ -197,10 +197,23 @@
   let currentKey = 'page-home';
   let workingContent = {}; // copy of the current page being edited (unsaved)
   let originalContent = {}; // last-saved state (for revert)
+  let workingContentAR = {}; // Arabic mirror (unsaved)
+  let originalContentAR = {}; // last-saved Arabic (for revert)
 
   // ----------------------------- helpers ----------------------------
   function defaultsFor(key) {
     return (window.TAJ_PAGE_DEFAULTS && window.TAJ_PAGE_DEFAULTS[key]) || {};
+  }
+  // Derive Arabic defaults for a page from window.TAJ_I18N.cms by stripping the
+  // `<pageKey>.` prefix and folding the dotted paths into a nested object.
+  function arDefaultsFor(key) {
+    const out = {};
+    const cms = (window.TAJ_I18N && window.TAJ_I18N.cms) || {};
+    const prefix = key + '.';
+    Object.keys(cms).forEach(k => {
+      if (k.indexOf(prefix) === 0) set(out, k.slice(prefix.length), cms[k]);
+    });
+    return out;
   }
   // Deep-merge default + saved so newer fields auto-appear if defaults are extended
   function deepMerge(base, over) {
@@ -237,12 +250,15 @@
   // ----------------------------- renderer ---------------------------
   function renderField(block, field) {
     const path = block.id + '.' + field.key;
-    const val  = get(workingContent, path) || '';
-    const id   = 'cms-f-' + block.id + '-' + field.key;
-    let input;
+    const val   = get(workingContent,   path) || '';
+    const arVal = get(workingContentAR, path) || '';
+    const id    = 'cms-f-'    + block.id + '-' + field.key;
+    const arId  = 'cms-f-ar-' + block.id + '-' + field.key;
+    let input, arInput = '';
     switch (field.type) {
       case 'textarea':
-        input = `<textarea id="${id}" data-path="${path}" rows="${field.rows || 3}">${escHTML(val)}</textarea>`;
+        input   = `<textarea id="${id}"  data-path="${path}"    rows="${field.rows || 3}">${escHTML(val)}</textarea>`;
+        arInput = `<textarea id="${arId}" data-path-ar="${path}" rows="${field.rows || 3}" dir="rtl" lang="ar" class="cms-field__ar">${escHTML(arVal)}</textarea>`;
         break;
       case 'image': {
         const safe = escHTML(val);
@@ -254,17 +270,23 @@
             </button>
             <input type="text" id="${id}" data-path="${path}" value="${safe}" placeholder="assets/images/… or https://…" class="cms-image-url">
           </div>`;
+        // images don't need Arabic
         break;
       }
       case 'text':
       default:
-        input = `<input type="text" id="${id}" data-path="${path}" value="${escHTML(val)}">`;
+        input   = `<input type="text" id="${id}"  data-path="${path}"    value="${escHTML(val)}">`;
+        arInput = `<input type="text" id="${arId}" data-path-ar="${path}" value="${escHTML(arVal)}" dir="rtl" lang="ar" class="cms-field__ar">`;
     }
     const hint = field.hint ? `<small class="cms-field-hint">${field.hint}</small>` : '';
+    const arBlock = arInput
+      ? `<label for="${arId}" class="cms-field__ar-label"><span>ع</span> Arabic</label>${arInput}`
+      : '';
     return `
       <div class="cms-field">
         <label for="${id}">${escHTML(field.label)}</label>
         ${input}
+        ${arBlock}
         ${hint}
       </div>`;
   }
@@ -292,6 +314,13 @@
     if (def.footnote) html += `<p class="cms-footnote"><i class="fas fa-info-circle"></i> ${def.footnote}</p>`;
     sections.innerHTML = html;
 
+    // Wire Arabic inputs → workingContentAR (run first so its bindings exist
+    // independently of the English handler below)
+    sections.querySelectorAll('[data-path-ar]').forEach(el => {
+      el.addEventListener('input', () => {
+        set(workingContentAR, el.dataset.pathAr, el.value);
+      });
+    });
     // Wire field inputs → workingContent
     sections.querySelectorAll('[data-path]').forEach(el => {
       el.addEventListener('input', () => {
@@ -317,9 +346,14 @@
 
   async function loadPage(key) {
     currentKey = key;
-    const saved = await (window.TajData?.settings?.get(key) || Promise.resolve(null));
-    originalContent = deepMerge(defaultsFor(key), saved || {});
-    workingContent  = JSON.parse(JSON.stringify(originalContent));
+    const [saved, savedAR] = await Promise.all([
+      window.TajData?.settings?.get(key)         || Promise.resolve(null),
+      window.TajData?.settings?.get(key + '_ar') || Promise.resolve(null)
+    ]);
+    originalContent   = deepMerge(defaultsFor(key),   saved   || {});
+    originalContentAR = deepMerge(arDefaultsFor(key), savedAR || {});
+    workingContent    = JSON.parse(JSON.stringify(originalContent));
+    workingContentAR  = JSON.parse(JSON.stringify(originalContentAR));
     renderEditor();
   }
 
@@ -371,9 +405,11 @@
     try {
       if (window.TajData?.settings) {
         await TajData.settings.set(currentKey, workingContent);
+        await TajData.settings.set(currentKey + '_ar', workingContentAR);
       } else {
         const all = JSON.parse(localStorage.getItem('taj-settings') || '{}');
         all[currentKey] = workingContent;
+        all[currentKey + '_ar'] = workingContentAR;
         localStorage.setItem('taj-settings', JSON.stringify(all));
       }
       if (window.TajData?.activity) {
@@ -385,7 +421,8 @@
           refType: 'page'
         });
       }
-      originalContent = JSON.parse(JSON.stringify(workingContent));
+      originalContent   = JSON.parse(JSON.stringify(workingContent));
+      originalContentAR = JSON.parse(JSON.stringify(workingContentAR));
       btn.innerHTML = '<i class="fas fa-check"></i> Saved';
       setTimeout(() => { btn.innerHTML = original; btn.disabled = false; }, 1400);
       if (typeof showToast === 'function') showToast('Saved — live on the website now');
@@ -396,7 +433,8 @@
     }
   }
   function revert() {
-    workingContent = JSON.parse(JSON.stringify(originalContent));
+    workingContent   = JSON.parse(JSON.stringify(originalContent));
+    workingContentAR = JSON.parse(JSON.stringify(originalContentAR));
     renderEditor();
     if (typeof showToast === 'function') showToast('Reverted to last saved state');
   }
@@ -406,10 +444,12 @@
     for (const k of keys) {
       try {
         if (window.TajData?.settings) {
-          await TajData.settings.set(k, defaultsFor(k));
+          await TajData.settings.set(k,           defaultsFor(k));
+          await TajData.settings.set(k + '_ar',   arDefaultsFor(k));
         } else {
           const all = JSON.parse(localStorage.getItem('taj-settings') || '{}');
-          all[k] = defaultsFor(k);
+          all[k]           = defaultsFor(k);
+          all[k + '_ar']   = arDefaultsFor(k);
           localStorage.setItem('taj-settings', JSON.stringify(all));
         }
       } catch (_) {}
