@@ -50,7 +50,96 @@ window.TAJ_I18N = {
     'Quick Links': 'روابط سريعة',
     'Follow Us': 'تابعنا',
     'Opening Hours': 'ساعات العمل',
-    'Reserve Your Visit': 'احجز زيارتك'
+    'Send a Message': 'أرسل رسالة',
+    'Reserve Your Visit': 'احجز زيارتك',
+
+    // contact info cards
+    'Call Us': 'اتصل بنا',
+    'WhatsApp': 'واتساب',
+    'Location': 'الموقع',
+    'Fastest response': 'الأسرع للرد',
+    'Within 24 hours': 'خلال 24 ساعة',
+    'Walk-Ins Welcome': 'الزيارات بدون موعد مرحَّب بها',
+
+    // day names + hours
+    'Saturday': 'السبت',
+    'Sunday':   'الأحد',
+    'Monday':   'الإثنين',
+    'Tuesday':  'الثلاثاء',
+    'Wednesday': 'الأربعاء',
+    'Thursday': 'الخميس',
+    'Friday':   'الجمعة',
+    '10:00 AM – 6:00 PM': '10:00 ص – 6:00 م',
+
+    // form labels (contact + booking + signup)
+    'Full Name': 'الاسم الكامل',
+    'Phone': 'الهاتف',
+    'Email': 'البريد الإلكتروني',
+    'Subject': 'الموضوع',
+    'Message': 'الرسالة',
+    'Date': 'التاريخ',
+    'Time': 'الوقت',
+    'Notes': 'ملاحظات',
+    'Notes / Special Requests': 'ملاحظات / طلبات خاصة',
+    'Email (optional)': 'البريد الإلكتروني (اختياري)',
+    'Membership Tier': 'فئة العضوية',
+    'Member ID': 'رقم العضوية',
+
+    // contact subject options
+    'General Inquiry': 'استفسار عام',
+    'Booking Question': 'استفسار عن الحجز',
+    'Group / Couple Booking': 'حجز جماعي / للأزواج',
+    'Membership Inquiry': 'استفسار عن العضوية',
+    'Corporate / Event': 'شركات / فعاليات',
+    'Feedback': 'ملاحظات وآراء',
+
+    // placeholders
+    'Your name': 'اسمك',
+    'you@email.com': 'you@email.com',
+    'How can we help?': 'كيف يمكننا مساعدتك؟',
+    'TAS-2025-XXXX': 'TAS-2025-XXXX',
+    'Any preferences or notes for your visit?': 'هل لديك أي تفضيلات أو ملاحظات لزيارتك؟',
+    'MBR-001 or TAS-2025-XXXX': 'MBR-001 أو TAS-2025-XXXX',
+
+    // booking form section headings + member toggle
+    'Choose Your Treatment': 'اختر علاجك',
+    'Pick Date & Time': 'حدّد التاريخ والوقت',
+    'Your Details': 'بياناتك',
+    'Are you a Taj Al Sukun member?': 'هل أنت عضو في تاج السكون؟',
+    'Select tier…': 'اختر الفئة…',
+    'Silver — 10% off': 'فضّي — خصم 10٪',
+    'Gold — 15% off': 'ذهبي — خصم 15٪',
+    'Platinum — 20% off': 'بلاتيني — خصم 20٪',
+
+    // signin / signup buttons + labels
+    'Welcome back': 'أهلاً بعودتك',
+    'Forgot ID?': 'نسيت رقم العضوية؟',
+    'My Portal': 'حسابي',
+    'Not you?': 'لست أنت؟',
+    'Sign Out': 'تسجيل الخروج',
+    'Save Changes': 'حفظ التغييرات',
+    'Edit Profile': 'تعديل الملف الشخصي',
+
+    // booking summary
+    'Guest': 'ضيف',
+    'Service': 'الخدمة',
+    'Service Fee': 'رسوم الخدمة',
+    'Member Discount': 'خصم العضوية',
+    'Total': 'الإجمالي',
+    'Need Help?': 'تحتاج إلى مساعدة؟',
+
+    // services tabs sub
+    'Salon': 'صالون',
+    'Foot Ritual': 'طقس القدم',
+    'Couple': 'للأزواج',
+    'Package': 'باقة',
+
+    // misc small labels
+    'Discover': 'اكتشف',
+    'Spa & Wellness': 'سبا وعافية',
+    'Become a Silver Member': 'كن عضوًا فضّيًا',
+    'Become a Gold Member': 'كن عضوًا ذهبيًا',
+    'Become a Platinum Member': 'كن عضوًا بلاتينيًا'
   },
 
   /* ---------------- Page content (keyed by data-cms) ----------------------- */

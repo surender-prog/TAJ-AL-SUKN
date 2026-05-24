@@ -54,7 +54,13 @@
     '.nav__menu a', '.nav__signin', '.nav__member-name',
     '.btn', 'button.tab', '.svc-row__name h5',
     '.footer__col a', '.footer__col h6', '.footer__col h5',
-    '.crumb span', '.crumb a', '.step__label', '.eyebrow'
+    '.crumb span', '.crumb a', '.step__label', '.eyebrow',
+    // forms & deeper labels
+    '.field label', '.field-label', 'select option', '.form-card h3',
+    '.pick .info h6', '.pick .info span',
+    '.member-toggle__head .label', '.member-banner__hello',
+    '.info-card h5', '.info-card p', '.day', '.time', '.closed-lbl',
+    '.numlabel .lbl'
   ].join(',');
 
   function translateChrome(toArabic) {
@@ -81,6 +87,20 @@
     document.head.appendChild(link);
   }
 
+  // Placeholders aren't text nodes — translate them separately.
+  function translatePlaceholders(toArabic) {
+    var map = toArabic ? UI : UI_REV;
+    document.querySelectorAll('input[placeholder], textarea[placeholder]').forEach(function (el) {
+      var cur = el.getAttribute('placeholder') || '';
+      var t = cur.trim();
+      if (!t) return;
+      if (map[t] != null) {
+        if (!el.hasAttribute('data-en-placeholder')) el.setAttribute('data-en-placeholder', cur);
+        el.setAttribute('placeholder', map[t]);
+      }
+    });
+  }
+
   function apply(l, persist) {
     var root = document.documentElement;
     var toAr = (l === 'ar');
@@ -90,6 +110,7 @@
     root.classList.toggle('is-rtl', toAr);
     translateContent(toAr);
     translateChrome(toAr);
+    translatePlaceholders(toAr);
     if (persist) setLang(l);
     // reflect on every toggle button
     document.querySelectorAll('[data-lang-toggle]').forEach(function (b) {
