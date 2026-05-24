@@ -183,7 +183,132 @@ window.TAJ_I18N = {
     "I've tried many massage therapists before, but Sofia's approach is truly unique. Each movement feels thoughtful and precise. My back pain has eased.":
       'جرّبت معالجين كثيرين من قبل، لكن أسلوب صوفيا فريدٌ حقًا. كل حركة تبدو مدروسة ودقيقة. وآلام ظهري خفّت.',
     "Last night I slept like a child! I immediately felt my upper back, my legs, neck and lower body felt so much lighter. After my session everything was toned. Thank you.":
-      'نمت ليلة أمس كطفل! شعرت فورًا أن أعلى ظهري وساقَيّ ورقبتي وأسفل جسدي أصبحت أخفّ بكثير. بعد جلستي كان كل شيء في توازنه. شكرًا لكم.'
+      'نمت ليلة أمس كطفل! شعرت فورًا أن أعلى ظهري وساقَيّ ورقبتي وأسفل جسدي أصبحت أخفّ بكثير. بعد جلستي كان كل شيء في توازنه. شكرًا لكم.',
+
+    // about — values cards
+    'Quality': 'الجودة',
+    'Premium ingredients, vetted techniques, no shortcuts — ever.': 'مكوّناتٌ فاخرة، وتقنياتٌ مُختبَرة، بلا اختصارات — أبدًا.',
+    'Privacy': 'الخصوصية',
+    'Discreet, private rooms designed for your absolute comfort.': 'غرفٌ هادئة وخاصة صُمّمت لراحتك المطلقة.',
+    'Care': 'الرعاية',
+    'Genuine warmth in every welcome, every touch, every farewell.': 'دفءٌ صادقٌ في كل ترحيب، وكل لمسة، وكل وداع.',
+    'Excellence': 'التميّز',
+    'Trained professionals committed to mastery of their craft.': 'محترفون مدرَّبون ملتزمون بإتقان صنعتهم.',
+
+    // footer columns
+    'Visit': 'تصفّح',
+    'Experience': 'تجربة',
+    'Book Online': 'احجز عبر الإنترنت',
+    'Packages': 'الباقات',
+    'Treatments': 'العلاجات',
+
+    // member portal — hero
+    'MEMBER ID': 'رقم العضوية',
+    'My Profile': 'ملفي الشخصي',
+
+    // member portal — stats
+    'Complimentary Services Left': 'خدمات مجانية متبقّية',
+    'Account Balance': 'الرصيد',
+    'Visits This Year': 'زيارات هذا العام',
+    // (Member Discount already mapped)
+
+    // member portal — tabs + bookings section
+    'Bookings': 'الحجوزات',
+    'Profile': 'الملف الشخصي',
+    'Benefits': 'المزايا',
+    'Upcoming & Past Visits': 'الزيارات القادمة والسابقة',
+    'Upcoming': 'القادمة',
+    'Past': 'السابقة',
+    'All Visits': 'جميع الزيارات',
+    'All': 'الكل',
+    'Confirmed': 'مؤكَّد',
+    'Pending': 'قيد المراجعة',
+    'Completed': 'مكتمل',
+    'Cancelled': 'مُلغى',
+
+    // signup wizard
+    'Choose Tier': 'اختر الفئة',
+    'Payment': 'الدفع',
+    'Welcome': 'أهلاً',
+    'Confirm & Activate': 'تأكيد وتفعيل',
+
+    // membership comparison — section headers
+    'Benefit': 'الميزة',
+    'Annual Investment': 'الاشتراك السنوي',
+    'Complimentary Services': 'الخدمات المجانية',
+    'Member Pricing': 'أسعار الأعضاء',
+    'Booking & Privileges': 'الحجز والامتيازات',
+    'Welcome & Special Occasions': 'الترحيب والمناسبات الخاصة',
+    'Booking Privileges': 'امتيازات الحجز',
+    'Extras': 'مزايا إضافية',
+    'Price per year': 'السعر السنوي',
+    // comparison feature rows
+    '60-min signature massages': 'جلسات تدليك مميَّز (60 دقيقة)',
+    'Royal Hammam rituals': 'طقوس الحمّام الملكي',
+    'Foot rituals (reflexology)': 'طقوس القدم (ريفلكسولوجي)',
+    'Hot Stone sessions': 'جلسات الحجر الحار',
+    'Discount on additional treatments': 'خصم على العلاجات الإضافية',
+    'Discount on products': 'خصم على المنتجات',
+    'Priority booking window': 'نافذة الحجز ذات الأولوية',
+    'Guest passes per year': 'تصاريح ضيوف سنويًا',
+    'Personal therapist match': 'مطابقة معالجٍ شخصي',
+    'Birthday gift': 'هدية عيد الميلاد',
+    'Welcome ritual': 'طقس الترحيب',
+    'Member events': 'فعاليات الأعضاء',
+    'Concierge scheduling': 'جدولة عبر الكونسيرج',
+    // comparison value cells
+    'Unlimited (2/mo)': 'غير محدود (2 شهريًا)',
+    'Unlimited': 'غير محدود',
+    '12 per year': '12 سنويًا',
+    '24 hours ahead': 'قبل 24 ساعة',
+    '48 hours ahead': 'قبل 48 ساعة',
+    'Anytime': 'في أي وقت',
+    '90 min': '90 دقيقة',
+    '4 hours': '4 ساعات',
+    'Foot Relaxing': 'راحة القدم',
+    'Spa journey': 'رحلة سبا',
+    'Day at the Spa': 'يوم في السبا',
+    'Yes': 'نعم',
+    'No': 'لا',
+    'Seasonal offers': 'عروض موسمية',
+    'Seasonal events': 'فعاليات موسمية',
+
+    // about — multi-lingual list
+    'Multi-lingual team (Arabic, English & more)': 'فريقٌ متعدّد اللغات (العربية والإنجليزية وأكثر)',
+    'Kingdom of Bahrain · CR No. 182250-1': 'مملكة البحرين · س.ت رقم 182250-1',
+
+    // portal — tier-specific taglines (set dynamically by member-auth.js)
+    'Your year of considered moments awaits.': 'عامٌ من اللحظات المختارة بعناية بانتظارك.',
+    'A generous year of restoration is yours.': 'عامٌ سخيّ من الاستعادة لك.',
+    'The fullest expression of care, at your call.': 'أرفع تعبيرٍ عن العناية، في خدمتك.',
+    'Your sanctuary is ready.': 'ملاذك جاهز.',
+
+    // signup wizard panel headings + welcome eyebrow
+    'Tell us a little about you.': 'أخبرنا قليلاً عنك.',
+    'Choose your tier.': 'اختر فئتك.',
+    'How would you like to pay?': 'كيف تودّ الدفع؟',
+    'WELCOME TO THE CIRCLE': 'أهلاً بك في الدائرة',
+
+    // about — numbered section chips (.numlabel .lbl)
+    'Our Story': 'قصتنا',
+    'Our Purpose': 'مهمتنا',
+    'Meet the Team': 'تعرّف على الفريق',
+    'Leadership': 'القيادة',
+    'Continuous training in new techniques': 'تدريبٌ مستمر على تقنياتٍ جديدة',
+
+    // about — mission italic taglines
+    '— To create moments of complete restoration for body, mind, and spirit.':
+      '— أن نصنع لحظاتٍ من الاستعادة الكاملة للجسد والعقل والروح.',
+    '— To be Bahrain\'s most-trusted name in holistic wellness.':
+      '— أن نكون الاسم الأكثر ثقةً في البحرين في مجال العافية الشاملة.',
+    'We deliver authentic, expertly-performed wellness rituals using premium natural ingredients in an environment designed for serenity.':
+      'نقدّم طقوس عافية أصيلة يؤدّيها خبراء مهرة باستخدام مكوّناتٍ طبيعية فاخرة في بيئةٍ صُمّمت للهدوء.',
+    'A destination where guests return — not just for the treatments, but for the feeling that lingers long after they leave.':
+      'وجهةٌ يعود إليها الضيوف — لا للعلاجات فحسب، بل لذلك الشعور الذي يبقى معهم طويلاً بعد المغادرة.',
+
+    // about — team certified list items
+    'Internationally certified therapists': 'معالجون معتمدون دوليًا',
+    'Premium products from Morocco, Bali & Thailand': 'منتجاتٌ فاخرة من المغرب وبالي وتايلاند'
   },
 
   /* ---------------- Page content (keyed by data-cms) ----------------------- */
@@ -236,6 +361,18 @@ window.TAJ_I18N = {
     'page-about.cta.eyebrow': 'مستعدٌّ لاختبار الفرق؟',
     'page-about.cta.title': 'ادخل إلى <em>الملاذ</em>',
     'page-about.cta.body': 'احجز جلستك عبر الإنترنت أو تحدّث معنا مباشرةً على واتساب.',
+    // about — section editorial titles + paragraphs
+    'page-about.story.title': 'ملاذٌ وُلد من <em>أمنيةٍ بسيطة</em>.',
+    'page-about.story.p1': 'تأسّس «تاج السكون» على إيمانٍ هادئ — بأن كل شخصٍ يستحقّ مكانًا يضع فيه ثقل العالم جانبًا. في مدينةٍ تعجّ بالحركة، صنعنا فضاءً يُبطئ خطواتك بلطفٍ وكمال.',
+    'page-about.story.p2': 'مستلهَمين من تقاليد العافية العميقة في شبه الجزيرة العربية وشمال إفريقيا وجنوب شرق آسيا، يجمع السبا أرقى الطقوس من حول العالم — تؤدّيها أيادٍ تدرّبت سنواتٍ لتقدّمها بعناية.',
+    'page-about.story.p3': 'كلّ علاج، وكلّ عطر، وكلّ تفصيلٍ هادئٍ في المكان مُختارٌ لغايةٍ واحدة: <em>أن نعيدك إلى نفسك.</em>',
+    'page-about.mission.title': 'الرسالة <em>والرؤية</em>.',
+    'page-about.team.h2': 'أيادٍ <em>تفهم</em>.',
+    'page-about.team.p1': 'يحمل معالجونا سنواتٍ من التدريب في الأساليب التايلاندية والبالية والمغربية والسويدية والعميقة. كلٌّ منهم يحمل شهاداتٍ دولية، ويُختار قدر اختياره لمهارته التقنية لدفئه وحضوره.',
+    'page-about.team.p2': 'ما يجمعهم إيمانٌ مشترك — أن العافية الحقيقية تحدث حين يشعر الضيوف بأمانٍ كامل، وبأنهم مرئيّون، ومُعتنىً بهم تمامًا.',
+    'page-about.leadership.title': 'الرؤية خلف <em>الملاذ</em>.',
+    'page-about.leadership.p1': 'بأكثر من عقدَين من القيادة في الضيافة والعافية، تَصوغ مديرة السبا كل عنصرٍ من تجربة تاج السكون — من اختيار الزيوت إلى درجة حرارة شاي الترحيب.',
+    'page-about.leadership.p2': 'التزامها بالتميّز هو ما يجعل تاج السكون يبدو لا كسبا، بل كملاذٍ ستعود إليه دائمًا.',
 
     /* ---- SERVICES ---- */
     'page-services.hero.title': '<em>علاجاتنا</em>',
@@ -275,6 +412,11 @@ window.TAJ_I18N = {
     'page-contact.hero.subtitle': 'تواصل معنا هاتفيًا أو عبر واتساب أو من خلال النموذج أدناه — نردّ بسرعة.',
     'page-contact.visit.eyebrow': 'موقعنا',
     'page-contact.visit.title': 'مبنى <em>950</em>',
+
+    /* ---- MEMBER PORTAL ---- */
+    'page-portal.hero.eyebrow': 'بوابة العضو',
+    'page-portal.hero.welcome': 'أهلاً بعودتك،',
+    'page-portal.hero.tagline': 'ملاذك جاهز. هذا ما ينتظرك.',
 
     /* ---- MEMBERSHIP — tier cards ---- */
     'page-membership.perks-label': 'مشمولة سنويًا',

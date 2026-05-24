@@ -849,6 +849,11 @@
     }
     renderBenefits();
 
+    // Member-auth has rewritten the hero name, tagline, tier, etc. Tell i18n
+    // to re-translate so the Arabic version doesn't get stranded on the just-
+    // written English values (reuses the page-cms completion event).
+    try { document.dispatchEvent(new CustomEvent('taj-cms-applied')); } catch (_) {}
+
     // "My Profile" hero button — activates the Profile tab + scrolls into view
     document.getElementById('profile-btn')?.addEventListener('click', () => {
       activatePortalTab('profile');

@@ -68,7 +68,17 @@
     '.plan__name', '.plan__list li',
     '.testi p', '.testi__by span',
     // misc
-    '.svc-row__name p'
+    '.svc-row__name p',
+    // about values + team list items
+    '.value h4', '.value p', '.editorial__copy ul li',
+    // member portal
+    '.portal-stat__lbl', '.portal-tabnav__btn',
+    '.portal-hero__id-label', '.portal-hero__action', '#hero-tagline',
+    '.portal-bookings__head h2', '.portal-bookings-tabs button',
+    // signup wizard
+    '.wizard-step__label', '.wizard-panel__head h2',
+    // membership comparison table cells
+    '.compare td', '.compare th', '.compare td strong'
   ].join(',');
 
   function translateChrome(toArabic) {
