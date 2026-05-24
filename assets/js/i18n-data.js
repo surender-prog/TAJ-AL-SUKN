@@ -142,7 +142,48 @@ window.TAJ_I18N = {
     'Spa & Wellness': 'سبا وعافية',
     'Become a Silver Member': 'كن عضوًا فضّيًا',
     'Become a Gold Member': 'كن عضوًا ذهبيًا',
-    'Become a Platinum Member': 'كن عضوًا بلاتينيًا'
+    'Become a Platinum Member': 'كن عضوًا بلاتينيًا',
+
+    // home — "After Your Visit" numbered cards
+    'Steps to a world of healing': 'خطواتٌ إلى عالمٍ من الشفاء',
+    'For your body and soul.': 'لجسدك وروحك.',
+    'Begin your journey': 'ابدأ رحلتك',
+    'Of rejuvenation and healing.': 'من التجديد والشفاء.',
+    'Deep relaxation': 'استرخاءٌ عميق',
+    'Enjoy deep relaxation and rest.': 'استمتع بالاسترخاء العميق والراحة.',
+    'Lightness in your body': 'خِفّةٌ في جسدك',
+    'Experience lightness in muscles and joints.': 'اختبر الخفّة في العضلات والمفاصل.',
+
+    // home — pricing plans
+    'Basic': 'أساسي',
+    'Standard': 'قياسي',
+    'Premium': 'فاخر',
+    'Three ways to experience Taj Al Sukun — choose what fits today.': 'ثلاث طرق لاختبار تاج السكون — اختر ما يناسبك اليوم.',
+    'Book Your Massage': 'احجز جلستك',
+    '60-min Swedish or Casablanca': 'تدليك سويدي أو كازابلانكا 60 دقيقة',
+    'Aromatic oils': 'زيوت عطرية',
+    'Herbal tea after session': 'شاي أعشاب بعد الجلسة',
+    'Hot herbal compress': 'كمّادة أعشاب ساخنة',
+    'Foot reflexology': 'ريفلكسولوجي للقدم',
+    '90-min Traditional Massage': 'تدليك تقليدي 90 دقيقة',
+    'Foot reflexology (15 min)': 'ريفلكسولوجي للقدم (15 دقيقة)',
+    'Hot stone therapy': 'علاج بالحجر الحار',
+    '120-min Luxury Ritual': 'طقس فاخر 120 دقيقة',
+    'Foot reflexology (30 min)': 'ريفلكسولوجي للقدم (30 دقيقة)',
+
+    // home — testimonial quotes + locations
+    'Manama': 'المنامة',
+    'Riffa': 'الرفاع',
+    'Adliya': 'العدلية',
+    'Seef': 'السيف',
+    "A perfect escape from the city. The Royal Hammam left my skin glowing and my mind completely at ease. Sofia's touch is sheer magic.":
+      'ملاذٌ مثاليّ بعيدًا عن صخب المدينة. الحمّام الملكي ترك بشرتي متألّقة وذهني في راحةٍ تامّة. لمسة صوفيا سحرٌ خالص.',
+    "The atmosphere in the studio is incredibly calming from the very first minute. Sofia's touch is gentle and powerful, more than just a massage — it's therapy for the soul.":
+      'الأجواء في الاستوديو مهدّئة بعمقٍ من الدقيقة الأولى. لمسة صوفيا لطيفةٌ وقويةٌ في آنٍ معًا — أكثر من مجرّد تدليك، إنه علاجٌ للروح.',
+    "I've tried many massage therapists before, but Sofia's approach is truly unique. Each movement feels thoughtful and precise. My back pain has eased.":
+      'جرّبت معالجين كثيرين من قبل، لكن أسلوب صوفيا فريدٌ حقًا. كل حركة تبدو مدروسة ودقيقة. وآلام ظهري خفّت.',
+    "Last night I slept like a child! I immediately felt my upper back, my legs, neck and lower body felt so much lighter. After my session everything was toned. Thank you.":
+      'نمت ليلة أمس كطفل! شعرت فورًا أن أعلى ظهري وساقَيّ ورقبتي وأسفل جسدي أصبحت أخفّ بكثير. بعد جلستي كان كل شيء في توازنه. شكرًا لكم.'
   },
 
   /* ---------------- Page content (keyed by data-cms) ----------------------- */
@@ -283,5 +324,25 @@ window.TAJ_I18N = {
     'page-membership.platinum.p10': 'صندوق هدايا سنوي من المنتجات الفاخرة',
     'page-membership.platinum.p11': 'جدولة المواعيد عبر الكونسيرج',
     'page-membership.platinum.cta': '<i class="fas fa-star"></i> كن عضوًا بلاتينيًا'
+  },
+
+  /* ---------------- Service catalogue (dynamic cards) ---------------------- */
+  // Keyed by the English service name (matches the service row in Supabase).
+  // Both name and desc are swapped on the rendered .svc-card and the booking
+  // service picker; caching uses data-en-name / data-en-desc for EN-restore.
+  services: {
+    'Royal Hammam':      { name: 'الحمّام الملكي',       desc: 'طقس بخار فاخر يجمع التقشير والتنظيف العميق — لتنقية الجسد والبشرة.' },
+    'Casablanca Hammam': { name: 'حمّام الدار البيضاء',   desc: 'طقس عافية مميَّز يجمع البخار والتقشير والتنظيف لاستعادة التوازن الداخلي.' },
+    'Argan Oil Ritual':  { name: 'طقس زيت الأركان',       desc: 'تدليكٌ فاخر بزيت الأركان المغربي الغني لتغذية البشرة وتخفيف التوتر.' },
+    'Hot Stone Therapy': { name: 'علاج الحجر الحار',     desc: 'أحجارٌ بركانية دافئة تُرخي العضلات، وتنشّط الدورة الدموية، وتعزّز العافية الشاملة.' },
+    'Aroma Relaxing':    { name: 'التدليك العطري المريح', desc: 'تدليكٌ مهدّئٌ بعمق بالزيوت العطرية الأساسية لتخفيف التوتر وموازنة الحواس.' },
+    'Balinese Massage':  { name: 'التدليك البالي',        desc: 'علاجٌ شامل يمزج التمدّدات اللطيفة والحركات الإيقاعية والزيوت العطرية.' },
+    'Royal Thai':        { name: 'التايلاندي الملكي',     desc: 'تمدّدات إيقاعية تقليدية وحركات مساعِدة لاستعادة تدفّق الطاقة.' },
+    'Swedish Massage':   { name: 'التدليك السويدي',       desc: 'تدليكٌ كلاسيكي لكامل الجسم بضغطٍ خفيف إلى متوسط لتخفيف التوتر.' },
+    'Deep Tissue':       { name: 'التدليك العميق',        desc: 'تخفيفٌ موجَّه للتوتر المزمن، وتحسينٌ للحركة، وتعافٍ عضلي يدوم.' },
+    'Reflexology':       { name: 'الريفلكسولوجي',         desc: 'تدليكٌ علاجي للقدم بضغطٍ لطيف على نقاطٍ محدّدة لتخفيف التوتر.' },
+    'Foot Relaxing':     { name: 'راحة القدم',            desc: 'تدليكٌ مهدّئ للقدم يخفّف التعب ويدعم التوازن العام.' },
+    'Couples Sanctuary': { name: 'ملاذ الأزواج',          desc: 'تجربةٌ للزوجين جنبًا إلى جنب — اختر تدليكك في جناحٍ خاص مع الشموع والشاي.' },
+    'Sultan Suite':      { name: 'جناح السلطان',          desc: 'تتابعٌ فاخرٌ مصمَّم لاستعادةٍ تستغرق اليوم بكامله.' }
   }
 };

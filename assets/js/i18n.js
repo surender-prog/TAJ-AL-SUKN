@@ -17,9 +17,10 @@
   'use strict';
 
   var STORE = 'taj-lang';
-  var DICT  = window.TAJ_I18N || { ui: {}, cms: {} };
+  var DICT  = window.TAJ_I18N || { ui: {}, cms: {}, services: {} };
   var UI    = DICT.ui  || {};
   var CMS   = DICT.cms || {};
+  var SVCS  = DICT.services || {};
 
   // reverse UI map (Arabic -> English) for restoring
   var UI_REV = {};
@@ -61,7 +62,13 @@
     '.member-toggle__head .label', '.member-banner__hello',
     '.info-card h5', '.info-card p', '.day', '.time', '.closed-lbl',
     '.numlabel .lbl', '.mtier__tier', '.svc-card .tag', '.compare th',
-    '.s-head p', '.hours h4'
+    '.s-head p', '.hours h4',
+    // home deeper sections + testimonials
+    '.numbento__cell h5', '.numbento__cell p',
+    '.plan__name', '.plan__list li',
+    '.testi p', '.testi__by span',
+    // misc
+    '.svc-row__name p'
   ].join(',');
 
   function translateChrome(toArabic) {
@@ -88,6 +95,45 @@
     document.head.appendChild(link);
   }
 
+  // Service cards (.svc-card on Services page) and the booking service picker
+  // (.pick on Booking page) are rendered dynamically by main.js from the
+  // services table. Translate them by matching the English name against
+  // TAJ_I18N.services. Caches in data-en-name / data-en-desc.
+  function translateServiceCards(toArabic) {
+    // Cards (services page)
+    document.querySelectorAll('.svc-card').forEach(function (card) {
+      var h = card.querySelector('h4');
+      var p = card.querySelector('p');
+      if (!h) return;
+      var englishName = h.getAttribute('data-en-name') || h.textContent.trim();
+      var sv = SVCS[englishName];
+      if (!sv) return;
+      if (toArabic) {
+        if (!h.hasAttribute('data-en-name')) h.setAttribute('data-en-name', h.textContent);
+        if (sv.name) h.textContent = sv.name;
+        if (p && sv.desc) {
+          if (!p.hasAttribute('data-en-desc')) p.setAttribute('data-en-desc', p.textContent);
+          p.textContent = sv.desc;
+        }
+      } else {
+        if (h.hasAttribute('data-en-name')) h.textContent = h.getAttribute('data-en-name');
+        if (p && p.hasAttribute('data-en-desc')) p.textContent = p.getAttribute('data-en-desc');
+      }
+    });
+    // Booking picker labels (.pick .info h6)
+    document.querySelectorAll('.pick .info h6').forEach(function (h) {
+      var englishName = h.getAttribute('data-en-name') || h.textContent.trim();
+      var sv = SVCS[englishName];
+      if (!sv) return;
+      if (toArabic) {
+        if (!h.hasAttribute('data-en-name')) h.setAttribute('data-en-name', h.textContent);
+        if (sv.name) h.textContent = sv.name;
+      } else if (h.hasAttribute('data-en-name')) {
+        h.textContent = h.getAttribute('data-en-name');
+      }
+    });
+  }
+
   // Placeholders aren't text nodes — translate them separately.
   function translatePlaceholders(toArabic) {
     var map = toArabic ? UI : UI_REV;
@@ -112,6 +158,7 @@
     translateContent(toAr);
     translateChrome(toAr);
     translatePlaceholders(toAr);
+    translateServiceCards(toAr);
     if (persist) setLang(l);
     // reflect on every toggle button
     document.querySelectorAll('[data-lang-toggle]').forEach(function (b) {
