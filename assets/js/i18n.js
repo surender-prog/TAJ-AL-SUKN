@@ -60,7 +60,8 @@
     '.pick .info h6', '.pick .info span',
     '.member-toggle__head .label', '.member-banner__hello',
     '.info-card h5', '.info-card p', '.day', '.time', '.closed-lbl',
-    '.numlabel .lbl'
+    '.numlabel .lbl', '.mtier__tier', '.svc-card .tag', '.compare th',
+    '.s-head p', '.hours h4'
   ].join(',');
 
   function translateChrome(toArabic) {

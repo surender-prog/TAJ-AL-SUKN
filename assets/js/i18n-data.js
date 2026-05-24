@@ -110,6 +110,9 @@ window.TAJ_I18N = {
     'Silver — 10% off': 'فضّي — خصم 10٪',
     'Gold — 15% off': 'ذهبي — خصم 15٪',
     'Platinum — 20% off': 'بلاتيني — خصم 20٪',
+    'Silver': 'فضّي',
+    'Gold': 'ذهبي',
+    'Platinum': 'بلاتيني',
 
     // signin / signup buttons + labels
     'Welcome back': 'أهلاً بعودتك',
@@ -230,6 +233,55 @@ window.TAJ_I18N = {
     'page-contact.hero.title': 'يسعدنا أن <em>نسمع منك</em>',
     'page-contact.hero.subtitle': 'تواصل معنا هاتفيًا أو عبر واتساب أو من خلال النموذج أدناه — نردّ بسرعة.',
     'page-contact.visit.eyebrow': 'موقعنا',
-    'page-contact.visit.title': 'مبنى <em>950</em>'
+    'page-contact.visit.title': 'مبنى <em>950</em>',
+
+    /* ---- MEMBERSHIP — tier cards ---- */
+    'page-membership.perks-label': 'مشمولة سنويًا',
+    'page-membership.most-popular': 'الأكثر شعبية',
+
+    // Silver
+    'page-membership.silver.name': 'الرفيق',
+    'page-membership.silver.sub': 'دعوةٌ للبدء — عامٌ من اللحظات المختارة بعناية.',
+    'page-membership.silver.price': '150<small>د.ب · سنويًا</small>',
+    'page-membership.silver.p1': '<strong>2 جلسات</strong> تدليك مميَّز مجانية (60 دقيقة)',
+    'page-membership.silver.p2': '<strong>1 طقس</strong> ريفلكسولوجي للقدم مجاني',
+    'page-membership.silver.p3': '<strong>خصم 10٪</strong> على جميع العلاجات الإضافية',
+    'page-membership.silver.p4': 'حجز ذو أولوية — قبل 24 ساعة',
+    'page-membership.silver.p5': 'طقس ترحيبي عند الاشتراك',
+    'page-membership.silver.p6': 'هدية عيد الميلاد — جلسة قدم مجانية',
+    'page-membership.silver.p7': 'عروض موسمية حصرية للأعضاء',
+    'page-membership.silver.cta': '<i class="fas fa-gem"></i> كن عضوًا فضّيًا',
+
+    // Gold
+    'page-membership.gold.name': 'الملاذ',
+    'page-membership.gold.sub': 'عامٌ سخيّ من الاستعادة المنتظمة والعناية المميَّزة.',
+    'page-membership.gold.price': '350<small>د.ب · سنويًا</small>',
+    'page-membership.gold.p1': '<strong>6 جلسات</strong> تدليك مميَّز مجانية (60 دقيقة)',
+    'page-membership.gold.p2': '<strong>1 طقس</strong> الحمّام الملكي مشمول',
+    'page-membership.gold.p3': '<strong>2 طقوس</strong> قدم مجانية',
+    'page-membership.gold.p4': '<strong>خصم 15٪</strong> على جميع العلاجات الإضافية',
+    'page-membership.gold.p5': 'حجز ذو أولوية — قبل 48 ساعة',
+    'page-membership.gold.p6': '<strong>تصريح ضيف</strong> واحد سنويًا',
+    'page-membership.gold.p7': 'طقس ترحيبي بالحمّام عند الاشتراك',
+    'page-membership.gold.p8': 'رحلة سبا ليوم عيد الميلاد (90 دقيقة)',
+    'page-membership.gold.p9': 'فعاليات موسمية حصرية للأعضاء',
+    'page-membership.gold.cta': '<i class="fas fa-crown"></i> كن عضوًا ذهبيًا',
+
+    // Platinum
+    'page-membership.platinum.name': 'الدائرة الملكية',
+    'page-membership.platinum.sub': 'سكونٌ بلا حدود — أعلى مستويات العناية، للأكثر تفانيًا.',
+    'page-membership.platinum.price': '750<small>د.ب · سنويًا</small>',
+    'page-membership.platinum.p1': '<strong>غير محدودة</strong> جلسات التدليك المميَّز (حد أقصى 2 شهريًا)',
+    'page-membership.platinum.p2': '<strong>12 طقسًا</strong> للحمّام الملكي سنويًا',
+    'page-membership.platinum.p3': '<strong>4 جلسات</strong> الحجر الحار مشمولة',
+    'page-membership.platinum.p4': '<strong>خصم 20٪</strong> على العلاجات والمنتجات الإضافية',
+    'page-membership.platinum.p5': 'حجز ذو أولوية — في أي وقت',
+    'page-membership.platinum.p6': '<strong>4 تصاريح ضيوف</strong> سنويًا',
+    'page-membership.platinum.p7': 'طقس ترحيبي في «جناح السلطان»',
+    'page-membership.platinum.p8': 'مطابقة معالجٍ شخصي',
+    'page-membership.platinum.p9': 'يوم عيد ميلاد في السبا (4 ساعات)',
+    'page-membership.platinum.p10': 'صندوق هدايا سنوي من المنتجات الفاخرة',
+    'page-membership.platinum.p11': 'جدولة المواعيد عبر الكونسيرج',
+    'page-membership.platinum.cta': '<i class="fas fa-star"></i> كن عضوًا بلاتينيًا'
   }
 };
