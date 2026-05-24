@@ -394,6 +394,11 @@
     const v = document.getElementById('cms-img-url').value.trim();
     if (v) applyImage(v);
   });
+  // Upload from local computer — uses the shared TajUpload helper.
+  document.getElementById('cms-img-upload')?.addEventListener('click', e => {
+    if (!window.TajUpload) { alert('Upload helper not loaded.'); return; }
+    TajUpload.pickAndUpload(url => applyImage(url), { btn: e.currentTarget });
+  });
   picker?.addEventListener('click', e => { if (e.target === picker) closePicker(); });
 
   // ----------------------------- save / revert / reset --------------

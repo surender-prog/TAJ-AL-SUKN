@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link rel="stylesheet" href="assets/css/style.css?v=20260520m">
+<link rel="stylesheet" href="assets/css/style.css?v=20260520n">
 </head>
 <body class="admin">
 
@@ -591,11 +591,20 @@
               <h3>Choose an image</h3>
               <button class="cms-img-picker__close" id="cms-img-close">×</button>
             </header>
+
+            <div class="cms-img-picker__upload">
+              <button class="btn btn--gold btn--block" id="cms-img-upload"><i class="fas fa-cloud-upload-alt"></i> Upload from your computer</button>
+              <small class="cms-img-picker__hint">JPG, PNG, WebP or SVG · up to 5 MB</small>
+            </div>
+
+            <div class="cms-img-picker__divider"><span>OR</span></div>
+
             <div class="cms-img-picker__url">
-              <label>Custom URL or path</label>
+              <label>Paste an image URL or path</label>
               <input type="text" id="cms-img-url" placeholder="https://… or assets/images/…">
               <button class="btn btn--primary" id="cms-img-use">Use This URL</button>
             </div>
+
             <div class="cms-img-picker__label">OR pick from library</div>
             <div class="cms-img-picker__grid" id="cms-img-grid">
               <!-- thumbnails -->
@@ -1136,13 +1145,14 @@
 
 <!-- Supabase data layer -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-<script src="assets/js/supabase-config.js?v=20260520m" defer></script>
-<script src="assets/js/admin-auth.js?v=20260520m" defer></script>
-<script src="assets/js/taj-data.js?v=20260520m" defer></script>
-<script src="assets/js/page-cms.js?v=20260520m" defer></script>
+<script src="assets/js/supabase-config.js?v=20260520n" defer></script>
+<script src="assets/js/admin-auth.js?v=20260520n" defer></script>
+<script src="assets/js/taj-data.js?v=20260520n" defer></script>
+<script src="assets/js/page-cms.js?v=20260520n" defer></script>
 <script src="assets/js/admin-shared.js" defer></script>
 <script src="assets/js/admin.js" defer></script>
-<script src="assets/js/i18n-data.js?v=20260520m" defer></script>
-<script src="assets/js/admin-pages.js?v=20260520m" defer></script>
+<script src="assets/js/i18n-data.js?v=20260520n" defer></script>
+<script src="assets/js/admin-upload.js?v=20260520n" defer></script>
+<script src="assets/js/admin-pages.js?v=20260520n" defer></script>
 </body>
 </html>

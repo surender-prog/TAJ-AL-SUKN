@@ -37,3 +37,10 @@
 .cms-field__ar-label{display:inline-flex;align-items:center;gap:6px;margin:10px 0 4px;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c-copper);font-weight:700}
 .cms-field__ar-label span{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--c-copper);color:#fff;font-family:'Amiri',serif;font-weight:700;font-size:.95rem;letter-spacing:0;text-transform:none}
 .cms-field__ar{font-family:'Tajawal',Arial,sans-serif !important;text-align:right;direction:rtl}
+
+/* ===== Image picker — upload + divider ===== */
+.cms-img-picker__upload{padding:18px 4px 4px}
+.cms-img-picker__hint{display:block;margin-top:8px;text-align:center;color:var(--c-text-soft);font-size:.78rem;letter-spacing:.04em}
+.cms-img-picker__divider{display:flex;align-items:center;gap:14px;margin:18px 0 14px;color:var(--c-text-soft);font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;font-weight:700}
+.cms-img-picker__divider::before,.cms-img-picker__divider::after{content:"";flex:1;height:1px;background:var(--c-line)}
+.cms-img-picker__upload .btn i{margin-right:8px}

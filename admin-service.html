@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link rel="stylesheet" href="assets/css/style.css?v=20260520m">
+<link rel="stylesheet" href="assets/css/style.css?v=20260520n">
 </head>
 <body class="admin">
 
@@ -203,6 +203,10 @@
                     <i class="far fa-image"></i>
                     <input type="text" id="sv-image" name="image" placeholder="assets/images/spa-detail-2.jpg or https://…">
                   </div>
+                  <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
+                    <button type="button" class="btn btn--gold" id="sv-image-upload" style="padding:10px 16px; font-size:0.78rem;"><i class="fas fa-cloud-upload-alt"></i> Upload from Computer</button>
+                    <small style="color:var(--c-text-soft); align-self:center; font-size:0.78rem;">JPG / PNG / WebP · up to 5 MB · or paste any URL above</small>
+                  </div>
                 </div>
                 <div class="svc-img-suggest">
                   <span class="svc-img-suggest__label">QUICK PICKS</span>
@@ -321,11 +325,12 @@
 
 <!-- Supabase data layer -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-<script src="assets/js/supabase-config.js?v=20260520m" defer></script>
-<script src="assets/js/admin-auth.js?v=20260520m" defer></script>
-<script src="assets/js/taj-data.js?v=20260520m" defer></script>
-<script src="assets/js/page-cms.js?v=20260520m" defer></script>
+<script src="assets/js/supabase-config.js?v=20260520n" defer></script>
+<script src="assets/js/admin-auth.js?v=20260520n" defer></script>
+<script src="assets/js/taj-data.js?v=20260520n" defer></script>
+<script src="assets/js/page-cms.js?v=20260520n" defer></script>
 <script src="assets/js/admin-shared.js" defer></script>
+<script src="assets/js/admin-upload.js?v=20260520n" defer></script>
 <script src="assets/js/admin-service.js" defer></script>
 </body>
 </html>

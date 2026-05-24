@@ -177,6 +177,16 @@ document.getElementById('service-form').addEventListener('input', refresh);
 document.getElementById('service-form').addEventListener('change', refresh);
 refresh();
 
+// Upload-from-computer button next to the image URL field.
+// Uses the shared TajUpload helper (Supabase Storage with data-URL fallback).
+document.getElementById('sv-image-upload')?.addEventListener('click', e => {
+  if (!window.TajUpload) { alert('Upload helper not loaded.'); return; }
+  TajUpload.pickAndUpload(url => {
+    F.image.value = url;
+    refresh();
+  }, { btn: e.currentTarget });
+});
+
 /* ---- Submit ---- */
 document.getElementById('service-form').addEventListener('submit', async e => {
   e.preventDefault();
