@@ -140,9 +140,23 @@
         image:   'assets/images/spa-corridor.jpg'
       },
       story: {
-        eyebrow: 'Beginnings',
-        title:   'Crafted with *intention*.',
-        body:    'Taj Al Sukun was born from a simple belief: that wellness is a practice, not a luxury. Every room, every fragrance, every silence is deliberate.'
+        eyebrow: 'Our Story',
+        title:   'A sanctuary born from a *simple wish*.',
+        p1: 'Taj Al Sukun was founded with one quiet belief — that everyone deserves a place to set the world down. In a city that moves quickly, we built a space that slows you, gently and completely.',
+        p2: 'Drawing on the deep wellness traditions of the Arabian Peninsula, North Africa, and Southeast Asia, our spa brings together the finest rituals from across the world — performed by hands that have trained for years to deliver them with care.',
+        p3: 'Every treatment, every aroma, every quiet detail of the space is chosen with one purpose: *to give you back to yourself.*',
+        image:  'assets/images/spa-entrance.jpg',
+        accent: 'assets/images/lobby-table.jpg'
+      },
+      mission: {
+        eyebrow: 'Our Purpose',
+        title:   'Mission & *Vision*.',
+        missionLine: '— To create moments of complete restoration for body, mind, and spirit.',
+        missionBody: 'We deliver authentic, expertly-performed wellness rituals using premium natural ingredients in an environment designed for serenity.',
+        visionLine:  "— To be Bahrain's most-trusted name in holistic wellness.",
+        visionBody:  'A destination where guests return — not just for the treatments, but for the feeling that lingers long after they leave.',
+        image:  'assets/images/spa-corridor.jpg',
+        accent: 'assets/images/sanctuary-bed.jpg'
       },
       quote: {
         quote: '"In stillness, we *return* — to ourselves, to silence, to the quiet truth of our bodies."',

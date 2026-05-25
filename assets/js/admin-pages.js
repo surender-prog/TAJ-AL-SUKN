@@ -130,8 +130,25 @@
       preview: 'about.html',
       blocks: [
         heroBlock(2),
-        { id: 'story', title: 'Story / Beginnings',
-          fields: [ F.eyebrow, F.headline(2), F.body(5) ] },
+        { id: 'story', title: 'Our Story (01) — beginnings',
+          fields: [
+            F.eyebrow, F.headline(2),
+            { key:'p1', label:'Paragraph 1', type:'textarea', rows:3 },
+            { key:'p2', label:'Paragraph 2', type:'textarea', rows:3 },
+            { key:'p3', label:'Paragraph 3', type:'textarea', rows:3, hint:'Wrap a word in *…* for italic accent.' },
+            { key:'image',  label:'Main image',   type:'image' },
+            { key:'accent', label:'Accent image', type:'image' }
+          ] },
+        { id: 'mission', title: 'Our Purpose (02) — Mission & Vision',
+          fields: [
+            F.eyebrow, F.headline(2),
+            { key:'missionLine', label:'Mission — italic line', type:'textarea', rows:2 },
+            { key:'missionBody', label:'Mission — body',        type:'textarea', rows:3 },
+            { key:'visionLine',  label:'Vision — italic line',  type:'textarea', rows:2 },
+            { key:'visionBody',  label:'Vision — body',         type:'textarea', rows:3 },
+            { key:'image',  label:'Main image',   type:'image' },
+            { key:'accent', label:'Accent image', type:'image' }
+          ] },
         { id: 'quote', title: 'Philosophy quote',
           fields: [ F.quote, F.by ] },
         { id: 'values', title: 'Our Values — section head',
