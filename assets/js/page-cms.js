@@ -67,7 +67,13 @@
       },
       treatments: {
         eyebrow: 'Signature Rituals',
-        title:   'Our most loved *treatments*.'
+        title:    'Our most loved *treatments*.',
+        subtitle: 'From deep-tissue therapy to the royal Hammam — every ritual is unhurried, deeply personal, and crafted to restore.',
+        button:   'View Complete Menu',
+        c1Tag:   'Signature',  c1Title: 'Royal Hammam',     c1Dur: '75 min',      c1Price: '45', c1Image: 'assets/images/spa-detail-2.jpg',
+        c2Tag:   'Signature',  c2Title: 'Argan Oil Ritual', c2Dur: '60 / 90 min', c2Price: '40', c2Image: 'assets/images/therapist-products.jpg',
+        c3Tag:   'Therapeutic',c3Title: 'Deep Tissue',      c3Dur: '60 / 90 min', c3Price: '30', c3Image: 'assets/images/deep-tissue.jpg',
+        c4Tag:   'Hammam',     c4Title: 'Casablanca',       c4Dur: '60 min',      c4Price: '25', c4Image: 'assets/images/spa-detail-1.jpg'
       },
       after: {
         eyebrow: 'After Your Visit',
