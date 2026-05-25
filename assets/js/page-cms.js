@@ -164,7 +164,11 @@
       },
       values: {
         eyebrow: 'Our Values',
-        title:   'How we *practice* hospitality.'
+        title:   'How we *practice* hospitality.',
+        c1Title: 'Quality',    c1Body: 'Premium ingredients, vetted techniques, no shortcuts — ever.',
+        c2Title: 'Privacy',    c2Body: 'Discreet, private rooms designed for your absolute comfort.',
+        c3Title: 'Care',       c3Body: 'Genuine warmth in every welcome, every touch, every farewell.',
+        c4Title: 'Excellence', c4Body: 'Trained professionals committed to mastery of their craft.'
       },
       team: {
         eyebrow: 'Trusted & Certified',
