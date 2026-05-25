@@ -170,6 +170,17 @@
         c3Title: 'Care',       c3Body: 'Genuine warmth in every welcome, every touch, every farewell.',
         c4Title: 'Excellence', c4Body: 'Trained professionals committed to mastery of their craft.'
       },
+      meetTeam: {
+        eyebrow: 'Meet the Team',
+        title:   'Hands that *understand*.',
+        p1: 'Our therapists bring years of training across Thai, Balinese, Moroccan, Swedish, and deep-tissue modalities. Each holds international certifications and is selected as much for warmth and presence as for technical skill.',
+        p2: 'What unites them is a shared belief — that real wellness happens when guests feel completely safe, completely seen, and completely cared for.',
+        bullet1: 'Internationally certified therapists',
+        bullet2: 'Multi-lingual team (Arabic, English & more)',
+        bullet3: 'Continuous training in new techniques',
+        image:   'assets/images/team-reception.jpg',
+        accent:  'assets/images/therapist-prep.jpg'
+      },
       team: {
         eyebrow: 'Trusted & Certified',
         title:   'A team of *master therapists*.',

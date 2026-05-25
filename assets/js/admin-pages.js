@@ -163,7 +163,18 @@
             { key:'c4Title', label:'Card 04 — Title', type:'text' },
             { key:'c4Body',  label:'Card 04 — Body',  type:'textarea', rows:2 }
           ] },
-        { id: 'team', title: 'Team — section head',
+        { id: 'meetTeam', title: 'Meet the Team (03) — hands that understand',
+          fields: [
+            F.eyebrow, F.headline(2),
+            { key:'p1', label:'Paragraph 1', type:'textarea', rows:3 },
+            { key:'p2', label:'Paragraph 2', type:'textarea', rows:3 },
+            { key:'bullet1', label:'Checklist bullet 1', type:'text' },
+            { key:'bullet2', label:'Checklist bullet 2', type:'text' },
+            { key:'bullet3', label:'Checklist bullet 3', type:'text' },
+            { key:'image',  label:'Main image',   type:'image' },
+            { key:'accent', label:'Accent image', type:'image' }
+          ] },
+        { id: 'team', title: 'Trusted & Certified — section head',
           fields: [ F.eyebrow, F.headline(2), F.body(3) ] },
         { id: 'cta', title: 'Closing CTA',
           fields: [ F.eyebrow, F.headline(2), F.body(3), F.button ] }
