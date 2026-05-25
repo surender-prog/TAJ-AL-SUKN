@@ -118,7 +118,12 @@
         eyebrow: 'Limited Welcome Offer',
         title:   'Save *10%* on your first ritual.',
         body:    'New guests receive 10% off any signature treatment when booked this month. Mention "First Visit" on WhatsApp to claim.',
-        button:  'Claim 10% Off'
+        button:  'Claim 10% Off',
+        namePh:  'Name *',
+        emailPh: 'Email *',
+        phonePh: 'Phone (optional)',
+        img1:    'assets/images/team-reception.jpg',
+        img2:    'assets/images/therapist-prep.jpg'
       },
       cta: {
         eyebrow: 'Your Sanctuary Awaits',
@@ -295,6 +300,9 @@
         break;
       case 'href':
         el.setAttribute('href', value);
+        break;
+      case 'placeholder':
+        el.setAttribute('placeholder', value);
         break;
       case 'html':
         el.innerHTML = value;
