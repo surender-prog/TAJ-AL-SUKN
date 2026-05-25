@@ -51,7 +51,9 @@
       welcome: {
         eyebrow: 'Welcome',
         title:   'A modern sanctuary in *Manama*.',
-        body:    'Taj Al Sukun is more than a spa — it is a refuge crafted for those who value stillness. Our therapists are trained in authentic Arabian techniques, complemented by the world\'s finest spa traditions.'
+        body:    'Taj Al Sukun is more than a spa — it is a refuge crafted for those who value stillness. Our therapists are trained in authentic Arabian techniques, complemented by the world\'s finest spa traditions.',
+        image:   'assets/images/spa-foyer.jpg',
+        accent:  'assets/images/lounge-flowers.jpg'
       },
       treatments: {
         eyebrow: 'Signature Rituals',

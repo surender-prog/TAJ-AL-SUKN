@@ -46,7 +46,11 @@
         { id: 'benefits', title: 'Massage benefits — heading',
           fields: [ F.headline(2) ] },
         { id: 'welcome', title: 'Welcome editorial (01)',
-          fields: [ F.eyebrow, F.titleT, F.body(5) ] },
+          fields: [
+            F.eyebrow, F.titleT, F.body(5),
+            { key:'image',  label:'Main image',   type:'image' },
+            { key:'accent', label:'Accent image', type:'image' }
+          ] },
         { id: 'treatments', title: 'Signature Treatments — heading',
           fields: [ F.eyebrow, F.headline(2) ] },
         { id: 'after', title: "After Your Visit — section head",
