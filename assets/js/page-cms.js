@@ -69,11 +69,10 @@
         eyebrow: 'Signature Rituals',
         title:    'Our most loved *treatments*.',
         subtitle: 'From deep-tissue therapy to the royal Hammam — every ritual is unhurried, deeply personal, and crafted to restore.',
-        button:   'View Complete Menu',
-        c1Tag:   'Signature',  c1Title: 'Royal Hammam',     c1Dur: '75 min',      c1Price: '45', c1Image: 'assets/images/spa-detail-2.jpg',
-        c2Tag:   'Signature',  c2Title: 'Argan Oil Ritual', c2Dur: '60 / 90 min', c2Price: '40', c2Image: 'assets/images/therapist-products.jpg',
-        c3Tag:   'Therapeutic',c3Title: 'Deep Tissue',      c3Dur: '60 / 90 min', c3Price: '30', c3Image: 'assets/images/deep-tissue.jpg',
-        c4Tag:   'Hammam',     c4Title: 'Casablanca',       c4Dur: '60 min',      c4Price: '25', c4Image: 'assets/images/spa-detail-1.jpg'
+        button:   'View Complete Menu'
+        // Featured cards are pulled from the services master via slot IDs
+        // (page-home.treatments.c1Id..c4Id). Empty slot → fallback to the
+        // static HTML card content in index.html.
       },
       after: {
         eyebrow: 'After Your Visit',
@@ -361,8 +360,41 @@
     }
 
     applyContent(got);
+    // Fill the Home → Signature Treatments featured cards from the services
+    // master if slot IDs are configured. Awaited so i18n sees the final DOM.
+    await renderFeaturedTreatments(got);
     // Signal that CMS content is on the page so the i18n layer can (re)translate.
     try { document.dispatchEvent(new CustomEvent('taj-cms-applied')); } catch (_) {}
+  }
+
+  async function renderFeaturedTreatments(got) {
+    const grid = document.querySelector('.feature-grid');
+    if (!grid) return;
+    const cfg = ((got['page-home'] || DEFAULTS['page-home'] || {}).treatments) || {};
+    const ids = [cfg.c1Id, cfg.c2Id, cfg.c3Id, cfg.c4Id];
+    if (!ids.some(Boolean)) return;
+    if (!window.TajData || !window.TajData.services) return;
+    let services = [];
+    try { services = (await window.TajData.services.list()) || []; } catch (_) { return; }
+    const byId = Object.create(null);
+    services.forEach(s => { byId[s.id] = s; });
+    const cards = grid.querySelectorAll('.feature');
+    ids.forEach((id, i) => {
+      if (!id || !cards[i]) return;
+      const s = byId[id];
+      if (!s) return;
+      const card = cards[i];
+      const img = card.querySelector('img');
+      const tag = card.querySelector('.tag');
+      const h4  = card.querySelector('h4');
+      const dur = card.querySelector('.dur');
+      const priceSpan = card.querySelector('.price > span') || card.querySelector('.price');
+      if (img && s.image) { img.setAttribute('src', s.image); if (s.name) img.setAttribute('alt', s.name); }
+      if (tag && s.tag)   tag.textContent = s.tag;
+      if (h4 && s.name)   h4.textContent  = s.name;
+      if (dur && s.duration != null) dur.textContent = String(s.duration);
+      if (priceSpan && s.price != null) priceSpan.textContent = String(s.price);
+    });
   }
 
   // Expose for the admin Website tab to invoke after a save (live preview),

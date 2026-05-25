@@ -63,29 +63,13 @@
             { key:'image',  label:'Main image',   type:'image' },
             { key:'accent', label:'Accent image', type:'image' }
           ] },
-        { id: 'treatments', title: 'Signature Treatments — section + cards',
+        { id: 'treatments', title: 'Signature Treatments — section + featured services',
           fields: [
             F.eyebrow, F.headline(2), F.subtitle, F.button,
-            { key:'c1Tag',   label:'Card 1 — Tag',      type:'text' },
-            { key:'c1Title', label:'Card 1 — Title',    type:'text' },
-            { key:'c1Dur',   label:'Card 1 — Duration', type:'text' },
-            { key:'c1Price', label:'Card 1 — Price',    type:'text' },
-            { key:'c1Image', label:'Card 1 — Image',    type:'image' },
-            { key:'c2Tag',   label:'Card 2 — Tag',      type:'text' },
-            { key:'c2Title', label:'Card 2 — Title',    type:'text' },
-            { key:'c2Dur',   label:'Card 2 — Duration', type:'text' },
-            { key:'c2Price', label:'Card 2 — Price',    type:'text' },
-            { key:'c2Image', label:'Card 2 — Image',    type:'image' },
-            { key:'c3Tag',   label:'Card 3 — Tag',      type:'text' },
-            { key:'c3Title', label:'Card 3 — Title',    type:'text' },
-            { key:'c3Dur',   label:'Card 3 — Duration', type:'text' },
-            { key:'c3Price', label:'Card 3 — Price',    type:'text' },
-            { key:'c3Image', label:'Card 3 — Image',    type:'image' },
-            { key:'c4Tag',   label:'Card 4 — Tag',      type:'text' },
-            { key:'c4Title', label:'Card 4 — Title',    type:'text' },
-            { key:'c4Dur',   label:'Card 4 — Duration', type:'text' },
-            { key:'c4Price', label:'Card 4 — Price',    type:'text' },
-            { key:'c4Image', label:'Card 4 — Image',    type:'image' }
+            { key:'c1Id', label:'Featured Card 1 — Service', type:'serviceSelect' },
+            { key:'c2Id', label:'Featured Card 2 — Service', type:'serviceSelect' },
+            { key:'c3Id', label:'Featured Card 3 — Service', type:'serviceSelect' },
+            { key:'c4Id', label:'Featured Card 4 — Service', type:'serviceSelect' }
           ] },
         { id: 'after', title: "After Your Visit — section + bento",
           fields: [
@@ -324,6 +308,17 @@
         // images don't need Arabic
         break;
       }
+      case 'serviceSelect': {
+        // Placeholder; populated async via populateServiceSelects() after editor mounts
+        const safe = escHTML(val);
+        input = `
+          <select id="${id}" data-path="${path}" data-service-select class="cms-service-select">
+            <option value="">— Use static fallback —</option>
+            ${val ? `<option value="${safe}" selected>${safe}</option>` : ''}
+          </select>`;
+        // service selects don't need an Arabic mirror — the service master is the source of truth
+        break;
+      }
       case 'text':
       default:
         input   = `<input type="text" id="${id}"  data-path="${path}"    value="${escHTML(val)}">`;
@@ -392,6 +387,28 @@
     // Image picker triggers
     sections.querySelectorAll('[data-pick]').forEach(btn => {
       btn.addEventListener('click', () => openPicker(btn.dataset.pick));
+    });
+
+    // Populate service-select dropdowns from the services master
+    populateServiceSelects();
+  }
+
+  async function populateServiceSelects() {
+    const selects = document.querySelectorAll('[data-service-select]');
+    if (!selects.length) return;
+    let list = [];
+    try { list = (await window.TajData?.services?.list()) || []; } catch (_) {}
+    // Sort by sort field then name for a stable, browseable list
+    list.sort((a, b) => (a.sort || 0) - (b.sort || 0) || String(a.name || '').localeCompare(String(b.name || '')));
+    const options = list.map(s => {
+      const id = escHTML(s.id);
+      const label = escHTML(s.name || s.id);
+      return `<option value="${id}">${label}</option>`;
+    }).join('');
+    selects.forEach(sel => {
+      const current = sel.getAttribute('data-current') || sel.value || '';
+      sel.innerHTML = `<option value="">— Use static fallback —</option>` + options;
+      if (current && [...sel.options].some(o => o.value === current)) sel.value = current;
     });
   }
 
