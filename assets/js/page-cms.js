@@ -71,7 +71,18 @@
       },
       after: {
         eyebrow: 'After Your Visit',
-        title:   "How you'll *feel*."
+        title:   "How you'll *feel*.",
+        c1Title: 'Deep relaxation',
+        c1Body:  'Enjoy deep relaxation and rest.',
+        c2Title: 'Steps to a world of healing',
+        c2Body:  'For your body and soul.',
+        c3Title: 'Lightness in your body',
+        c3Body:  'Experience lightness in muscles and joints.',
+        c4Title: 'Begin your journey',
+        c4Body:  'Of rejuvenation and healing.',
+        img1:    'assets/images/spa-relax-1.jpg',
+        img2:    'assets/images/sanctuary-bed.jpg',
+        img3:    'assets/images/spa-relax-2.jpg'
       },
       philosophy: {
         quote: '"True wellness is not in escape — it is in *returning to yourself*."',
