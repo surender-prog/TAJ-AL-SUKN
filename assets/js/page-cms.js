@@ -105,8 +105,14 @@
         title:   'Words from our *circle*.'
       },
       pricing: {
-        eyebrow: 'Annual Memberships',
-        title:   'Become a *member*, save year-round.'
+        eyebrow:  'Annual Memberships',
+        title:    'Become a *member*, save year-round.',
+        subtitle: 'Three ways to experience Taj Al Sukun — choose what fits today.',
+        button:   'Book Your Massage',
+        unit:     '/ session · BHD',
+        c1Name: 'Basic',    c1Price: '25',  c1Bullets: '60-min Swedish or Casablanca\nAromatic oils\nHerbal tea after session\n~ Hot herbal compress\n~ Foot reflexology',
+        c2Name: 'Standard', c2Price: '35',  c2Bullets: '90-min Traditional Massage\nAromatic oils\nHot herbal compress\nFoot reflexology (15 min)\n~ Hot stone therapy',
+        c3Name: 'Premium',  c3Price: '120', c3Bullets: '120-min Luxury Ritual\nAromatic oils\nHot herbal compress\nFoot reflexology (30 min)\nHot stone therapy'
       },
       offer: {
         eyebrow: 'Limited Welcome Offer',
@@ -363,8 +369,57 @@
     // Fill the Home → Signature Treatments featured cards from the services
     // master if slot IDs are configured. Awaited so i18n sees the final DOM.
     await renderFeaturedTreatments(got);
+    // Fill the Home → Pricing / Memberships plan cards (sync, no fetch).
+    renderPricingPlans(got);
     // Signal that CMS content is on the page so the i18n layer can (re)translate.
     try { document.dispatchEvent(new CustomEvent('taj-cms-applied')); } catch (_) {}
+  }
+
+  function renderPricingPlans(got) {
+    const plans = document.querySelectorAll('.pricing .plan');
+    if (!plans.length) return;
+    const cfg = ((got['page-home'] || DEFAULTS['page-home'] || {}).pricing) || {};
+    const unit = cfg.unit;
+    const buttonLabel = cfg.button;
+    const escText = (s) => String(s).replace(/[&<>]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[c]);
+    ['c1','c2','c3'].forEach((k, i) => {
+      const card = plans[i];
+      if (!card) return;
+      const name = cfg[k + 'Name'];
+      const price = cfg[k + 'Price'];
+      const bullets = cfg[k + 'Bullets'];
+      if (name) {
+        const nameEl = card.querySelector('.plan__name');
+        if (nameEl) nameEl.textContent = name;
+      }
+      const priceEl = card.querySelector('.plan__price');
+      if (priceEl) {
+        const small = priceEl.querySelector('small');
+        if (price != null && price !== '') {
+          const firstText = [...priceEl.childNodes].find(n => n.nodeType === 3);
+          if (firstText) firstText.textContent = String(price);
+          else priceEl.insertBefore(document.createTextNode(String(price)), priceEl.firstChild);
+        }
+        if (small && unit) small.textContent = ' ' + String(unit).replace(/^\s+/, '');
+      }
+      if (typeof bullets === 'string') {
+        const ul = card.querySelector('.plan__list');
+        if (ul) {
+          ul.innerHTML = bullets.split(/\r?\n/)
+            .map(l => l.replace(/\s+$/, ''))
+            .filter(l => l.length)
+            .map(line => {
+              const muted = /^\s*~\s*/.test(line);
+              const text = line.replace(/^\s*~\s*/, '');
+              return `<li${muted ? ' class="muted"' : ''}>${escText(text)}</li>`;
+            }).join('');
+        }
+      }
+      if (buttonLabel) {
+        const btn = card.querySelector('a.btn');
+        if (btn) btn.textContent = buttonLabel;
+      }
+    });
   }
 
   async function renderFeaturedTreatments(got) {
