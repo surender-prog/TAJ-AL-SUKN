@@ -184,7 +184,11 @@
       team: {
         eyebrow: 'Trusted & Certified',
         title:   'A team of *master therapists*.',
-        body:    'Each member of our team is internationally certified, with decades of combined experience across Arabian, Asian, and European traditions.'
+        body:    'Kingdom of Bahrain · CR No. 182250-1',
+        b1Label: 'Bahrain Licensed',
+        b2Label: 'Natural Products',
+        b3Label: 'Hygiene Certified',
+        b4Label: 'Award-Ready Service'
       },
       cta: {
         eyebrow: 'Ready to experience the difference?',

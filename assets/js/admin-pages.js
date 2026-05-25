@@ -174,8 +174,14 @@
             { key:'image',  label:'Main image',   type:'image' },
             { key:'accent', label:'Accent image', type:'image' }
           ] },
-        { id: 'team', title: 'Trusted & Certified — section head',
-          fields: [ F.eyebrow, F.headline(2), F.body(3) ] },
+        { id: 'team', title: 'Trusted & Certified — section + badges',
+          fields: [
+            F.eyebrow, F.headline(2), F.body(3),
+            { key:'b1Label', label:'Badge 1 — Label', type:'text' },
+            { key:'b2Label', label:'Badge 2 — Label', type:'text' },
+            { key:'b3Label', label:'Badge 3 — Label', type:'text' },
+            { key:'b4Label', label:'Badge 4 — Label', type:'text' }
+          ] },
         { id: 'cta', title: 'Closing CTA',
           fields: [ F.eyebrow, F.headline(2), F.body(3), F.button ] }
       ]
