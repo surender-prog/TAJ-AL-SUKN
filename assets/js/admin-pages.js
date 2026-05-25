@@ -43,8 +43,20 @@
           fields: [ F.titleT, F.body(3), F.image('Section image') ] },
         { id: 'stress', title: 'Stress fades · harmony begins',
           fields: [ F.headline(2), F.body(4) ] },
-        { id: 'benefits', title: 'Massage benefits — heading',
-          fields: [ F.headline(2) ] },
+        { id: 'benefits', title: 'Massage benefits — heading + cards',
+          fields: [
+            F.headline(2),
+            { key:'c1Title', label:'Card 1 — Title', type:'text' },
+            { key:'c1Body',  label:'Card 1 — Body',  type:'textarea', rows:2 },
+            { key:'c2Title', label:'Card 2 — Title', type:'text' },
+            { key:'c2Body',  label:'Card 2 — Body',  type:'textarea', rows:2 },
+            { key:'c3Title', label:'Card 3 — Title', type:'text' },
+            { key:'c3Body',  label:'Card 3 — Body',  type:'textarea', rows:2 },
+            { key:'c4Title', label:'Card 4 — Title', type:'text' },
+            { key:'c4Body',  label:'Card 4 — Body',  type:'textarea', rows:2 },
+            { key:'c5Title', label:'Card 5 — Title', type:'text' },
+            { key:'c5Body',  label:'Card 5 — Body',  type:'textarea', rows:2 }
+          ] },
         { id: 'welcome', title: 'Welcome editorial (01)',
           fields: [
             F.eyebrow, F.titleT, F.body(5),

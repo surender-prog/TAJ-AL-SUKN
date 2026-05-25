@@ -46,7 +46,17 @@
         body:  'Experience the healing power of authentic Arabian rituals — a blend of tradition and care designed to release stress, improve circulation, and restore inner peace. Each session is a journey toward balance, clarity, and deep renewal.'
       },
       benefits: {
-        title: 'Massage can help you *if you*…'
+        title:   'Massage can help you *if you*…',
+        c1Title: 'Feel Tense & Stiff All Day',
+        c1Body:  'Your body feels heavy, tight, and hard to move — even after rest.',
+        c2Title: 'Living with Constant Pain',
+        c2Body:  'Dealing with aches, chronic pain, or physical discomfort daily.',
+        c3Title: 'Struggling to Sleep at Night',
+        c3Body:  "You lie awake exhausted but can't switch off or rest properly.",
+        c4Title: 'Overwhelmed by Stress',
+        c4Body:  'Feeling anxious, tense, and unable to unwind no matter what you try.',
+        c5Title: 'Feeling Drained & Low',
+        c5Body:  'Low energy, low mood, and struggling to feel like yourself again.'
       },
       welcome: {
         eyebrow: 'Welcome',
