@@ -370,6 +370,11 @@
         p4Title: 'Birthday Treat',
         p4Body:  'A complimentary celebration ritual on or around your birthday, every year.'
       },
+      faq: {
+        eyebrow: 'Frequently Asked',
+        title:   'Questions, *answered*.',
+        items: "Q: How long is membership valid?\nA: 12 months from the date of activation. Reminders are sent 30 days before renewal.\n\nQ: Can I share my membership with family?\nA: Memberships are personal, but Gold and Platinum tiers include guest passes for sharing. Family memberships available — speak with our team.\n\nQ: What happens if I don't use all my included services?\nA: Unused services don't roll over, but you receive renewal incentives if you've used the majority of your benefits in your first year.\n\nQ: Can I upgrade from Silver to Gold mid-year?\nA: Yes. The pro-rated difference is applied and your benefits upgrade immediately.\n\nQ: How do I pay?\nA: Pay in person at the spa, by bank transfer, or via our secure online payment link sent over WhatsApp.\n\nQ: Are corporate or wellness packages available?\nA: Yes — we offer customized corporate wellness memberships for teams of 5 or more. Contact us for details."
+      },
       quote: {
         quote: '"Membership at Taj Al Sukun means *coming home* — to a team that knows your preferences, your pressure points, and your favorite tea."',
         by:    '— A Gold Member'
@@ -518,8 +523,46 @@
     renderComparisonTable(got);
     // Membership → Portal preview: bullets list + CTA button label.
     renderPortalExtras(got);
+    // Membership → FAQ Q/A list (sync).
+    renderFaqList(got);
     // Signal that CMS content is on the page so the i18n layer can (re)translate.
     try { document.dispatchEvent(new CustomEvent('taj-cms-applied')); } catch (_) {}
+  }
+
+  function renderFaqList(got) {
+    const container = document.getElementById('faq-list');
+    if (!container) return;
+    const cfg = ((got['page-membership'] || DEFAULTS['page-membership'] || {}).faq) || {};
+    const items = typeof cfg.items === 'string' ? cfg.items : '';
+    if (!items.trim()) return;
+    const esc = s => String(s == null ? '' : s).replace(/[&<>]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[c]);
+    const pairs = [];
+    let currentQ = null;
+    let currentA = [];
+    const flush = () => {
+      if (currentQ) pairs.push({ q: currentQ, a: currentA.join(' ').trim() });
+      currentQ = null; currentA = [];
+    };
+    items.split(/\r?\n/).forEach(rawLine => {
+      const line = rawLine.replace(/\s+$/, '');
+      if (!line.trim()) { flush(); return; }
+      const qm = /^\s*Q\s*[:.\-]\s*(.+)$/i.exec(line);
+      const am = /^\s*A\s*[:.\-]\s*(.+)$/i.exec(line);
+      if (qm) { flush(); currentQ = qm[1].trim(); }
+      else if (am) { currentA.push(am[1].trim()); }
+      else if (currentA.length) { currentA.push(line.trim()); }
+      else if (currentQ) { currentQ += ' ' + line.trim(); }
+    });
+    flush();
+    if (!pairs.length) return;
+    container.innerHTML = pairs.map((p, i) => {
+      const last = i === pairs.length - 1;
+      const wrapStyle = last ? 'padding: 26px 0;' : 'border-bottom: 1px solid var(--c-line); padding: 26px 0;';
+      return `<div style="${wrapStyle}">
+        <h4 style="font-family: var(--f-display); font-weight: 500; margin-bottom: 10px;">${esc(p.q)}</h4>
+        <p style="color: var(--c-text-soft);">${esc(p.a)}</p>
+      </div>`;
+    }).join('');
   }
 
   function renderPortalExtras(got) {

@@ -306,6 +306,11 @@
             { key:'p4Title', label:'Perk 4 — Title', type:'text' },
             { key:'p4Body',  label:'Perk 4 — Body',  type:'textarea', rows:2 }
           ] },
+        { id: 'faq', title: 'Frequently Asked — section + Q/A list',
+          fields: [
+            F.eyebrow, F.headline(2),
+            { key:'items', label:'Questions & Answers', type:'textarea', rows:20, hint:'Each Q/A pair on two lines: start question with "Q:" and answer with "A:". Separate pairs with a blank line. Add or remove items freely.' }
+          ] },
         { id: 'quote', title: 'Member quote',
           fields: [ F.quote, F.by ] },
         { id: 'cta', title: 'Closing CTA',
