@@ -434,8 +434,33 @@
     await renderFeaturedTreatments(got);
     // Fill the Home → Pricing / Memberships plan cards (sync, no fetch).
     renderPricingPlans(got);
+    // Gallery → Instagram CTA: link + label derived from the handle setting.
+    renderInstagramCTA(got);
     // Signal that CMS content is on the page so the i18n layer can (re)translate.
     try { document.dispatchEvent(new CustomEvent('taj-cms-applied')); } catch (_) {}
+  }
+
+  function renderInstagramCTA(got) {
+    const link = document.getElementById('instagram-cta-link');
+    const label = document.getElementById('instagram-cta-handle');
+    if (!link || !label) return;
+    const cfg = ((got['page-gallery'] || DEFAULTS['page-gallery'] || {}).instagram) || {};
+    const raw = (cfg.handle || '').trim();
+    if (!raw) return;
+    // Accept @handle, handle, or a full URL — derive both display label and href
+    let handle = raw;
+    if (/^https?:\/\//i.test(raw)) {
+      try {
+        const u = new URL(raw);
+        handle = u.pathname.replace(/^\//, '').replace(/\/.*$/, '');
+      } catch (_) { /* fall through */ }
+    }
+    handle = handle.replace(/^@+/, '').replace(/\/+$/, '');
+    if (!handle) return;
+    label.textContent = '@' + handle;
+    link.setAttribute('href', 'https://www.instagram.com/' + handle);
+    link.setAttribute('target', '_blank');
+    link.setAttribute('rel', 'noopener');
   }
 
   function renderPricingPlans(got) {
