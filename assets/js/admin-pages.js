@@ -232,6 +232,24 @@
         heroBlock(2),
         { id: 'intro', title: 'Three Tiers · One Sanctuary',
           fields: [ F.eyebrow, F.headline(2), F.body(4) ] },
+        { id: 'tiersShared', title: 'Membership tiers — shared labels',
+          fields: [
+            { key:'perksLabel', label:'Perks list header', type:'text', hint:'e.g., "Included Annually"' },
+            { key:'badgeText',  label:'Featured badge text', type:'text', hint:'e.g., "Most Popular" (shows on Gold)' }
+          ] },
+        ...['silver','gold','platinum'].map(k => ({
+          id: k,
+          title: 'Tier — ' + k.charAt(0).toUpperCase() + k.slice(1),
+          fields: [
+            { key:'tier',     label:'Tier label (small caps)', type:'text' },
+            { key:'name',     label:'Tier name',               type:'text' },
+            { key:'sub',      label:'Tagline',                 type:'textarea', rows:2 },
+            { key:'price',    label:'Price (number only)',     type:'text' },
+            { key:'unit',     label:'Price unit',              type:'text', hint:'e.g., "BHD · per year"' },
+            { key:'perks',    label:'Perks (one per line; wrap with **…** for bold accent)', type:'textarea', rows:10 },
+            { key:'ctaLabel', label:'CTA button label',        type:'text' }
+          ]
+        })),
         { id: 'compare', title: 'Compare All Tiers — heading',
           fields: [ F.eyebrow, F.headline(2) ] },
         { id: 'portal', title: 'Member Portal preview — heading',

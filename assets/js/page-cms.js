@@ -270,6 +270,34 @@
       }
     },
     'page-membership': {
+      tiersShared: { perksLabel: 'Included Annually', badgeText: 'Most Popular' },
+      silver: {
+        tier: 'Silver',
+        name: 'The Companion',
+        sub:  'An invitation to begin — a year of considered moments.',
+        price: '150',
+        unit:  'BHD · per year',
+        perks: '**2 complimentary** 60-min signature massages\n**1 complimentary** Foot Reflexology ritual\n**10% off** all additional treatments\nPriority booking — 24 hours ahead\nWelcome ritual on signup\nBirthday gift — free Foot Relaxing\nMember-only seasonal offers',
+        ctaLabel: 'Become Silver'
+      },
+      gold: {
+        tier: 'Gold',
+        name: 'The Sanctuary',
+        sub:  'A generous year of regular restoration and signature care.',
+        price: '350',
+        unit:  'BHD · per year',
+        perks: '**6 complimentary** 60-min signature massages\n**1 Royal Hammam** ritual included\n**2 complimentary** foot rituals\n**15% off** all additional treatments\nPriority booking — 48 hours ahead\n**1 guest pass** per year\nWelcome Hammam ritual on signup\nBirthday spa journey (90 min)\nMembers-only seasonal events',
+        ctaLabel: 'Become Gold'
+      },
+      platinum: {
+        tier: 'Platinum',
+        name: 'The Royal Circle',
+        sub:  'Unlimited stillness — the highest tier of care, for the most devoted.',
+        price: '750',
+        unit:  'BHD · per year',
+        perks: '**Unlimited** signature massages (max 2/month)\n**12 Royal Hammams** per year\n**4 Hot Stone** sessions included\n**20% off** additional treatments & products\nPriority booking — anytime\n**4 guest passes** per year\nWelcome Sultan Suite ritual\nPersonal therapist match\nBirthday Day at the Spa (4 hours)\nAnnual gift box of premium products\nConcierge appointment scheduling',
+        ctaLabel: 'Become Platinum'
+      },
       hero: {
         eyebrow: 'MEMBERSHIP',
         title:   'The Taj Al Sukun *Membership*.',
@@ -436,8 +464,54 @@
     renderPricingPlans(got);
     // Gallery → Instagram CTA: link + label derived from the handle setting.
     renderInstagramCTA(got);
+    // Membership → 3 tier cards (sync).
+    renderMembershipTiers(got);
     // Signal that CMS content is on the page so the i18n layer can (re)translate.
     try { document.dispatchEvent(new CustomEvent('taj-cms-applied')); } catch (_) {}
+  }
+
+  function renderMembershipTiers(got) {
+    const cards = document.querySelectorAll('.mtier-grid .mtier');
+    if (!cards.length) return;
+    const cfg = got['page-membership'] || DEFAULTS['page-membership'] || {};
+    const shared = cfg.tiersShared || {};
+    const esc = s => String(s == null ? '' : s).replace(/[&<>]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[c]);
+    const fmtPerk = line => esc(line).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    ['silver','gold','platinum'].forEach((key, i) => {
+      const card = cards[i];
+      if (!card) return;
+      const t = cfg[key];
+      if (!t) return;
+      const tierEl = card.querySelector('.mtier__tier');
+      if (tierEl && t.tier) tierEl.textContent = t.tier;
+      const nameEl = card.querySelector('h3');
+      if (nameEl && t.name) nameEl.textContent = t.name;
+      const subEl = card.querySelector('.mtier__sub');
+      if (subEl && t.sub) subEl.textContent = t.sub;
+      const priceEl = card.querySelector('.mtier__price');
+      if (priceEl && (t.price != null || t.unit != null)) {
+        const num = t.price != null && t.price !== '' ? esc(String(t.price)) : '';
+        const sm  = t.unit != null && t.unit !== ''  ? `<small>${esc(t.unit)}</small>` : '';
+        priceEl.innerHTML = num + sm;
+      }
+      const perksLabelEl = card.querySelector('.mtier__perks-label');
+      if (perksLabelEl && shared.perksLabel) perksLabelEl.textContent = shared.perksLabel;
+      const ul = card.querySelector('.mtier__perks');
+      if (ul && typeof t.perks === 'string') {
+        ul.innerHTML = t.perks.split(/\r?\n/)
+          .map(l => l.replace(/\s+$/, ''))
+          .filter(l => l.length)
+          .map(line => `<li>${fmtPerk(line)}</li>`)
+          .join('');
+      }
+      const btn = card.querySelector('a.btn');
+      if (btn && t.ctaLabel) {
+        const icon = btn.querySelector('i');
+        btn.innerHTML = (icon ? icon.outerHTML + ' ' : '') + esc(t.ctaLabel);
+      }
+    });
+    const goldBadge = cards[1]?.querySelector('.mtier__badge');
+    if (goldBadge && shared.badgeText) goldBadge.textContent = shared.badgeText;
   }
 
   function renderInstagramCTA(got) {
