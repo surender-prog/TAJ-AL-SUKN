@@ -282,8 +282,30 @@
             { key:'stat4Num',   label:'Stat 4 — Number',      type:'text' },
             { key:'stat4Label', label:'Stat 4 — Label',       type:'text' }
           ] },
-        { id: 'process', title: 'How Membership Works — heading',
-          fields: [ F.eyebrow, F.headline(2) ] },
+        { id: 'process', title: 'How Membership Works — section + 4 steps',
+          fields: [
+            F.eyebrow, F.headline(2),
+            { key:'s1Title', label:'Step 01 — Title', type:'text' },
+            { key:'s1Body',  label:'Step 01 — Body',  type:'textarea', rows:2 },
+            { key:'s2Title', label:'Step 02 — Title', type:'text' },
+            { key:'s2Body',  label:'Step 02 — Body',  type:'textarea', rows:2 },
+            { key:'s3Title', label:'Step 03 — Title', type:'text' },
+            { key:'s3Body',  label:'Step 03 — Body',  type:'textarea', rows:2 },
+            { key:'s4Title', label:'Step 04 — Title', type:'text' },
+            { key:'s4Body',  label:'Step 04 — Body',  type:'textarea', rows:2 }
+          ] },
+        { id: 'perks', title: 'Why Become a Member — section + 4 perks',
+          fields: [
+            F.eyebrow, F.headline(2),
+            { key:'p1Title', label:'Perk 1 — Title', type:'text' },
+            { key:'p1Body',  label:'Perk 1 — Body',  type:'textarea', rows:2 },
+            { key:'p2Title', label:'Perk 2 — Title', type:'text' },
+            { key:'p2Body',  label:'Perk 2 — Body',  type:'textarea', rows:2 },
+            { key:'p3Title', label:'Perk 3 — Title', type:'text' },
+            { key:'p3Body',  label:'Perk 3 — Body',  type:'textarea', rows:2 },
+            { key:'p4Title', label:'Perk 4 — Title', type:'text' },
+            { key:'p4Body',  label:'Perk 4 — Body',  type:'textarea', rows:2 }
+          ] },
         { id: 'quote', title: 'Member quote',
           fields: [ F.quote, F.by ] },
         { id: 'cta', title: 'Closing CTA',

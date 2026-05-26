@@ -348,7 +348,27 @@
       },
       process: {
         eyebrow: 'How Membership Works',
-        title:   'Simple, *transparent*, generous.'
+        title:   'Simple, *transparent*, generous.',
+        s1Title: 'Choose Your Tier',
+        s1Body:  'Silver, Gold, or Platinum — pick the package that matches your rhythm.',
+        s2Title: 'Pay Annually',
+        s2Body:  'One-time annual payment via bank transfer or in-spa. No monthly fees.',
+        s3Title: 'Welcome Ritual',
+        s3Body:  'Receive your member card and complimentary welcome treatment.',
+        s4Title: 'Enjoy & Renew',
+        s4Body:  'Use your services year-round. Auto-reminder before renewal.'
+      },
+      perks: {
+        eyebrow: 'Why Become a Member',
+        title:   'The most loved *perks*.',
+        p1Title: 'Pay Once, Save All Year',
+        p1Body:  'Up to 40% savings vs. paying per visit. Members save more, every time.',
+        p2Title: 'Priority Booking',
+        p2Body:  'Members get first access to evenings, weekends, and seasonal slots.',
+        p3Title: 'Bring a Guest',
+        p3Body:  'Gold & Platinum members receive guest passes — share the stillness.',
+        p4Title: 'Birthday Treat',
+        p4Body:  'A complimentary celebration ritual on or around your birthday, every year.'
       },
       quote: {
         quote: '"Membership at Taj Al Sukun means *coming home* — to a team that knows your preferences, your pressure points, and your favorite tea."',
