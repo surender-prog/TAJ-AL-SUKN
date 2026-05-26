@@ -578,6 +578,13 @@ window.TAJ_I18N = {
     'page-gallery.tiles.t18Label': 'طقس القدم',
     'page-gallery.tiles.t19Label': 'المدخل',
     'page-gallery.tiles.t20Label': 'مبنى 950',
+    // Gallery — Instagram CTA + Reserve CTA banner
+    'page-gallery.instagram.eyebrow': 'تابع رحلتنا',
+    'page-gallery.instagram.title':   'تابعنا على <em>إنستغرام</em>.',
+    'page-gallery.instagram.body':    'لحظاتٌ يومية من داخل الملاذ — علاجات، طقوس، وعروض موسمية.',
+    'page-gallery.cta.eyebrow': 'هل أنت مستعد للدخول؟',
+    'page-gallery.cta.title':   'احجز <em>زيارتك</em>.',
+    'page-gallery.cta.body':    'مواعيد اليوم نفسه متاحة غالبًا — احجز لحظتك.',
 
     /* ---------------- MEMBERSHIP — intro + new tier schema ---------------- */
     'page-membership.intro.body': 'اختر الفئة التي تناسب إيقاعك. كل عضوية تُشترى سنويًا، وتشمل مجموعةً سخيّة من الخدمات المميَّزة المجانية، وتفتح أسعارًا خاصة بالأعضاء على كل علاجٍ وباقة ومنتج إضافي.',
