@@ -55,6 +55,8 @@
     '.nav__menu a', '.nav__signin', '.nav__member-name',
     '.btn', 'button.tab', '.svc-row__name h5',
     '.footer__col a', '.footer__col h6', '.footer__col h5',
+    '.footer-col a', '.footer-col h6', '.footer-col h5',
+    '.footer-brand h4', '.footer-bottom span', '.footer-bottom a',
     '.crumb span', '.crumb a', '.step__label', '.eyebrow',
     // forms & deeper labels
     '.field label', '.field-label', 'select option', '.form-card h3',
