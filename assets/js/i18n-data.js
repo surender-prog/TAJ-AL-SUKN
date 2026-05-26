@@ -65,6 +65,32 @@ window.TAJ_I18N = {
     'Over 5 years of expertise in professional body relaxation': 'أكثر من 5 سنوات من الخبرة في الاسترخاء الجسدي الاحترافي',
     'Welcomes clients of any gender, age, and physical condition': 'ترحّب بالعملاء من جميع الأعمار والحالات الجسدية',
     "Gently activates the body's natural self-healing processes": 'تنشّط بلطف عمليات الشفاء الذاتي الطبيعية في الجسم',
+
+    // Services page — Curated Packages list (12 rows)
+    'Moroccan Bath + Argan Oil Massage': 'الحمّام المغربي + تدليك بزيت الأركان',
+    'The classic pairing — exfoliating Hammam followed by an argan oil massage.': 'الثنائي الكلاسيكي — حمّام تقشير يتبعه تدليك بزيت الأركان.',
+    'Moroccan Bath + Massage + Waxing': 'الحمّام المغربي + تدليك + إزالة شعر',
+    'A full-care ritual combining Hammam, signature massage, and waxing.': 'طقسٌ متكامل يجمع الحمّام والتدليك المميَّز وإزالة الشعر.',
+    'Royal Hammam + Massage': 'الحمّام الملكي + تدليك',
+    'Our most popular pairing — Royal Hammam followed by a signature massage.': 'باقتنا الأكثر طلبًا — الحمّام الملكي يتبعه تدليك مميَّز.',
+    'Sultan Suite': 'جناح السلطان',
+    'A premium sequence designed for full-day restoration.': 'تتابعٌ فاخرٌ مصمَّم لاستعادةٍ تستغرق اليوم بكامله.',
+    'Massage + Moroccan Bath': 'تدليك + الحمّام المغربي',
+    'Choose your massage style and follow with the traditional Moroccan Hammam.': 'اختر نوع التدليك واتبعه بالحمّام المغربي التقليدي.',
+    'Royal Hammam + Luxury Manicure': 'الحمّام الملكي + مانيكير فاخر',
+    'Cleanse, exfoliate, and finish with a luxury manicure ritual.': 'تنظيف وتقشير، يختتم بطقس مانيكير فاخر.',
+    'Royal Hammam + Luxury Pedicure': 'الحمّام الملكي + باديكير فاخر',
+    'The full Royal Hammam followed by a complete luxury pedicure.': 'الحمّام الملكي الكامل يتبعه باديكير فاخرٌ متكامل.',
+    'Moroccan Bath + Mani & Pedicure': 'الحمّام المغربي + مانيكير وباديكير',
+    'Full Hammam experience with a classic manicure and pedicure.': 'تجربة حمّامٍ كاملة مع مانيكير وباديكير كلاسيكي.',
+    'Balinese Massage + Body Scrub': 'التدليك البالي + تقشير الجسم',
+    'Aromatic Balinese massage paired with an invigorating full-body scrub.': 'تدليكٌ بالي عطري مع تقشيرٍ منعش لكامل الجسم.',
+    'Swedish Massage + Brazilian Waxing': 'التدليك السويدي + إزالة شعر برازيلية',
+    'Our gentle Swedish massage paired with a precise Brazilian wax.': 'تدليكنا السويدي اللطيف مع إزالة شعرٍ برازيلية دقيقة.',
+    'Swedish Massage + Jacuzzi': 'التدليك السويدي + جاكوزي',
+    'Tension-easing Swedish massage followed by a private jacuzzi soak.': 'تدليكٌ سويدي مزيلٌ للتوتر يتبعه استرخاء في جاكوزي خاص.',
+    'Massage + Body Scrub': 'تدليك + تقشير الجسم',
+    'Choose your massage and pair it with a full-body exfoliation ritual.': 'اختر تدليكك واقترنه بطقس تقشيرٍ لكامل الجسم.',
     'Follow Us': 'تابعنا',
     'Opening Hours': 'ساعات العمل',
     'Send a Message': 'أرسل رسالة',
@@ -585,6 +611,17 @@ window.TAJ_I18N = {
     'page-gallery.cta.eyebrow': 'هل أنت مستعد للدخول؟',
     'page-gallery.cta.title':   'احجز <em>زيارتك</em>.',
     'page-gallery.cta.body':    'مواعيد اليوم نفسه متاحة غالبًا — احجز لحظتك.',
+
+    // Membership intro — user's edited copy translated
+    'page-membership.intro.eyebrow': 'ثلاث فئات · ملاذٌ واحد',
+    'page-membership.intro.title':   'عضوية <em>مصمَّمة للزوّار الدائمين</em>.',
+
+    // Membership second big quote (below tier cards)
+    'page-membership.quote2.quote': '«في عامٍ كامل، يتحوّل ما يبدو اليوم رفاهيةً إلى <em>إيقاعٍ هادئ</em> — يُعيد تشكيلك.»',
+    'page-membership.quote2.by':    '— مديرة السبا',
+
+    // Contact "Find Us" body
+    'page-contact.visit.body': 'الفاتح، المنامة · مجمع 324 · طريق 2416 · مبنى 950 · مملكة البحرين',
 
     /* ---------------- MEMBERSHIP — intro + new tier schema ---------------- */
     'page-membership.intro.body': 'اختر الفئة التي تناسب إيقاعك. كل عضوية تُشترى سنويًا، وتشمل مجموعةً سخيّة من الخدمات المميَّزة المجانية، وتفتح أسعارًا خاصة بالأعضاء على كل علاجٍ وباقة ومنتج إضافي.',
