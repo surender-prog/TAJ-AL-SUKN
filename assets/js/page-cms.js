@@ -304,6 +304,34 @@
         subtitle:'An annual circle of complimentary services, member-only pricing, and priority care.',
         image:   'assets/images/sanctuary-bed.jpg'
       },
+      compare: {
+        eyebrow: 'Compare All Tiers',
+        title:   'Every benefit, *side by side*.',
+        headerBenefit: 'Benefit',
+        colSilver:     'Silver',
+        colGold:       'Gold',
+        colPlatinum:   'Platinum',
+        rows: '== Annual Investment\n**Price per year** | 150 BHD | 350 BHD | 750 BHD\n\n== Complimentary Services\n60-min signature massages | 2 | 6 | Unlimited (2/mo)\nRoyal Hammam rituals | x | 1 | 12 per year\nFoot rituals (reflexology) | 1 | 2 | Unlimited\nHot Stone sessions | x | x | 4 per year\n\n== Member Pricing\nDiscount on additional treatments | 10% | 15% | 20%\nDiscount on retail products | x | 10% | 20%\n\n== Booking & Privileges\nPriority booking window | 24 hours | 48 hours | Anytime\nGuest passes per year | x | 1 | 4\nPersonal therapist match | x | x | ✓\nConcierge scheduling | x | x | ✓\n\n== Welcome & Special Occasions\nWelcome ritual on signup | Foot Relaxing | Hammam | Sultan Suite\nBirthday gift | Foot Relaxing | 90-min spa journey | 4-hour spa day\nAnnual product gift box | x | x | ✓\nMembers-only events | x | ✓ | ✓',
+        ctaLabel: 'Speak with our team',
+        ctaUrl:   "https://wa.me/97335194422?text=I'd%20like%20to%20learn%20more%20about%20Taj%20Al%20Sukun%20Membership"
+      },
+      portal: {
+        eyebrow: 'Your Member Account',
+        title:   'Track everything in *one place*.',
+        copyTitle: 'A simple, beautiful *member dashboard*.',
+        copyBody:  'Every Taj Al Sukun member receives a personal account with their balance of complimentary services, upcoming bookings, and member ID for fast checkout.',
+        bullets:   'Track your complimentary services balance in real-time\nBook using your member ID — no payment needed for included services\nApply your member discount automatically at checkout\nReceive renewal reminders 30 days before expiry\nManage guest passes & gift transfers',
+        ctaLabel:  'Preview Member Portal',
+        cardName:   'Fatima A.',
+        cardJoined: 'Member since 2025',
+        cardTier:   'Gold',
+        idLabel:    'Member ID',
+        cardId:     'TAS-2025-0047',
+        stat1Num: '4',   stat1Label: 'Massages Left',
+        stat2Num: '1',   stat2Label: 'Hammams Left',
+        stat3Num: '2',   stat3Label: 'Foot Rituals',
+        stat4Num: '15%', stat4Label: 'Member Discount'
+      },
       intro: {
         eyebrow: 'Three Tiers · One Sanctuary',
         title:   'Membership crafted for *regulars*.',
@@ -466,8 +494,86 @@
     renderInstagramCTA(got);
     // Membership → 3 tier cards (sync).
     renderMembershipTiers(got);
+    // Membership → comparison table (sync).
+    renderComparisonTable(got);
+    // Membership → Portal preview: bullets list + CTA button label.
+    renderPortalExtras(got);
     // Signal that CMS content is on the page so the i18n layer can (re)translate.
     try { document.dispatchEvent(new CustomEvent('taj-cms-applied')); } catch (_) {}
+  }
+
+  function renderPortalExtras(got) {
+    const cfg = ((got['page-membership'] || DEFAULTS['page-membership'] || {}).portal) || {};
+    const esc = s => String(s == null ? '' : s).replace(/[&<>]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[c]);
+    const ul = document.getElementById('portal-bullets');
+    if (ul && typeof cfg.bullets === 'string') {
+      ul.innerHTML = cfg.bullets.split(/\r?\n/)
+        .map(l => l.replace(/\s+$/, ''))
+        .filter(l => l.length)
+        .map(l => `<li>${esc(l)}</li>`).join('');
+    }
+    const btn = document.getElementById('portal-cta-btn');
+    if (btn && cfg.ctaLabel) {
+      const icon = btn.querySelector('i');
+      btn.innerHTML = (icon ? icon.outerHTML + ' ' : '') + esc(cfg.ctaLabel);
+    }
+  }
+
+  function renderComparisonTable(got) {
+    const table = document.querySelector('table.compare');
+    if (!table) return;
+    const cfg = ((got['page-membership'] || DEFAULTS['page-membership'] || {}).compare) || {};
+    const esc = s => String(s == null ? '' : s).replace(/[&<>]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[c]);
+    const fmtInline = s => esc(s).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    const thead = table.querySelector('thead tr');
+    if (thead) {
+      if (cfg.headerBenefit && thead.children[0]) thead.children[0].textContent = cfg.headerBenefit;
+      if (cfg.colSilver     && thead.children[1]) thead.children[1].textContent = cfg.colSilver;
+      if (cfg.colGold       && thead.children[2]) thead.children[2].textContent = cfg.colGold;
+      if (cfg.colPlatinum   && thead.children[3]) thead.children[3].textContent = cfg.colPlatinum;
+    }
+    if (typeof cfg.rows === 'string') {
+      const tbody = table.querySelector('tbody');
+      if (tbody) {
+        const out = [];
+        cfg.rows.split(/\r?\n/).forEach(rawLine => {
+          const line = rawLine.replace(/\s+$/, '');
+          if (!line) return;
+          if (/^==\s+/.test(line)) {
+            const title = line.replace(/^==\s+/, '');
+            out.push(`<tr class="section-row"><td colspan="4">${esc(title)}</td></tr>`);
+            return;
+          }
+          const parts = line.split('|').map(p => p.trim());
+          const label = parts[0] || '';
+          const vals  = parts.slice(1, 4);
+          while (vals.length < 3) vals.push('');
+          const cellHtml = (v, i) => {
+            const lower = String(v).toLowerCase();
+            let html;
+            if (lower === 'x' || lower === '×' || lower === '-') html = '<i class="fas fa-times"></i>';
+            else if (lower === '✓' || lower === 'check' || lower === 'yes' || lower === '✔') html = '<i class="fas fa-check"></i>';
+            else {
+              const m = /^(\d+(?:\.\d+)?)\s+BHD\s*$/i.exec(v);
+              if (m) html = `<span class="compare__price">${esc(m[1])}<small>BHD</small></span>`;
+              else html = fmtInline(v);
+            }
+            const cls = i === 1 ? 'tier-col gold-col' : 'tier-col';
+            return `<td class="${cls}">${html}</td>`;
+          };
+          out.push(`<tr><td>${fmtInline(label)}</td>${vals.map(cellHtml).join('')}</tr>`);
+        });
+        tbody.innerHTML = out.join('');
+      }
+    }
+    const btn = document.querySelector('a.btn--whatsapp');
+    if (btn) {
+      if (cfg.ctaUrl)   btn.setAttribute('href', cfg.ctaUrl);
+      if (cfg.ctaLabel) {
+        const icon = btn.querySelector('i');
+        btn.innerHTML = (icon ? icon.outerHTML + ' ' : '') + esc(cfg.ctaLabel);
+      }
+    }
   }
 
   function renderMembershipTiers(got) {
