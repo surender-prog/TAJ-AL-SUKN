@@ -180,6 +180,10 @@
       var lbl = b.querySelector('.lang-label');
       if (lbl) lbl.textContent = toAr ? 'EN' : 'ع';
     });
+    // Let custom renderers (page-cms.js) re-render imperatively-built blocks
+    // — membership tiers, comparison table, portal preview, FAQ list, etc. —
+    // so their copy switches with the language.
+    try { document.dispatchEvent(new CustomEvent('taj-lang-applied', { detail: { lang: toAr ? 'ar' : 'en' } })); } catch (_) {}
   }
 
   // ---- Inject the toggle into the nav (every page) ----

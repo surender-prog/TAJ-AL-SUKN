@@ -537,6 +537,8 @@
       } catch (_) {}
     }
 
+    // Stash the resolved map so the lang-change re-render can re-use it
+    LAST_GOT = got;
     applyContent(got);
     // Fill the Home → Signature Treatments featured cards from the services
     // master if slot IDs are configured. Awaited so i18n sees the final DOM.
@@ -559,12 +561,26 @@
     try { document.dispatchEvent(new CustomEvent('taj-cms-applied')); } catch (_) {}
   }
 
+  // Cache of last resolved settings map for language-toggle re-renders.
+  let LAST_GOT = {};
+
+  // Pick a string for the current language. Falls back to enVal.
+  // When in Arabic, prefers the value in TAJ_I18N.cms (which is merged with
+  // any admin-saved page-X_ar overrides by i18n.js).
+  function pickI18n(key, enVal) {
+    const isAR = (document.documentElement.getAttribute('lang') || 'en') === 'ar';
+    if (!isAR) return enVal;
+    const cms = (window.TAJ_I18N && window.TAJ_I18N.cms) || {};
+    const v = cms[key];
+    return (typeof v === 'string' && v) ? v : enVal;
+  }
+
   function renderContactExtras(got) {
     const page = got['page-contact'] || DEFAULTS['page-contact'] || {};
     const esc = s => String(s == null ? '' : s).replace(/[&<>]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[c]);
     // Subject dropdown — rebuild options if provided
     const select = document.querySelector('#contact-form select[name="subject"]');
-    const optsStr = (page.form || {}).subjectOptions;
+    const optsStr = pickI18n('page-contact.form.subjectOptions', (page.form || {}).subjectOptions);
     if (select && typeof optsStr === 'string' && optsStr.trim()) {
       select.innerHTML = optsStr.split(/\r?\n/)
         .map(l => l.replace(/\s+$/, ''))
@@ -573,14 +589,14 @@
     }
     // Submit button label
     const btn = document.querySelector('#contact-form button[type="submit"]');
-    const btnText = (page.form || {}).buttonText;
+    const btnText = pickI18n('page-contact.form.buttonText', (page.form || {}).buttonText);
     if (btn && btnText) {
       const icon = btn.querySelector('i');
       btn.innerHTML = (icon ? icon.outerHTML + ' ' : '') + esc(btnText);
     }
     // Hours list — rebuild from "Day | Time" lines
     const ul = document.getElementById('contact-hours-list');
-    const hoursStr = (page.hours || {}).list;
+    const hoursStr = pickI18n('page-contact.hours.list', (page.hours || {}).list);
     if (ul && typeof hoursStr === 'string' && hoursStr.trim()) {
       ul.innerHTML = hoursStr.split(/\r?\n/)
         .map(l => l.replace(/\s+$/, ''))
@@ -597,8 +613,8 @@
     const container = document.getElementById('faq-list');
     if (!container) return;
     const cfg = ((got['page-membership'] || DEFAULTS['page-membership'] || {}).faq) || {};
-    const items = typeof cfg.items === 'string' ? cfg.items : '';
-    if (!items.trim()) return;
+    const items = pickI18n('page-membership.faq.items', typeof cfg.items === 'string' ? cfg.items : '');
+    if (!items || !items.trim()) return;
     const esc = s => String(s == null ? '' : s).replace(/[&<>]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[c]);
     const pairs = [];
     let currentQ = null;
@@ -633,8 +649,9 @@
     const cfg = ((got['page-membership'] || DEFAULTS['page-membership'] || {}).portal) || {};
     const esc = s => String(s == null ? '' : s).replace(/[&<>]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[c]);
     const ul = document.getElementById('portal-bullets');
-    if (ul && typeof cfg.bullets === 'string') {
-      ul.innerHTML = cfg.bullets.split(/\r?\n/)
+    const bulletsStr = pickI18n('page-membership.portal.bullets', cfg.bullets);
+    if (ul && typeof bulletsStr === 'string') {
+      ul.innerHTML = bulletsStr.split(/\r?\n/)
         .map(l => l.replace(/\s+$/, ''))
         .filter(l => l.length)
         .map(l => `<li>${esc(l)}</li>`).join('');
@@ -642,7 +659,7 @@
     const btn = document.getElementById('portal-cta-btn');
     if (btn && cfg.ctaLabel) {
       const icon = btn.querySelector('i');
-      btn.innerHTML = (icon ? icon.outerHTML + ' ' : '') + esc(cfg.ctaLabel);
+      btn.innerHTML = (icon ? icon.outerHTML + ' ' : '') + esc(pickI18n('page-membership.portal.ctaLabel', cfg.ctaLabel));
     }
   }
 
@@ -654,11 +671,13 @@
     const fmtInline = s => esc(s).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     const thead = table.querySelector('thead tr');
     if (thead) {
-      if (cfg.headerBenefit && thead.children[0]) thead.children[0].textContent = cfg.headerBenefit;
-      if (cfg.colSilver     && thead.children[1]) thead.children[1].textContent = cfg.colSilver;
-      if (cfg.colGold       && thead.children[2]) thead.children[2].textContent = cfg.colGold;
-      if (cfg.colPlatinum   && thead.children[3]) thead.children[3].textContent = cfg.colPlatinum;
+      if (cfg.headerBenefit && thead.children[0]) thead.children[0].textContent = pickI18n('page-membership.compare.headerBenefit', cfg.headerBenefit);
+      if (cfg.colSilver     && thead.children[1]) thead.children[1].textContent = pickI18n('page-membership.compare.colSilver',     cfg.colSilver);
+      if (cfg.colGold       && thead.children[2]) thead.children[2].textContent = pickI18n('page-membership.compare.colGold',       cfg.colGold);
+      if (cfg.colPlatinum   && thead.children[3]) thead.children[3].textContent = pickI18n('page-membership.compare.colPlatinum',   cfg.colPlatinum);
     }
+    const rowsStr = pickI18n('page-membership.compare.rows', cfg.rows);
+    if (typeof rowsStr === 'string') { cfg.rows = rowsStr; }
     if (typeof cfg.rows === 'string') {
       const tbody = table.querySelector('tbody');
       if (tbody) {
@@ -698,7 +717,7 @@
       if (cfg.ctaUrl)   btn.setAttribute('href', cfg.ctaUrl);
       if (cfg.ctaLabel) {
         const icon = btn.querySelector('i');
-        btn.innerHTML = (icon ? icon.outerHTML + ' ' : '') + esc(cfg.ctaLabel);
+        btn.innerHTML = (icon ? icon.outerHTML + ' ' : '') + esc(pickI18n('page-membership.compare.ctaLabel', cfg.ctaLabel));
       }
     }
   }
@@ -716,22 +735,24 @@
       const t = cfg[key];
       if (!t) return;
       const tierEl = card.querySelector('.mtier__tier');
-      if (tierEl && t.tier) tierEl.textContent = t.tier;
+      if (tierEl && t.tier) tierEl.textContent = pickI18n(`page-membership.${key}.tier`, t.tier);
       const nameEl = card.querySelector('h3');
-      if (nameEl && t.name) nameEl.textContent = t.name;
+      if (nameEl && t.name) nameEl.textContent = pickI18n(`page-membership.${key}.name`, t.name);
       const subEl = card.querySelector('.mtier__sub');
-      if (subEl && t.sub) subEl.textContent = t.sub;
+      if (subEl && t.sub) subEl.textContent = pickI18n(`page-membership.${key}.sub`, t.sub);
       const priceEl = card.querySelector('.mtier__price');
       if (priceEl && (t.price != null || t.unit != null)) {
         const num = t.price != null && t.price !== '' ? esc(String(t.price)) : '';
-        const sm  = t.unit != null && t.unit !== ''  ? `<small>${esc(t.unit)}</small>` : '';
+        const unit = pickI18n(`page-membership.${key}.unit`, t.unit);
+        const sm  = unit != null && unit !== ''  ? `<small>${esc(unit)}</small>` : '';
         priceEl.innerHTML = num + sm;
       }
       const perksLabelEl = card.querySelector('.mtier__perks-label');
-      if (perksLabelEl && shared.perksLabel) perksLabelEl.textContent = shared.perksLabel;
+      if (perksLabelEl && shared.perksLabel) perksLabelEl.textContent = pickI18n('page-membership.tiersShared.perksLabel', shared.perksLabel);
       const ul = card.querySelector('.mtier__perks');
-      if (ul && typeof t.perks === 'string') {
-        ul.innerHTML = t.perks.split(/\r?\n/)
+      const perksStr = pickI18n(`page-membership.${key}.perks`, t.perks);
+      if (ul && typeof perksStr === 'string') {
+        ul.innerHTML = perksStr.split(/\r?\n/)
           .map(l => l.replace(/\s+$/, ''))
           .filter(l => l.length)
           .map(line => `<li>${fmtPerk(line)}</li>`)
@@ -740,11 +761,11 @@
       const btn = card.querySelector('a.btn');
       if (btn && t.ctaLabel) {
         const icon = btn.querySelector('i');
-        btn.innerHTML = (icon ? icon.outerHTML + ' ' : '') + esc(t.ctaLabel);
+        btn.innerHTML = (icon ? icon.outerHTML + ' ' : '') + esc(pickI18n(`page-membership.${key}.ctaLabel`, t.ctaLabel));
       }
     });
     const goldBadge = cards[1]?.querySelector('.mtier__badge');
-    if (goldBadge && shared.badgeText) goldBadge.textContent = shared.badgeText;
+    if (goldBadge && shared.badgeText) goldBadge.textContent = pickI18n('page-membership.tiersShared.badgeText', shared.badgeText);
   }
 
   function renderInstagramCTA(got) {
@@ -850,6 +871,19 @@
   // Expose for the admin Website tab to invoke after a save (live preview),
   // and for tests / other modules.
   window.TajPageCMS = { load, applyContent, getDefaults: () => DEFAULTS };
+
+  // When i18n flips the language, re-run the imperatively-built sections
+  // (membership tiers, comparison table, portal preview, FAQ, contact extras,
+  // pricing plans) so their copy switches with the chosen language.
+  document.addEventListener('taj-lang-applied', () => {
+    const got = LAST_GOT || {};
+    try { renderPricingPlans(got); } catch (_) {}
+    try { renderMembershipTiers(got); } catch (_) {}
+    try { renderComparisonTable(got); } catch (_) {}
+    try { renderPortalExtras(got); } catch (_) {}
+    try { renderFaqList(got); } catch (_) {}
+    try { renderContactExtras(got); } catch (_) {}
+  });
 
   // Run on DOM ready
   if (document.readyState === 'loading') {
