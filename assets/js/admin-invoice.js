@@ -31,7 +31,10 @@ function persist() {
   localStorage.setItem('taj-bookings', JSON.stringify(bookings));
 }
 
-function fmtMoney(n) { return n.toFixed(3) + ' BHD'; }
+function fmtMoney(n) {
+  const v = Number(n);
+  return (isFinite(v) ? v : 0).toFixed(3) + ' BHD';
+}
 function fmtFullDate(d) {
   if (!d) return '—';
   const [y, m, day] = d.split('-');
@@ -80,11 +83,15 @@ function render() {
   const isPaid = booking.paid;
   const isReceipt = isPaid;
 
-  // Service unit price (reverse from total which already has member disc)
+  // Service unit price (reverse from total which already has member disc).
+  // Guard against legacy/incomplete rows where booking.total is missing —
+  // otherwise every downstream calc cascades to NaN and the invoice
+  // displays "NaN BHD" everywhere.
+  const baseTotal = Number(booking.total) || 0;
   const memberDiscPct = tierDiscountPct(booking.tier);
   const unitPrice = memberDiscPct > 0
-    ? +(booking.total / (1 - memberDiscPct / 100)).toFixed(3)
-    : booking.total;
+    ? +(baseTotal / (1 - memberDiscPct / 100)).toFixed(3)
+    : baseTotal;
   const subtotal = unitPrice;
   const memberDisc = memberDiscPct > 0 ? +(subtotal * memberDiscPct / 100).toFixed(3) : 0;
 
