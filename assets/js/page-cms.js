@@ -393,6 +393,34 @@
         subtitle:'Reach us by phone, WhatsApp, or the form below — we reply quickly.',
         image:   'assets/images/reception-desk.jpg'
       },
+      form: {
+        eyebrow: 'Send a Message',
+        title:   'Inquire or *reserve*.',
+        body:    "Tell us how we can help — pricing questions, group bookings, membership inquiries, or anything else. We'll send your message directly to our reception team via WhatsApp.",
+        labelName: 'Full Name',    phName: 'Your name',
+        labelPhone: 'Phone',       phPhone: '+973 …',
+        labelEmail: 'Email',       phEmail: 'you@email.com',
+        labelSubject: 'Subject',
+        subjectOptions: 'General Inquiry\nBooking Question\nGroup / Couple Booking\nMembership Inquiry\nCorporate / Event\nFeedback',
+        labelMessage: 'Message',   phMessage: 'How can we help?',
+        buttonText: 'Send via WhatsApp'
+      },
+      hours: {
+        eyebrow: 'Opening Hours',
+        title:   'When to *visit*.',
+        list: 'Saturday | 10:00 AM – 6:00 PM\nSunday | 10:00 AM – 6:00 PM\nMonday | 10:00 AM – 6:00 PM\nTuesday | 10:00 AM – 6:00 PM\nWednesday | 10:00 AM – 6:00 PM\nThursday | 10:00 AM – 6:00 PM\nFriday | 10:00 AM – 6:00 PM'
+      },
+      walkins: {
+        title: 'Walk-Ins Welcome',
+        body:  'We do our best to accommodate walk-ins. For guaranteed time slots, especially evenings and weekends, please book in advance.'
+      },
+      follow: {
+        title: 'Follow Us',
+        urlInstagram: 'https://www.instagram.com/tajalsukunspa2026',
+        urlWhatsapp:  'https://wa.me/97335194422',
+        urlFacebook:  '#',
+        urlTiktok:    '#'
+      },
       visit: {
         eyebrow: 'Find Us',
         title:   'Visit the *sanctuary*.',
@@ -525,8 +553,44 @@
     renderPortalExtras(got);
     // Membership → FAQ Q/A list (sync).
     renderFaqList(got);
+    // Contact → Subject dropdown options + Hours table (sync).
+    renderContactExtras(got);
     // Signal that CMS content is on the page so the i18n layer can (re)translate.
     try { document.dispatchEvent(new CustomEvent('taj-cms-applied')); } catch (_) {}
+  }
+
+  function renderContactExtras(got) {
+    const page = got['page-contact'] || DEFAULTS['page-contact'] || {};
+    const esc = s => String(s == null ? '' : s).replace(/[&<>]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[c]);
+    // Subject dropdown — rebuild options if provided
+    const select = document.querySelector('#contact-form select[name="subject"]');
+    const optsStr = (page.form || {}).subjectOptions;
+    if (select && typeof optsStr === 'string' && optsStr.trim()) {
+      select.innerHTML = optsStr.split(/\r?\n/)
+        .map(l => l.replace(/\s+$/, ''))
+        .filter(l => l.length)
+        .map(l => `<option>${esc(l)}</option>`).join('');
+    }
+    // Submit button label
+    const btn = document.querySelector('#contact-form button[type="submit"]');
+    const btnText = (page.form || {}).buttonText;
+    if (btn && btnText) {
+      const icon = btn.querySelector('i');
+      btn.innerHTML = (icon ? icon.outerHTML + ' ' : '') + esc(btnText);
+    }
+    // Hours list — rebuild from "Day | Time" lines
+    const ul = document.getElementById('contact-hours-list');
+    const hoursStr = (page.hours || {}).list;
+    if (ul && typeof hoursStr === 'string' && hoursStr.trim()) {
+      ul.innerHTML = hoursStr.split(/\r?\n/)
+        .map(l => l.replace(/\s+$/, ''))
+        .filter(l => l.length)
+        .map(line => {
+          const [day, ...rest] = line.split('|');
+          const time = rest.join('|').trim();
+          return `<li><span class="day">${esc((day||'').trim())}</span> <span class="time">${esc(time)}</span></li>`;
+        }).join('');
+    }
   }
 
   function renderFaqList(got) {

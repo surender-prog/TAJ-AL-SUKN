@@ -85,16 +85,16 @@
   <div class="container">
     <div class="editorial">
       <div class="editorial__copy reveal">
-        <div class="numlabel"><span class="num">01</span><span class="lbl">Send a Message</span></div>
-        <h2>Inquire or <em>reserve</em>.</h2>
-        <p style="margin-bottom: 36px;">Tell us how we can help — pricing questions, group bookings, membership inquiries, or anything else. We'll send your message directly to our reception team via WhatsApp.</p>
+        <div class="numlabel"><span class="num">01</span><span class="lbl" data-cms="page-contact.form.eyebrow">Send a Message</span></div>
+        <h2 data-cms="page-contact.form.title">Inquire or <em>reserve</em>.</h2>
+        <p style="margin-bottom: 36px;" data-cms="page-contact.form.body">Tell us how we can help — pricing questions, group bookings, membership inquiries, or anything else. We'll send your message directly to our reception team via WhatsApp.</p>
 
         <form id="contact-form" class="form-grid">
-          <div class="field"><label>Full Name</label><input type="text" name="name" required placeholder="Your name"></div>
-          <div class="field"><label>Phone</label><input type="tel" name="phone" required placeholder="+973 …"></div>
-          <div class="field full"><label>Email</label><input type="email" name="email" placeholder="you@email.com"></div>
+          <div class="field"><label data-cms="page-contact.form.labelName">Full Name</label><input type="text" name="name" required placeholder="Your name" data-cms="page-contact.form.phName" data-cms-prop="placeholder"></div>
+          <div class="field"><label data-cms="page-contact.form.labelPhone">Phone</label><input type="tel" name="phone" required placeholder="+973 …" data-cms="page-contact.form.phPhone" data-cms-prop="placeholder"></div>
+          <div class="field full"><label data-cms="page-contact.form.labelEmail">Email</label><input type="email" name="email" placeholder="you@email.com" data-cms="page-contact.form.phEmail" data-cms-prop="placeholder"></div>
           <div class="field full">
-            <label>Subject</label>
+            <label data-cms="page-contact.form.labelSubject">Subject</label>
             <select name="subject">
               <option>General Inquiry</option>
               <option>Booking Question</option>
@@ -104,16 +104,16 @@
               <option>Feedback</option>
             </select>
           </div>
-          <div class="field full"><label>Message</label><textarea name="message" placeholder="How can we help?" required></textarea></div>
+          <div class="field full"><label data-cms="page-contact.form.labelMessage">Message</label><textarea name="message" placeholder="How can we help?" required data-cms="page-contact.form.phMessage" data-cms-prop="placeholder"></textarea></div>
           <div class="full"><button type="submit" class="btn btn--primary btn--block"><i class="fab fa-whatsapp"></i> Send via WhatsApp</button></div>
         </form>
       </div>
 
       <div class="reveal delay-1">
-        <div class="numlabel"><span class="num">02</span><span class="lbl">Opening Hours</span></div>
-        <h2>When to <em>visit</em>.</h2>
+        <div class="numlabel"><span class="num">02</span><span class="lbl" data-cms="page-contact.hours.eyebrow">Opening Hours</span></div>
+        <h2 data-cms="page-contact.hours.title">When to <em>visit</em>.</h2>
         <div class="hours" style="margin-top: 30px;">
-          <ul style="padding: 0; list-style: none;">
+          <ul style="padding: 0; list-style: none;" id="contact-hours-list">
             <li><span class="day">Saturday</span> <span class="time">10:00 AM – 6:00 PM</span></li>
             <li><span class="day">Sunday</span> <span class="time">10:00 AM – 6:00 PM</span></li>
             <li><span class="day">Monday</span> <span class="time">10:00 AM – 6:00 PM</span></li>
@@ -125,17 +125,17 @@
         </div>
 
         <div style="background: var(--c-cream); padding: 30px; border-radius: var(--r-md); margin-top: 30px; border-left: 3px solid var(--c-copper);">
-          <h4 style="font-family: var(--f-display); margin-bottom: 10px;"><i class="fas fa-info-circle" style="color: var(--c-copper); margin-right: 10px;"></i>Walk-Ins Welcome</h4>
-          <p style="color: var(--c-muted); font-size: 0.95rem;">We do our best to accommodate walk-ins. For guaranteed time slots, especially evenings and weekends, please book in advance.</p>
+          <h4 style="font-family: var(--f-display); margin-bottom: 10px;"><i class="fas fa-info-circle" style="color: var(--c-copper); margin-right: 10px;"></i><span data-cms="page-contact.walkins.title">Walk-Ins Welcome</span></h4>
+          <p style="color: var(--c-muted); font-size: 0.95rem;" data-cms="page-contact.walkins.body">We do our best to accommodate walk-ins. For guaranteed time slots, especially evenings and weekends, please book in advance.</p>
         </div>
 
         <div style="margin-top: 36px;">
-          <h4 style="font-family: var(--f-display); margin-bottom: 16px;">Follow Us</h4>
+          <h4 style="font-family: var(--f-display); margin-bottom: 16px;" data-cms="page-contact.follow.title">Follow Us</h4>
           <div class="socials" style="justify-content: flex-start;">
-            <a href="https://www.instagram.com/tajalsukunspa2026" target="_blank" rel="noopener" aria-label="Instagram" style="border-color: var(--c-line); color: var(--c-deep);"><i class="fab fa-instagram"></i></a>
-            <a href="https://wa.me/97335194422" aria-label="WhatsApp" target="_blank" style="border-color: var(--c-line); color: var(--c-deep);"><i class="fab fa-whatsapp"></i></a>
-            <a href="#" aria-label="Facebook" style="border-color: var(--c-line); color: var(--c-deep);"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" aria-label="TikTok" style="border-color: var(--c-line); color: var(--c-deep);"><i class="fab fa-tiktok"></i></a>
+            <a href="https://www.instagram.com/tajalsukunspa2026" data-cms="page-contact.follow.urlInstagram" data-cms-prop="href" target="_blank" rel="noopener" aria-label="Instagram" style="border-color: var(--c-line); color: var(--c-deep);"><i class="fab fa-instagram"></i></a>
+            <a href="https://wa.me/97335194422" data-cms="page-contact.follow.urlWhatsapp" data-cms-prop="href" aria-label="WhatsApp" target="_blank" style="border-color: var(--c-line); color: var(--c-deep);"><i class="fab fa-whatsapp"></i></a>
+            <a href="#" data-cms="page-contact.follow.urlFacebook" data-cms-prop="href" aria-label="Facebook" style="border-color: var(--c-line); color: var(--c-deep);"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" data-cms="page-contact.follow.urlTiktok" data-cms-prop="href" aria-label="TikTok" style="border-color: var(--c-line); color: var(--c-deep);"><i class="fab fa-tiktok"></i></a>
           </div>
         </div>
       </div>
@@ -212,7 +212,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="assets/js/supabase-config.js?v=20260520n" defer></script>
 <script src="assets/js/taj-data.js?v=20260520n" defer></script>
-<script src="assets/js/page-cms.js?v=20260526m" defer></script>
+<script src="assets/js/page-cms.js?v=20260526n" defer></script>
 <script src="assets/js/member-auth.js?v=20260520n" defer></script>
 <script src="assets/js/main.js?v=20260520n" defer></script>
 <script src="assets/js/i18n-data.js?v=20260520n" defer></script>

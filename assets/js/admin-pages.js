@@ -323,6 +323,39 @@
       preview: 'contact.html',
       blocks: [
         heroBlock(2),
+        { id: 'form', title: 'Inquire / contact form (left column)',
+          fields: [
+            F.eyebrow, F.headline(2), F.body(3),
+            { key:'labelName',    label:'Field — Name label',     type:'text' },
+            { key:'phName',       label:'Field — Name placeholder',type:'text' },
+            { key:'labelPhone',   label:'Field — Phone label',    type:'text' },
+            { key:'phPhone',      label:'Field — Phone placeholder',type:'text' },
+            { key:'labelEmail',   label:'Field — Email label',    type:'text' },
+            { key:'phEmail',      label:'Field — Email placeholder',type:'text' },
+            { key:'labelSubject', label:'Field — Subject label',  type:'text' },
+            { key:'subjectOptions', label:'Subject dropdown options (one per line)', type:'textarea', rows:6 },
+            { key:'labelMessage', label:'Field — Message label',  type:'text' },
+            { key:'phMessage',    label:'Field — Message placeholder', type:'text' },
+            { key:'buttonText',   label:'Submit button label',    type:'text' }
+          ] },
+        { id: 'hours', title: 'Opening hours (right column)',
+          fields: [
+            F.eyebrow, F.headline(2),
+            { key:'list', label:'Hours (one per line: "Day | Time")', type:'textarea', rows:8 }
+          ] },
+        { id: 'walkins', title: 'Walk-Ins notice (right column)',
+          fields: [
+            { key:'title', label:'Title', type:'text' },
+            { key:'body',  label:'Body',  type:'textarea', rows:3 }
+          ] },
+        { id: 'follow', title: 'Follow Us (social links)',
+          fields: [
+            { key:'title',        label:'Section title', type:'text' },
+            { key:'urlInstagram', label:'Instagram URL', type:'text' },
+            { key:'urlWhatsapp',  label:'WhatsApp URL',  type:'text' },
+            { key:'urlFacebook',  label:'Facebook URL',  type:'text' },
+            { key:'urlTiktok',    label:'TikTok URL',    type:'text' }
+          ] },
         { id: 'visit', title: 'Find Us — visit section',
           fields: [ F.eyebrow, F.headline(2), F.body(3) ] },
         { id: 'cta', title: 'WhatsApp shortcut',
