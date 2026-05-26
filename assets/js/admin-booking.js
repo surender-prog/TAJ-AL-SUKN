@@ -104,7 +104,7 @@ function render() {
   stBadge.className = 'badge-status ' + booking.status;
   stBadge.textContent = statusLabel(booking.status);
 
-  document.getElementById('bn-total').textContent = (booking.invoice && booking.invoice.total) ? booking.invoice.total + ' BHD' : booking.total + ' BHD';
+  document.getElementById('bn-total').textContent = (booking.invoice && booking.invoice.total) ? booking.invoice.total + ' BHD' : (booking.total ?? 0) + ' BHD';
   document.getElementById('bn-paid').textContent = isPaid ? 'Paid' : 'Unpaid';
 
   // Pipeline (status visualisation)

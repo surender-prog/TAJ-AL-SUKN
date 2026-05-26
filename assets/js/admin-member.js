@@ -244,7 +244,7 @@ function render() {
         <td><a>${b.id}</a></td>
         <td>${fmtShort(b.date)}<br><small style="color:var(--c-text-soft);">${b.time}</small></td>
         <td>${b.service}</td>
-        <td class="r"><strong style="color:var(--c-deep);">${b.total} BHD</strong>${b.paid ? '<br><small style="color:#2a8a4a; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; font-size:0.66rem;">✓ Paid</small>' : ''}</td>
+        <td class="r"><strong style="color:var(--c-deep);">${b.total ?? 0} BHD</strong>${b.paid ? '<br><small style="color:#2a8a4a; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; font-size:0.66rem;">✓ Paid</small>' : ''}</td>
         <td><span class="badge-status ${b.status}">${statusLabel(b.status)}</span></td>
       </tr>
     `).join('');
@@ -325,7 +325,7 @@ function renderTimeline(history) {
     if (b.status === 'cancel') {
       events.push({ icon: 'fa-times', cls: 'cancel', title: `Cancelled: ${b.service}`, desc: b.id, when: fmtShort(b.date) });
     } else if (b.paid) {
-      events.push({ icon: 'fa-check-circle', cls: 'payment', title: `Paid: ${b.service}`, desc: `${b.total} BHD · ${b.id}`, when: fmtShort(b.date) });
+      events.push({ icon: 'fa-check-circle', cls: 'payment', title: `Paid: ${b.service}`, desc: `${b.total ?? 0} BHD · ${b.id}`, when: fmtShort(b.date) });
     } else {
       events.push({ icon: 'fa-calendar-check', cls: 'book', title: `Booked: ${b.service}`, desc: b.id, when: fmtShort(b.date) });
     }

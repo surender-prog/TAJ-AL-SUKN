@@ -220,7 +220,7 @@ function renderBookings() {
           <td>${b.service}</td>
           <td>${tierBadge(b.tier)}</td>
           <td>${sourceBadge(b.source)}</td>
-          <td><strong style="color:var(--c-deep);">${b.total} BHD</strong>${b.paid ? '<br><small style="color:#2a8a4a; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; font-size:0.66rem;">✓ Paid</small>' : ''}</td>
+          <td><strong style="color:var(--c-deep);">${b.total ?? 0} BHD</strong>${b.paid ? '<br><small style="color:#2a8a4a; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; font-size:0.66rem;">✓ Paid</small>' : ''}</td>
           <td><span class="badge-status ${b.status}">${statusLabel(b.status)}</span></td>
           <td class="cell-actions">
             <a class="icon-btn view-bk" title="View Details"><i class="fas fa-eye"></i></a>
@@ -517,7 +517,7 @@ function showBookingModal(id) {
       <div><small style="color:var(--c-text-soft); letter-spacing:0.18em; font-size:0.7rem; text-transform:uppercase; font-weight:600;">Date</small><div style="margin-top:4px; font-weight:500;">${fmtDate(b.date)} · ${b.time}</div></div>
       <div><small style="color:var(--c-text-soft); letter-spacing:0.18em; font-size:0.7rem; text-transform:uppercase; font-weight:600;">Status</small><div style="margin-top:4px;"><span class="badge-status ${b.status}">${statusLabel(b.status)}</span></div></div>
       <div><small style="color:var(--c-text-soft); letter-spacing:0.18em; font-size:0.7rem; text-transform:uppercase; font-weight:600;">Service</small><div style="margin-top:4px; font-weight:500;">${b.service}</div></div>
-      <div><small style="color:var(--c-text-soft); letter-spacing:0.18em; font-size:0.7rem; text-transform:uppercase; font-weight:600;">Total</small><div style="margin-top:4px; font-weight:600; color:var(--c-copper); font-size:1.15rem;">${b.total} BHD</div></div>
+      <div><small style="color:var(--c-text-soft); letter-spacing:0.18em; font-size:0.7rem; text-transform:uppercase; font-weight:600;">Total</small><div style="margin-top:4px; font-weight:600; color:var(--c-copper); font-size:1.15rem;">${b.total ?? 0} BHD</div></div>
       <div><small style="color:var(--c-text-soft); letter-spacing:0.18em; font-size:0.7rem; text-transform:uppercase; font-weight:600;">Source</small><div style="margin-top:4px; font-weight:500; text-transform:capitalize;">${b.source}</div></div>
       <div><small style="color:var(--c-text-soft); letter-spacing:0.18em; font-size:0.7rem; text-transform:uppercase; font-weight:600;">Member</small><div style="margin-top:4px;">${tierBadge(b.tier)}</div></div>
     </div>
