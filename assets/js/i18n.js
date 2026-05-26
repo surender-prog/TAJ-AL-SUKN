@@ -73,6 +73,8 @@
     '.svc-row__name p',
     // about values + team list items
     '.value h4', '.value p', '.editorial__copy ul li',
+    // home founder bullets + socials labels
+    '.founder__list li', '.founder .role',
     // member portal
     '.portal-stat__lbl', '.portal-tabnav__btn',
     '.portal-hero__id-label', '.portal-hero__action', '#hero-tagline',
