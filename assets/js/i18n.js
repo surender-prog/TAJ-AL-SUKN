@@ -63,7 +63,7 @@
     '.pick .info h6', '.pick .info span',
     '.member-toggle__head .label', '.member-banner__hello',
     '.info-card h5', '.info-card p', '.day', '.time', '.closed-lbl',
-    '.numlabel .lbl', '.mtier__tier', '.svc-card .tag', '.compare th',
+    '.numlabel .lbl', '.mtier__tier', '.svc-card .tag', '.feature .tag', '.compare th',
     '.s-head p', '.hours h4',
     // home deeper sections + testimonials
     '.numbento__cell h5', '.numbento__cell p',
@@ -114,8 +114,8 @@
   // services table. Translate them by matching the English name against
   // TAJ_I18N.services. Caches in data-en-name / data-en-desc.
   function translateServiceCards(toArabic) {
-    // Cards (services page)
-    document.querySelectorAll('.svc-card').forEach(function (card) {
+    // Cards (services page) + home "Signature Treatments" featured cards
+    document.querySelectorAll('.svc-card, .feature-grid .feature').forEach(function (card) {
       var h = card.querySelector('h4');
       var p = card.querySelector('p');
       if (!h) return;
