@@ -236,6 +236,28 @@
         title:   'Beauty in *every detail*.',
         body:    'Tap any image to view it in full.'
       },
+      tiles: {
+        t01Image: 'assets/images/sanctuary-bed.jpg',     t01Label: 'A Sanctuary of Silence',
+        t02Image: 'assets/images/treatment-room.jpg',    t02Label: 'Private Suite',
+        t03Image: 'assets/images/reception-desk.jpg',    t03Label: 'A Warm Welcome',
+        t04Image: 'assets/images/deep-tissue.jpg',       t04Label: 'Deep Tissue Therapy',
+        t05Image: 'assets/images/spa-corridor.jpg',      t05Label: 'Walk to Stillness',
+        t06Image: 'assets/images/spa-foyer.jpg',         t06Label: 'The Foyer',
+        t07Image: 'assets/images/waiting-lounge.jpg',    t07Label: 'Lounge',
+        t08Image: 'assets/images/therapist-prep.jpg',    t08Label: 'Preparing the Ritual',
+        t09Image: 'assets/images/couples-massage.jpg',   t09Label: 'Couples Sanctuary',
+        t10Image: 'assets/images/therapist-products.jpg',t10Label: 'Premium Oils',
+        t11Image: 'assets/images/products-shelf.jpg',    t11Label: 'Curated Products',
+        t12Image: 'assets/images/lounge-flowers.jpg',    t12Label: 'Quiet Detail',
+        t13Image: 'assets/images/lobby-table.jpg',       t13Label: 'Lobby Centerpiece',
+        t14Image: 'assets/images/spa-detail-1.jpg',      t14Label: 'Interior Detail',
+        t15Image: 'assets/images/team-reception.jpg',    t15Label: 'The Team',
+        t16Image: 'assets/images/spa-relax-1.jpg',       t16Label: 'Relaxation Suite',
+        t17Image: 'assets/images/spa-relax-2.jpg',       t17Label: 'Hot Stone',
+        t18Image: 'assets/images/spa-relax-3.jpg',       t18Label: 'Foot Ritual',
+        t19Image: 'assets/images/spa-entrance.jpg',      t19Label: 'Entrance',
+        t20Image: 'assets/images/spa-exterior.jpg',      t20Label: 'Building 950'
+      },
       quote: {
         quote: '"Every detail is composed — every fragrance, every sound, every silence. *It all leads here*."',
         by:    '— Taj Al Sukun'

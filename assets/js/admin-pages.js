@@ -209,6 +209,16 @@
         heroBlock(2),
         { id: 'intro', title: 'Visual Journey — heading',
           fields: [ F.eyebrow, F.headline(2), { key:'body', label:'Hint text', type:'text' } ] },
+        { id: 'tiles', title: 'Gallery tiles (20 slots)',
+          fields: (() => {
+            const out = [];
+            for (let n = 1; n <= 20; n++) {
+              const k = 't' + (n < 10 ? '0' + n : n);
+              out.push({ key: k + 'Image', label: 'Tile ' + (n < 10 ? '0' + n : n) + ' — Image', type: 'image' });
+              out.push({ key: k + 'Label', label: 'Tile ' + (n < 10 ? '0' + n : n) + ' — Caption', type: 'text' });
+            }
+            return out;
+          })() },
         { id: 'quote', title: 'Closing quote',
           fields: [ F.quote, F.by ] },
         { id: 'instagram', title: 'Instagram CTA',
