@@ -100,20 +100,6 @@
             F.quote,
             F.image('Portrait')
           ] },
-        { id: 'pricing', title: 'Pricing / Memberships — section + plans',
-          fields: [
-            F.eyebrow, F.headline(2), F.subtitle, F.button,
-            { key:'unit', label:'Price unit (shared)', type:'text', hint:'e.g., "/ session · BHD"' },
-            { key:'c1Name',    label:'Plan 1 — Name',     type:'text' },
-            { key:'c1Price',   label:'Plan 1 — Price',    type:'text' },
-            { key:'c1Bullets', label:'Plan 1 — Bullets',  type:'textarea', rows:6, hint:'One per line. Prefix a line with ~ to show it muted/excluded.' },
-            { key:'c2Name',    label:'Plan 2 — Name',     type:'text' },
-            { key:'c2Price',   label:'Plan 2 — Price',    type:'text' },
-            { key:'c2Bullets', label:'Plan 2 — Bullets',  type:'textarea', rows:6, hint:'One per line. Prefix a line with ~ to show it muted/excluded.' },
-            { key:'c3Name',    label:'Plan 3 — Name',     type:'text' },
-            { key:'c3Price',   label:'Plan 3 — Price',    type:'text' },
-            { key:'c3Bullets', label:'Plan 3 — Bullets',  type:'textarea', rows:6, hint:'One per line. Prefix a line with ~ to show it muted/excluded.' }
-          ] },
         { id: 'offer', title: '10% off welcome banner',
           fields: [
             F.eyebrow, F.headline(2), F.body(3), F.button,

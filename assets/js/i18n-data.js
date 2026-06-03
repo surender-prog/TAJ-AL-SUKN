@@ -375,8 +375,6 @@ window.TAJ_I18N = {
     'page-home.founder.title':   'أيادٍ <em>تفهم</em>.',
     'page-home.founder.name':    'صوفيا ماريني',
     'page-home.founder.role':    'المؤسِّسة',
-    'page-home.pricing.eyebrow': 'أسعارٌ مرنة',
-    'page-home.pricing.title': 'لكل <em>لحظة</em>',
     'page-home.offer.eyebrow': 'عرض الترحيب',
     'page-home.offer.title': 'استمتع بخصم <em>10٪</em>',
     'page-home.offer.body': 'املأ النموذج وسنتواصل معك لتأكيد موعدك والاستمتاع بخصمٍ ترحيبي على زيارتك الأولى.',
@@ -526,16 +524,6 @@ window.TAJ_I18N = {
 
     'page-home.treatments.subtitle': 'من العلاج العميق إلى الحمّام الملكي — كل طقسٍ يُقدَّم بهدوء، شخصي بعمق، ومصمَّم لاستعادة توازنك.',
     'page-home.treatments.button':   'استعرض القائمة الكاملة',
-
-    'page-home.pricing.subtitle': 'ثلاث طرق لاختبار تاج السكون — اختر ما يناسبك اليوم.',
-    'page-home.pricing.button':   'احجز جلستك',
-    'page-home.pricing.unit':     '/ جلسة · د.ب',
-    'page-home.pricing.c1Name':   'أساسي',
-    'page-home.pricing.c1Bullets':'تدليك سويدي أو كازابلانكا (60 دقيقة)\nزيوت عطرية\nشاي عشبي بعد الجلسة\n~ كمّادة الأعشاب الساخنة\n~ ريفلكسولوجي القدم',
-    'page-home.pricing.c2Name':   'قياسي',
-    'page-home.pricing.c2Bullets':'تدليك تقليدي 90 دقيقة\nزيوت عطرية\nكمّادة الأعشاب الساخنة\nريفلكسولوجي القدم (15 دقيقة)\n~ علاج الحجر الحار',
-    'page-home.pricing.c3Name':   'مميّز',
-    'page-home.pricing.c3Bullets':'طقس فاخر 120 دقيقة\nزيوت عطرية\nكمّادة الأعشاب الساخنة\nريفلكسولوجي القدم (30 دقيقة)\nعلاج الحجر الحار',
 
     'page-home.offer.namePh':  'الاسم *',
     'page-home.offer.emailPh': 'البريد الإلكتروني *',

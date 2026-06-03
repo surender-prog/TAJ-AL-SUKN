@@ -103,16 +103,6 @@
         quote:   '"Every detail at Taj Al Sukun is chosen with care — every fragrance, every silence, every fabric. We don\'t simply offer treatments; we curate moments of stillness."',
         image:   'assets/images/manager-portrait.jpg'
       },
-      pricing: {
-        eyebrow:  'Annual Memberships',
-        title:    'Become a *member*, save year-round.',
-        subtitle: 'Three ways to experience Taj Al Sukun — choose what fits today.',
-        button:   'Book Your Massage',
-        unit:     '/ session · BHD',
-        c1Name: 'Basic',    c1Price: '25',  c1Bullets: '60-min Swedish or Casablanca\nAromatic oils\nHerbal tea after session\n~ Hot herbal compress\n~ Foot reflexology',
-        c2Name: 'Standard', c2Price: '35',  c2Bullets: '90-min Traditional Massage\nAromatic oils\nHot herbal compress\nFoot reflexology (15 min)\n~ Hot stone therapy',
-        c3Name: 'Premium',  c3Price: '120', c3Bullets: '120-min Luxury Ritual\nAromatic oils\nHot herbal compress\nFoot reflexology (30 min)\nHot stone therapy'
-      },
       offer: {
         eyebrow: 'Limited Welcome Offer',
         title:   'Save *10%* on your first ritual.',
