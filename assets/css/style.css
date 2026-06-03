@@ -44,3 +44,12 @@
 .cms-img-picker__divider{display:flex;align-items:center;gap:14px;margin:18px 0 14px;color:var(--c-text-soft);font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;font-weight:700}
 .cms-img-picker__divider::before,.cms-img-picker__divider::after{content:"";flex:1;height:1px;background:var(--c-line)}
 .cms-img-picker__upload .btn i{margin-right:8px}
+
+/* === Single-row nav fix: keep menu items + CTAs on one line === */
+.nav__menu{gap:26px}
+.nav__menu a{font-size:0.72rem;letter-spacing:0.14em;white-space:nowrap}
+.nav__signin{font-size:0.7rem;letter-spacing:0.08em;padding:9px 14px;white-space:nowrap;margin-right:8px}
+.lang-toggle{padding:7px 11px;font-size:.74rem;letter-spacing:.04em;white-space:nowrap}
+.nav__cta .btn--primary{font-size:0.74rem;letter-spacing:0.12em;padding:10px 18px;white-space:nowrap}
+.nav__cta{gap:10px}
+@media(max-width:1180px){.nav__menu{gap:18px}.nav__menu a{font-size:0.68rem;letter-spacing:0.1em}}
