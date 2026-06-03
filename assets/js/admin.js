@@ -1272,6 +1272,102 @@ document.querySelectorAll('[data-save-settings]').forEach(b => {
   });
 });
 
+/* ---------- Notification Settings: load + persist on every change ----------
+   Stored under settings key "admin-notify" with shape:
+     { whatsapp:bool, whatsappNumber, email:bool, emailAddress,
+       sms:bool, smsNumber, digest:bool }
+   Falls back to Footer (global) WhatsApp/email if first-run blank.    */
+(function () {
+  const list = document.getElementById('notify-prefs-list');
+  if (!list) return;
+  const KEY = 'admin-notify';
+  const flash = document.getElementById('notify-saved-flash');
+  let prefs = { whatsapp:false, whatsappNumber:'', email:false, emailAddress:'', sms:false, smsNumber:'', digest:false };
+  let saveTimer = null;
+
+  const $tog = sel => list.querySelector(`[data-notify-toggle="${sel}"]`);
+  const $fld = sel => list.querySelector(`[data-notify-field="${sel}"]`);
+  const $bdg = sel => list.querySelector(`[data-notify-badge="${sel}"]`);
+
+  function paintBadges() {
+    [['whatsapp', $tog('whatsapp')], ['email', $tog('email')], ['sms', $tog('sms')], ['digest', $tog('digest')]].forEach(([key, cb]) => {
+      const badge = $bdg(key);
+      if (!badge || !cb) return;
+      const on = !!cb.checked;
+      badge.textContent = on ? 'Active' : 'Inactive';
+      badge.classList.toggle('ok', on);
+      badge.classList.toggle('done', !on);
+    });
+  }
+
+  function flashSaved() {
+    if (!flash) return;
+    flash.style.opacity = '1';
+    clearTimeout(flashSaved._t);
+    flashSaved._t = setTimeout(() => { flash.style.opacity = '0'; }, 1400);
+  }
+
+  async function save() {
+    prefs = {
+      whatsapp:       !!$tog('whatsapp')?.checked,
+      whatsappNumber: ($fld('whatsappNumber')?.value || '').trim(),
+      email:          !!$tog('email')?.checked,
+      emailAddress:   ($fld('emailAddress')?.value || '').trim(),
+      sms:            !!$tog('sms')?.checked,
+      smsNumber:      ($fld('smsNumber')?.value || '').trim(),
+      digest:         !!$tog('digest')?.checked
+    };
+    paintBadges();
+    try {
+      if (window.TajData?.settings?.set) await TajData.settings.set(KEY, prefs);
+      else localStorage.setItem('taj-' + KEY, JSON.stringify(prefs));
+      flashSaved();
+    } catch (e) { console.warn('[notify-prefs] save failed:', e); }
+  }
+
+  function scheduleSave() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(save, 300);
+  }
+
+  async function load() {
+    let saved = null;
+    try {
+      if (window.TajData?.settings?.get) saved = await TajData.settings.get(KEY);
+      else saved = JSON.parse(localStorage.getItem('taj-' + KEY) || 'null');
+    } catch (_) {}
+    // Fall back to the footer WhatsApp / email for first-run defaults
+    let footer = null;
+    try { footer = window.TajData?.settings?.get ? await TajData.settings.get('page-footer') : null; } catch (_) {}
+    const footerC = (footer && footer.contact) || {};
+    prefs = Object.assign({
+      whatsapp: true,  whatsappNumber: footerC.whatsapp || '+973 35194422',
+      email:    true,  emailAddress:   footerC.email   || 'admin@tasukunspa.com',
+      sms:      false, smsNumber:      '',
+      digest:   false
+    }, saved || {});
+    // Paint into the DOM
+    $tog('whatsapp').checked = !!prefs.whatsapp;
+    $fld('whatsappNumber').value = prefs.whatsappNumber || '';
+    $tog('email').checked = !!prefs.email;
+    $fld('emailAddress').value = prefs.emailAddress || '';
+    $tog('sms').checked = !!prefs.sms;
+    $fld('smsNumber').value = prefs.smsNumber || '';
+    $tog('digest').checked = !!prefs.digest;
+    paintBadges();
+  }
+
+  // Persist on any toggle or input
+  list.addEventListener('change', e => {
+    if (e.target.matches('[data-notify-toggle], [data-notify-field]')) scheduleSave();
+  });
+  list.addEventListener('input', e => {
+    if (e.target.matches('[data-notify-field]')) scheduleSave();
+  });
+
+  load();
+})();
+
 
 /* ============================================================
    ENHANCED OVERVIEW + NOTIFICATIONS

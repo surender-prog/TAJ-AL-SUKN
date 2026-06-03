@@ -661,41 +661,52 @@
         <!-- 2. Notifications -->
         <div class="panel settings-section" id="sg-notify">
           <div class="panel__head"><h3><i class="far fa-bell" style="color:var(--c-copper); margin-right:10px;"></i>Notification Settings</h3></div>
-          <p style="color: var(--c-text-soft); margin-bottom: 22px;">Choose how you receive copies of new guest bookings and member signups.</p>
-          <div style="display: flex; flex-direction: column; gap: 14px;">
-            <label style="display: flex; gap: 16px; align-items: center; padding: 16px 20px; border: 1px solid var(--c-line); border-radius: var(--r-md); cursor: pointer;">
-              <input type="checkbox" checked style="width: 20px; height: 20px; accent-color: var(--c-copper);">
+          <p style="color: var(--c-text-soft); margin-bottom: 22px;">Choose how you receive copies of new guest bookings and member signups. Changes save automatically.</p>
+          <div style="display: flex; flex-direction: column; gap: 14px;" id="notify-prefs-list">
+            <!-- WhatsApp -->
+            <div class="notify-row" style="display: flex; gap: 16px; align-items: flex-start; padding: 16px 20px; border: 1px solid var(--c-line); border-radius: var(--r-md);">
+              <input type="checkbox" id="notify-whatsapp-on" data-notify-toggle="whatsapp" style="width: 20px; height: 20px; accent-color: var(--c-copper); margin-top: 4px;">
               <div style="flex: 1;">
-                <strong style="display: block; color: var(--c-deep);">WhatsApp Notifications</strong>
-                <small style="color: var(--c-text-soft);">Every booking sent to <strong>+973 35194422</strong></small>
+                <strong style="display: block; color: var(--c-deep); margin-bottom: 4px;">WhatsApp Notifications</strong>
+                <label style="display: block; color: var(--c-text-soft); font-size: 0.86rem;">Every booking sent to:
+                  <input type="tel" id="notify-whatsapp-num" data-notify-field="whatsappNumber" placeholder="+973 …" style="margin-left: 6px; padding: 4px 10px; border: 1px solid var(--c-line); border-radius: 6px; font-weight: 600; color: var(--c-deep); min-width: 180px;">
+                </label>
               </div>
-              <span class="badge-status ok">Active</span>
-            </label>
-            <label style="display: flex; gap: 16px; align-items: center; padding: 16px 20px; border: 1px solid var(--c-line); border-radius: var(--r-md); cursor: pointer;">
-              <input type="checkbox" checked style="width: 20px; height: 20px; accent-color: var(--c-copper);">
+              <span class="badge-status" data-notify-badge="whatsapp">Inactive</span>
+            </div>
+            <!-- Email -->
+            <div class="notify-row" style="display: flex; gap: 16px; align-items: flex-start; padding: 16px 20px; border: 1px solid var(--c-line); border-radius: var(--r-md);">
+              <input type="checkbox" id="notify-email-on" data-notify-toggle="email" style="width: 20px; height: 20px; accent-color: var(--c-copper); margin-top: 4px;">
               <div style="flex: 1;">
-                <strong style="display: block; color: var(--c-deep);">Email Notifications</strong>
-                <small style="color: var(--c-text-soft);">Sent to <strong>admin@tasukunspa.com</strong></small>
+                <strong style="display: block; color: var(--c-deep); margin-bottom: 4px;">Email Notifications</strong>
+                <label style="display: block; color: var(--c-text-soft); font-size: 0.86rem;">Sent to:
+                  <input type="email" id="notify-email-addr" data-notify-field="emailAddress" placeholder="you@example.com" style="margin-left: 6px; padding: 4px 10px; border: 1px solid var(--c-line); border-radius: 6px; font-weight: 600; color: var(--c-deep); min-width: 240px;">
+                </label>
               </div>
-              <span class="badge-status ok">Active</span>
-            </label>
-            <label style="display: flex; gap: 16px; align-items: center; padding: 16px 20px; border: 1px solid var(--c-line); border-radius: var(--r-md); cursor: pointer;">
-              <input type="checkbox" style="width: 20px; height: 20px; accent-color: var(--c-copper);">
+              <span class="badge-status" data-notify-badge="email">Inactive</span>
+            </div>
+            <!-- SMS -->
+            <div class="notify-row" style="display: flex; gap: 16px; align-items: flex-start; padding: 16px 20px; border: 1px solid var(--c-line); border-radius: var(--r-md);">
+              <input type="checkbox" id="notify-sms-on" data-notify-toggle="sms" style="width: 20px; height: 20px; accent-color: var(--c-copper); margin-top: 4px;">
               <div style="flex: 1;">
-                <strong style="display: block; color: var(--c-deep);">SMS Notifications</strong>
-                <small style="color: var(--c-text-soft);">Backup channel — disabled by default</small>
+                <strong style="display: block; color: var(--c-deep); margin-bottom: 4px;">SMS Notifications</strong>
+                <label style="display: block; color: var(--c-text-soft); font-size: 0.86rem;">Backup channel — sent to:
+                  <input type="tel" id="notify-sms-num" data-notify-field="smsNumber" placeholder="+973 …" style="margin-left: 6px; padding: 4px 10px; border: 1px solid var(--c-line); border-radius: 6px; font-weight: 600; color: var(--c-deep); min-width: 180px;">
+                </label>
               </div>
-              <span class="badge-status done">Inactive</span>
-            </label>
-            <label style="display: flex; gap: 16px; align-items: center; padding: 16px 20px; border: 1px solid var(--c-line); border-radius: var(--r-md); cursor: pointer;">
-              <input type="checkbox" checked style="width: 20px; height: 20px; accent-color: var(--c-copper);">
+              <span class="badge-status" data-notify-badge="sms">Inactive</span>
+            </div>
+            <!-- Daily Summary -->
+            <div class="notify-row" style="display: flex; gap: 16px; align-items: flex-start; padding: 16px 20px; border: 1px solid var(--c-line); border-radius: var(--r-md);">
+              <input type="checkbox" id="notify-digest-on" data-notify-toggle="digest" style="width: 20px; height: 20px; accent-color: var(--c-copper); margin-top: 4px;">
               <div style="flex: 1;">
-                <strong style="display: block; color: var(--c-deep);">Daily Summary Digest</strong>
-                <small style="color: var(--c-text-soft);">End-of-day email with bookings, revenue, and pending actions</small>
+                <strong style="display: block; color: var(--c-deep); margin-bottom: 4px;">Daily Summary Digest</strong>
+                <small style="color: var(--c-text-soft);">End-of-day email with bookings, revenue, and pending actions (uses the Email address above).</small>
               </div>
-              <span class="badge-status ok">Active</span>
-            </label>
+              <span class="badge-status" data-notify-badge="digest">Inactive</span>
+            </div>
           </div>
+          <p id="notify-saved-flash" style="color: #2a8a4a; font-size: 0.82rem; margin-top: 14px; opacity: 0; transition: opacity .3s ease;"><i class="fas fa-check-circle"></i> Saved</p>
         </div>
 
         <!-- 3. Therapists -->
