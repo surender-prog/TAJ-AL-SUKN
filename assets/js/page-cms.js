@@ -180,6 +180,15 @@
         image:   'assets/images/team-reception.jpg',
         accent:  'assets/images/therapist-prep.jpg'
       },
+      leadership: {
+        eyebrow: 'Leadership',
+        title:   'The vision behind *the sanctuary*.',
+        p1:      'With more than two decades of hospitality and wellness leadership, our Spa Director shapes every element of the Taj Al Sukun experience — from the sourcing of our oils to the temperature of the welcome tea.',
+        p2:      "Her commitment to excellence is what makes Taj Al Sukun feel less like a spa, and more like a sanctuary you'll keep returning to.",
+        image:   'assets/images/manager-portrait.jpg',
+        stampNum:   '20+',
+        stampLabel: 'YRS LEAD'
+      },
       team: {
         eyebrow: 'Trusted & Certified',
         title:   'A team of *master therapists*.',

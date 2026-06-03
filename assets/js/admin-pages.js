@@ -176,6 +176,15 @@
             { key:'image',  label:'Main image',   type:'image' },
             { key:'accent', label:'Accent image', type:'image' }
           ] },
+        { id: 'leadership', title: 'Leadership (04) — the vision behind the sanctuary',
+          fields: [
+            F.eyebrow, F.headline(2),
+            { key:'p1', label:'Paragraph 1', type:'textarea', rows:3 },
+            { key:'p2', label:'Paragraph 2', type:'textarea', rows:3 },
+            { key:'image',     label:'Portrait image',           type:'image' },
+            { key:'stampNum',  label:'Stamp — Number (e.g., "20+")', type:'text' },
+            { key:'stampLabel',label:'Stamp — Label (e.g., "YRS LEAD")', type:'text' }
+          ] },
         { id: 'team', title: 'Trusted & Certified — section + badges',
           fields: [
             F.eyebrow, F.headline(2), F.body(3),
