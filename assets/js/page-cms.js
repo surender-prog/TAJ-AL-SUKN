@@ -298,17 +298,6 @@
         subtitle:'An annual circle of complimentary services, member-only pricing, and priority care.',
         image:   'assets/images/sanctuary-bed.jpg'
       },
-      compare: {
-        eyebrow: 'Compare All Tiers',
-        title:   'Every benefit, *side by side*.',
-        headerBenefit: 'Benefit',
-        colSilver:     'Silver',
-        colGold:       'Gold',
-        colPlatinum:   'Platinum',
-        rows: '== Annual Investment\n**Price per year** | 150 BHD | 350 BHD | 750 BHD\n\n== Complimentary Services\n60-min signature massages | 2 | 6 | Unlimited (2/mo)\nRoyal Hammam rituals | x | 1 | 12 per year\nFoot rituals (reflexology) | 1 | 2 | Unlimited\nHot Stone sessions | x | x | 4 per year\n\n== Member Pricing\nDiscount on additional treatments | 10% | 15% | 20%\nDiscount on retail products | x | 10% | 20%\n\n== Booking & Privileges\nPriority booking window | 24 hours | 48 hours | Anytime\nGuest passes per year | x | 1 | 4\nPersonal therapist match | x | x | ✓\nConcierge scheduling | x | x | ✓\n\n== Welcome & Special Occasions\nWelcome ritual on signup | Foot Relaxing | Hammam | Sultan Suite\nBirthday gift | Foot Relaxing | 90-min spa journey | 4-hour spa day\nAnnual product gift box | x | x | ✓\nMembers-only events | x | ✓ | ✓',
-        ctaLabel: 'Speak with our team',
-        ctaUrl:   "https://wa.me/97335194422?text=I'd%20like%20to%20learn%20more%20about%20Taj%20Al%20Sukun%20Membership"
-      },
       portal: {
         eyebrow: 'Your Member Account',
         title:   'Track everything in *one place*.',
@@ -541,10 +530,8 @@
     renderPricingPlans(got);
     // Gallery → Instagram CTA: link + label derived from the handle setting.
     renderInstagramCTA(got);
-    // Membership → 3 tier cards (sync).
+    // Membership → tier cards (sync).
     renderMembershipTiers(got);
-    // Membership → comparison table (sync).
-    renderComparisonTable(got);
     // Membership → Portal preview: bullets list + CTA button label.
     renderPortalExtras(got);
     // Membership → FAQ Q/A list (sync).
@@ -659,65 +646,6 @@
     if (btn && cfg.ctaLabel) {
       const icon = btn.querySelector('i');
       btn.innerHTML = (icon ? icon.outerHTML + ' ' : '') + esc(pickI18n('page-membership.portal.ctaLabel', cfg.ctaLabel));
-    }
-  }
-
-  function renderComparisonTable(got) {
-    const table = document.querySelector('table.compare');
-    if (!table) return;
-    const cfg = ((got['page-membership'] || DEFAULTS['page-membership'] || {}).compare) || {};
-    const esc = s => String(s == null ? '' : s).replace(/[&<>]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[c]);
-    const fmtInline = s => esc(s).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    const thead = table.querySelector('thead tr');
-    if (thead) {
-      if (cfg.headerBenefit && thead.children[0]) thead.children[0].textContent = pickI18n('page-membership.compare.headerBenefit', cfg.headerBenefit);
-      if (cfg.colSilver     && thead.children[1]) thead.children[1].textContent = pickI18n('page-membership.compare.colSilver',     cfg.colSilver);
-      if (cfg.colGold       && thead.children[2]) thead.children[2].textContent = pickI18n('page-membership.compare.colGold',       cfg.colGold);
-      if (cfg.colPlatinum   && thead.children[3]) thead.children[3].textContent = pickI18n('page-membership.compare.colPlatinum',   cfg.colPlatinum);
-    }
-    const rowsStr = pickI18n('page-membership.compare.rows', cfg.rows);
-    if (typeof rowsStr === 'string') { cfg.rows = rowsStr; }
-    if (typeof cfg.rows === 'string') {
-      const tbody = table.querySelector('tbody');
-      if (tbody) {
-        const out = [];
-        cfg.rows.split(/\r?\n/).forEach(rawLine => {
-          const line = rawLine.replace(/\s+$/, '');
-          if (!line) return;
-          if (/^==\s+/.test(line)) {
-            const title = line.replace(/^==\s+/, '');
-            out.push(`<tr class="section-row"><td colspan="4">${esc(title)}</td></tr>`);
-            return;
-          }
-          const parts = line.split('|').map(p => p.trim());
-          const label = parts[0] || '';
-          const vals  = parts.slice(1, 4);
-          while (vals.length < 3) vals.push('');
-          const cellHtml = (v, i) => {
-            const lower = String(v).toLowerCase();
-            let html;
-            if (lower === 'x' || lower === '×' || lower === '-') html = '<i class="fas fa-times"></i>';
-            else if (lower === '✓' || lower === 'check' || lower === 'yes' || lower === '✔') html = '<i class="fas fa-check"></i>';
-            else {
-              const m = /^(\d+(?:\.\d+)?)\s+BHD\s*$/i.exec(v);
-              if (m) html = `<span class="compare__price">${esc(m[1])}<small>BHD</small></span>`;
-              else html = fmtInline(v);
-            }
-            const cls = i === 1 ? 'tier-col gold-col' : 'tier-col';
-            return `<td class="${cls}">${html}</td>`;
-          };
-          out.push(`<tr><td>${fmtInline(label)}</td>${vals.map(cellHtml).join('')}</tr>`);
-        });
-        tbody.innerHTML = out.join('');
-      }
-    }
-    const btn = document.querySelector('a.btn--whatsapp');
-    if (btn) {
-      if (cfg.ctaUrl)   btn.setAttribute('href', cfg.ctaUrl);
-      if (cfg.ctaLabel) {
-        const icon = btn.querySelector('i');
-        btn.innerHTML = (icon ? icon.outerHTML + ' ' : '') + esc(pickI18n('page-membership.compare.ctaLabel', cfg.ctaLabel));
-      }
     }
   }
 
@@ -944,7 +872,6 @@
     const got = LAST_GOT || {};
     try { renderPricingPlans(got); } catch (_) {}
     try { renderMembershipTiers(got); } catch (_) {}
-    try { renderComparisonTable(got); } catch (_) {}
     try { renderPortalExtras(got); } catch (_) {}
     try { renderFaqList(got); } catch (_) {}
     try { renderContactExtras(got); } catch (_) {}

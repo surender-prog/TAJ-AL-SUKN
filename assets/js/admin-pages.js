@@ -238,17 +238,6 @@
           fields: [
             { key:'tiers', label:'Tiers', type:'tierList' }
           ] },
-        { id: 'compare', title: 'Compare All Tiers — section + table',
-          fields: [
-            F.eyebrow, F.headline(2),
-            { key:'headerBenefit', label:'Column 1 — Header',  type:'text' },
-            { key:'colSilver',     label:'Column 2 — Silver header',  type:'text' },
-            { key:'colGold',       label:'Column 3 — Gold header',    type:'text' },
-            { key:'colPlatinum',   label:'Column 4 — Platinum header',type:'text' },
-            { key:'rows', label:'Table rows', type:'textarea', rows:20, hint:'Lines starting with == are section dividers. Other lines: "Benefit | silver | gold | platinum". Use x (or -) for ×, ✓ (or check) for ✓. **bold** is supported. "150 BHD" renders as the price chip.' },
-            { key:'ctaLabel', label:'CTA button label', type:'text' },
-            { key:'ctaUrl',   label:'CTA button URL',   type:'text', hint:'e.g., a WhatsApp link or https URL' }
-          ] },
         { id: 'portal', title: 'Member Portal preview — section + card',
           fields: [
             F.eyebrow, F.headline(2),
