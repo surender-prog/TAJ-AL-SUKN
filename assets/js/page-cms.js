@@ -36,6 +36,9 @@
         subtitle: "Step into Taj Al Sukun — a private sanctuary where Arabian rituals meet the world's finest spa traditions. Authentic Hammams, signature massages, and unhurried care.",
         image:    'assets/images/sanctuary-bed.jpg'
       },
+      marquee: {
+        items: 'Royal Hammam\nArgan Oil Ritual\nHot Stone\nCasablanca Hammam\nCouples Sanctuary\nDeep Tissue'
+      },
       loving: {
         title: 'Loving Through Touch',
         body:  'A professional massage therapist with extensive experience is ready to care for your physical and emotional wellbeing. Every ritual begins with you.',
@@ -560,6 +563,8 @@
     // Site-wide WhatsApp CTA links — label + href derived from the
     // page-footer.contact.whatsapp setting. Sync.
     renderWhatsappLinks(got);
+    // Home → marquee strip items (sync).
+    renderMarquee(got);
     // Signal that CMS content is on the page so the i18n layer can (re)translate.
     try { document.dispatchEvent(new CustomEvent('taj-cms-applied')); } catch (_) {}
   }
@@ -771,6 +776,20 @@
     if (goldBadge && shared.badgeText) goldBadge.textContent = pickI18n('page-membership.tiersShared.badgeText', shared.badgeText);
   }
 
+  function renderMarquee(got) {
+    const track = document.querySelector('.marquee .marquee__track');
+    if (!track) return;
+    const cfg = ((got['page-home'] || DEFAULTS['page-home'] || {}).marquee) || {};
+    const itemsStr = pickI18n('page-home.marquee.items', cfg.items);
+    if (typeof itemsStr !== 'string' || !itemsStr.trim()) return;
+    const esc = s => String(s == null ? '' : s).replace(/[&<>]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[c]);
+    const items = itemsStr.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    if (!items.length) return;
+    // Duplicate the list so the CSS scroll animation has continuous content
+    const doubled = items.concat(items);
+    track.innerHTML = doubled.map(t => `<span class="marquee__item">${esc(t)}</span>`).join('');
+  }
+
   function renderWhatsappLinks(got) {
     const links = document.querySelectorAll('[data-whatsapp-link]');
     if (!links.length) return;
@@ -906,6 +925,7 @@
     try { renderFaqList(got); } catch (_) {}
     try { renderContactExtras(got); } catch (_) {}
     try { renderWhatsappLinks(got); } catch (_) {}
+    try { renderMarquee(got); } catch (_) {}
   });
 
   // Run on DOM ready

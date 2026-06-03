@@ -513,6 +513,7 @@ window.TAJ_I18N = {
     'page-membership.platinum.cta': '<i class="fas fa-star"></i> كن عضوًا بلاتينيًا',
 
     /* ---------------- HOME — extras added via admin CMS ---------------- */
+    'page-home.marquee.items': 'الحمّام الملكي\nطقس زيت الأركان\nالحجر الحار\nحمّام الدار البيضاء\nملاذ الأزواج\nالتدليك العميق',
     'page-home.benefits.c1Title': 'تشعر بالتوتّر والتيبّس طوال اليوم',
     'page-home.benefits.c1Body':  'جسدك يبدو ثقيلًا ومشدودًا ويصعب تحريكه — حتى بعد الراحة.',
     'page-home.benefits.c2Title': 'تعيش مع ألمٍ مستمر',

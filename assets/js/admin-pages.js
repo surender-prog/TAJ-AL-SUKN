@@ -39,6 +39,10 @@
       preview: 'index.html',
       blocks: [
         heroBlock(2),
+        { id: 'marquee', title: 'Marquee strip (scrolling treatment names)',
+          fields: [
+            { key:'items', label:'Marquee items (one per line)', type:'textarea', rows:8, hint:'One short label per line. They scroll across the top of the home page. Add or remove freely.' }
+          ] },
         { id: 'loving', title: 'Loving Through Touch (overlay card)',
           fields: [ F.titleT, F.body(3), F.image('Section image') ] },
         { id: 'stress', title: 'Stress fades · harmony begins',
