@@ -232,21 +232,12 @@
         { id: 'tiersShared', title: 'Membership tiers — shared labels',
           fields: [
             { key:'perksLabel', label:'Perks list header', type:'text', hint:'e.g., "Included Annually"' },
-            { key:'badgeText',  label:'Featured badge text', type:'text', hint:'e.g., "Most Popular" (shows on Gold)' }
+            { key:'badgeText',  label:'Featured badge text', type:'text', hint:'e.g., "Most Popular"' }
           ] },
-        ...['silver','gold','platinum'].map(k => ({
-          id: k,
-          title: 'Tier — ' + k.charAt(0).toUpperCase() + k.slice(1),
+        { id: 'tierList', title: 'Membership tiers — add / remove / reorder',
           fields: [
-            { key:'tier',     label:'Tier label (small caps)', type:'text' },
-            { key:'name',     label:'Tier name',               type:'text' },
-            { key:'sub',      label:'Tagline',                 type:'textarea', rows:2 },
-            { key:'price',    label:'Price (number only)',     type:'text' },
-            { key:'unit',     label:'Price unit',              type:'text', hint:'e.g., "BHD · per year"' },
-            { key:'perks',    label:'Perks (one per line; wrap with **…** for bold accent)', type:'textarea', rows:10 },
-            { key:'ctaLabel', label:'CTA button label',        type:'text' }
-          ]
-        })),
+            { key:'tiers', label:'Tiers', type:'tierList' }
+          ] },
         { id: 'compare', title: 'Compare All Tiers — section + table',
           fields: [
             F.eyebrow, F.headline(2),
@@ -495,6 +486,13 @@
         // service selects don't need an Arabic mirror — the service master is the source of truth
         break;
       }
+      case 'tierList': {
+        // Dynamic list of membership tier cards. Populated/wired in
+        // populateTierLists() after the editor mounts. No Arabic mirror —
+        // each tier's editor has its own per-language inputs.
+        input = `<div class="cms-tier-list" id="${id}" data-path="${path}"></div>`;
+        break;
+      }
       case 'text':
       default:
         input   = `<input type="text" id="${id}"  data-path="${path}"    value="${escHTML(val)}">`;
@@ -567,6 +565,121 @@
 
     // Populate service-select dropdowns from the services master
     populateServiceSelects();
+    // Populate dynamic membership tier lists
+    populateTierLists();
+  }
+
+  /* ----------------------------- Tier list ----------------------------
+     Custom field for editing a variable-length list of membership tiers.
+     Each tier card has: name, sub, price, unit, perks (textarea), CTA
+     label, optional Most-Popular flag, optional FontAwesome icon class.
+     Stored as an array at workingContent[<path>]. ------------------- */
+  const TIER_FIELDS = [
+    { key:'tier',     label:'Tier label (small caps)', type:'text', placeholder:'e.g., Silver' },
+    { key:'name',     label:'Tier name',               type:'text', placeholder:'e.g., The Companion' },
+    { key:'sub',      label:'Tagline',                 type:'textarea', rows:2 },
+    { key:'price',    label:'Price (number only)',     type:'text', placeholder:'150' },
+    { key:'unit',     label:'Price unit',              type:'text', placeholder:'BHD · per year' },
+    { key:'perks',    label:'Perks (one per line, **bold** for emphasis)', type:'textarea', rows:8 },
+    { key:'ctaLabel', label:'CTA button label',        type:'text', placeholder:'e.g., Become Silver' },
+    { key:'icon',     label:'Crown icon (Font Awesome class)', type:'text', placeholder:'fas fa-gem' },
+    { key:'featured', label:'Show "Most Popular" badge + dark styling', type:'checkbox' }
+  ];
+
+  function tierFieldHtml(tier, idx, field) {
+    const v = tier[field.key];
+    const id = `cms-tier-${idx}-${field.key}`;
+    const safe = escHTML(v == null ? '' : v);
+    const ph = field.placeholder ? ` placeholder="${escHTML(field.placeholder)}"` : '';
+    let input;
+    if (field.type === 'textarea') {
+      input = `<textarea id="${id}" data-tier-field="${field.key}" rows="${field.rows || 3}"${ph}>${safe}</textarea>`;
+    } else if (field.type === 'checkbox') {
+      input = `<label class="cms-tier-check"><input type="checkbox" id="${id}" data-tier-field="${field.key}"${v ? ' checked' : ''}> <span>${escHTML(field.label)}</span></label>`;
+      return `<div class="cms-field cms-tier-field cms-tier-field--check">${input}</div>`;
+    } else {
+      input = `<input type="text" id="${id}" data-tier-field="${field.key}" value="${safe}"${ph}>`;
+    }
+    return `<div class="cms-field cms-tier-field">
+      <label for="${id}">${escHTML(field.label)}</label>
+      ${input}
+    </div>`;
+  }
+
+  function renderOneTierCard(tier, idx, total) {
+    const head = escHTML(tier.tier || tier.name || `Tier ${idx + 1}`);
+    return `<details class="cms-tier" data-tier-idx="${idx}"${idx === 0 ? ' open' : ''}>
+      <summary><span class="cms-tier__name">${head}</span>
+        <span class="cms-tier__ctrls">
+          <button type="button" class="cms-tier__btn" data-tier-act="up"   ${idx === 0 ? 'disabled' : ''} title="Move up"><i class="fas fa-arrow-up"></i></button>
+          <button type="button" class="cms-tier__btn" data-tier-act="down" ${idx === total - 1 ? 'disabled' : ''} title="Move down"><i class="fas fa-arrow-down"></i></button>
+          <button type="button" class="cms-tier__btn cms-tier__btn--del" data-tier-act="remove" title="Remove tier"><i class="fas fa-trash"></i></button>
+        </span>
+      </summary>
+      <div class="cms-tier__body">
+        ${TIER_FIELDS.map(f => tierFieldHtml(tier, idx, f)).join('')}
+      </div>
+    </details>`;
+  }
+
+  function tierListContainerHtml(items) {
+    const head = `<div class="cms-tier-list__items">${items.map((t, i) => renderOneTierCard(t, i, items.length)).join('')}</div>`;
+    const add = `<button type="button" class="cms-tier-list__add"><i class="fas fa-plus"></i> Add membership tier</button>`;
+    return head + add;
+  }
+
+  function populateTierLists() {
+    document.querySelectorAll('[id^="cms-f-"].cms-tier-list, .cms-tier-list[data-path]').forEach(el => {
+      const path = el.getAttribute('data-path');
+      if (!path) return;
+      let items = get(workingContent, path);
+      if (!Array.isArray(items)) items = [];
+      wireTierList(el, path, items);
+    });
+  }
+
+  function wireTierList(el, path, items) {
+    el.innerHTML = tierListContainerHtml(items);
+    // Add button
+    el.querySelector('.cms-tier-list__add').onclick = () => {
+      items.push({ tier: '', name: 'New Tier', sub: '', price: '', unit: 'BHD · per year', perks: '', ctaLabel: '', icon: 'fas fa-gem', featured: false });
+      set(workingContent, path, items);
+      wireTierList(el, path, items);
+    };
+    // Per-tier events
+    el.querySelectorAll('.cms-tier').forEach(card => {
+      const idx = Number(card.getAttribute('data-tier-idx'));
+      // Live-update header on name/tier change
+      const refreshHead = () => {
+        const head = card.querySelector('.cms-tier__name');
+        if (head) head.textContent = items[idx].tier || items[idx].name || `Tier ${idx + 1}`;
+      };
+      card.querySelectorAll('[data-tier-field]').forEach(input => {
+        const key = input.getAttribute('data-tier-field');
+        const evt = input.type === 'checkbox' ? 'change' : 'input';
+        input.addEventListener(evt, () => {
+          items[idx][key] = input.type === 'checkbox' ? input.checked : input.value;
+          set(workingContent, path, items);
+          if (key === 'tier' || key === 'name') refreshHead();
+        });
+      });
+      // Reorder + remove
+      card.querySelectorAll('[data-tier-act]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const act = btn.getAttribute('data-tier-act');
+          if (act === 'remove') {
+            if (!confirm(`Remove "${items[idx].name || items[idx].tier || 'this tier'}"?`)) return;
+            items.splice(idx, 1);
+          } else if (act === 'up' && idx > 0) {
+            [items[idx - 1], items[idx]] = [items[idx], items[idx - 1]];
+          } else if (act === 'down' && idx < items.length - 1) {
+            [items[idx + 1], items[idx]] = [items[idx], items[idx + 1]];
+          } else return;
+          set(workingContent, path, items);
+          wireTierList(el, path, items);
+        });
+      });
+    });
   }
 
   async function populateServiceSelects() {

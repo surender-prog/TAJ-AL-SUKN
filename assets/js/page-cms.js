@@ -269,33 +269,29 @@
     },
     'page-membership': {
       tiersShared: { perksLabel: 'Included Annually', badgeText: 'Most Popular' },
-      silver: {
-        tier: 'Silver',
-        name: 'The Companion',
-        sub:  'An invitation to begin — a year of considered moments.',
-        price: '150',
-        unit:  'BHD · per year',
-        perks: '**2 complimentary** 60-min signature massages\n**1 complimentary** Foot Reflexology ritual\n**10% off** all additional treatments\nPriority booking — 24 hours ahead\nWelcome ritual on signup\nBirthday gift — free Foot Relaxing\nMember-only seasonal offers',
-        ctaLabel: 'Become Silver'
-      },
-      gold: {
-        tier: 'Gold',
-        name: 'The Sanctuary',
-        sub:  'A generous year of regular restoration and signature care.',
-        price: '350',
-        unit:  'BHD · per year',
-        perks: '**6 complimentary** 60-min signature massages\n**1 Royal Hammam** ritual included\n**2 complimentary** foot rituals\n**15% off** all additional treatments\nPriority booking — 48 hours ahead\n**1 guest pass** per year\nWelcome Hammam ritual on signup\nBirthday spa journey (90 min)\nMembers-only seasonal events',
-        ctaLabel: 'Become Gold'
-      },
-      platinum: {
-        tier: 'Platinum',
-        name: 'The Royal Circle',
-        sub:  'Unlimited stillness — the highest tier of care, for the most devoted.',
-        price: '750',
-        unit:  'BHD · per year',
-        perks: '**Unlimited** signature massages (max 2/month)\n**12 Royal Hammams** per year\n**4 Hot Stone** sessions included\n**20% off** additional treatments & products\nPriority booking — anytime\n**4 guest passes** per year\nWelcome Sultan Suite ritual\nPersonal therapist match\nBirthday Day at the Spa (4 hours)\nAnnual gift box of premium products\nConcierge appointment scheduling',
-        ctaLabel: 'Become Platinum'
-      },
+      tierList: { tiers: [
+        {
+          tier: 'Silver', name: 'The Companion',
+          sub:  'An invitation to begin — a year of considered moments.',
+          price: '150', unit: 'BHD · per year',
+          perks: '**2 complimentary** 60-min signature massages\n**1 complimentary** Foot Reflexology ritual\n**10% off** all additional treatments\nPriority booking — 24 hours ahead\nWelcome ritual on signup\nBirthday gift — free Foot Relaxing\nMember-only seasonal offers',
+          ctaLabel: 'Become Silver', icon: 'fas fa-gem', featured: false
+        },
+        {
+          tier: 'Gold', name: 'The Sanctuary',
+          sub:  'A generous year of regular restoration and signature care.',
+          price: '350', unit: 'BHD · per year',
+          perks: '**6 complimentary** 60-min signature massages\n**1 Royal Hammam** ritual included\n**2 complimentary** foot rituals\n**15% off** all additional treatments\nPriority booking — 48 hours ahead\n**1 guest pass** per year\nWelcome Hammam ritual on signup\nBirthday spa journey (90 min)\nMembers-only seasonal events',
+          ctaLabel: 'Become Gold', icon: 'fas fa-crown', featured: true
+        },
+        {
+          tier: 'Platinum', name: 'The Royal Circle',
+          sub:  'Unlimited stillness — the highest tier of care, for the most devoted.',
+          price: '750', unit: 'BHD · per year',
+          perks: '**Unlimited** signature massages (max 2/month)\n**12 Royal Hammams** per year\n**4 Hot Stone** sessions included\n**20% off** additional treatments & products\nPriority booking — anytime\n**4 guest passes** per year\nWelcome Sultan Suite ritual\nPersonal therapist match\nBirthday Day at the Spa (4 hours)\nAnnual gift box of premium products\nConcierge appointment scheduling',
+          ctaLabel: 'Become Platinum', icon: 'fas fa-star', featured: false
+        }
+      ] },
       hero: {
         eyebrow: 'MEMBERSHIP',
         title:   'The Taj Al Sukun *Membership*.',
@@ -726,49 +722,71 @@
   }
 
   function renderMembershipTiers(got) {
-    const cards = document.querySelectorAll('.mtier-grid .mtier');
-    if (!cards.length) return;
+    const grid = document.querySelector('.mtier-grid');
+    if (!grid) return;
     const cfg = got['page-membership'] || DEFAULTS['page-membership'] || {};
     const shared = cfg.tiersShared || {};
     const esc = s => String(s == null ? '' : s).replace(/[&<>]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[c]);
     const fmtPerk = line => esc(line).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    ['silver','gold','platinum'].forEach((key, i) => {
-      const card = cards[i];
-      if (!card) return;
-      const t = cfg[key];
-      if (!t) return;
-      const tierEl = card.querySelector('.mtier__tier');
-      if (tierEl && t.tier) tierEl.textContent = pickI18n(`page-membership.${key}.tier`, t.tier);
-      const nameEl = card.querySelector('h3');
-      if (nameEl && t.name) nameEl.textContent = pickI18n(`page-membership.${key}.name`, t.name);
-      const subEl = card.querySelector('.mtier__sub');
-      if (subEl && t.sub) subEl.textContent = pickI18n(`page-membership.${key}.sub`, t.sub);
-      const priceEl = card.querySelector('.mtier__price');
-      if (priceEl && (t.price != null || t.unit != null)) {
-        const num = t.price != null && t.price !== '' ? esc(String(t.price)) : '';
-        const unit = pickI18n(`page-membership.${key}.unit`, t.unit);
-        const sm  = unit != null && unit !== ''  ? `<small>${esc(unit)}</small>` : '';
-        priceEl.innerHTML = num + sm;
-      }
-      const perksLabelEl = card.querySelector('.mtier__perks-label');
-      if (perksLabelEl && shared.perksLabel) perksLabelEl.textContent = pickI18n('page-membership.tiersShared.perksLabel', shared.perksLabel);
-      const ul = card.querySelector('.mtier__perks');
-      const perksStr = pickI18n(`page-membership.${key}.perks`, t.perks);
-      if (ul && typeof perksStr === 'string') {
-        ul.innerHTML = perksStr.split(/\r?\n/)
-          .map(l => l.replace(/\s+$/, ''))
-          .filter(l => l.length)
-          .map(line => `<li>${fmtPerk(line)}</li>`)
-          .join('');
-      }
-      const btn = card.querySelector('a.btn');
-      if (btn && t.ctaLabel) {
-        const icon = btn.querySelector('i');
-        btn.innerHTML = (icon ? icon.outerHTML + ' ' : '') + esc(pickI18n(`page-membership.${key}.ctaLabel`, t.ctaLabel));
-      }
-    });
-    const goldBadge = cards[1]?.querySelector('.mtier__badge');
-    if (goldBadge && shared.badgeText) goldBadge.textContent = pickI18n('page-membership.tiersShared.badgeText', shared.badgeText);
+
+    // Resolve tiers: prefer new array shape (cfg.tierList.tiers), fall
+    // back to legacy silver/gold/platinum keys for old saved data.
+    let tiers = (cfg.tierList && Array.isArray(cfg.tierList.tiers)) ? cfg.tierList.tiers : null;
+    if (!tiers || !tiers.length) {
+      tiers = [];
+      ['silver','gold','platinum'].forEach((k) => {
+        const t = cfg[k];
+        if (t) tiers.push(Object.assign({
+          featured: k === 'gold',
+          icon: ({ silver:'fas fa-gem', gold:'fas fa-crown', platinum:'fas fa-star' })[k]
+        }, t));
+      });
+    }
+    if (!tiers.length) return;
+
+    const badgeText   = pickI18n('page-membership.tiersShared.badgeText',  shared.badgeText  || 'Most Popular');
+    const perksLabel  = pickI18n('page-membership.tiersShared.perksLabel', shared.perksLabel || 'Included Annually');
+    const slugMap = ['silver', 'gold', 'platinum']; // first three keep their original class for styling parity
+
+    grid.innerHTML = tiers.map((tRaw, i) => {
+      // Per-tier i18n key prefix: use slugMap for first three so existing
+      // Arabic dictionary keys still apply; later additions get t<idx>.
+      const slug = slugMap[i] || ('t' + (i + 1));
+      const t = {
+        tier:     pickI18n(`page-membership.${slug}.tier`,     tRaw.tier),
+        name:     pickI18n(`page-membership.${slug}.name`,     tRaw.name),
+        sub:      pickI18n(`page-membership.${slug}.sub`,      tRaw.sub),
+        unit:     pickI18n(`page-membership.${slug}.unit`,     tRaw.unit),
+        perks:    pickI18n(`page-membership.${slug}.perks`,    tRaw.perks),
+        ctaLabel: pickI18n(`page-membership.${slug}.ctaLabel`, tRaw.ctaLabel)
+      };
+      const cls = ['mtier', 'reveal', i ? `delay-${i}` : '', tRaw.featured ? 'mtier--gold' : `mtier--${slug}`]
+        .filter(Boolean).join(' ');
+      const iconCls = tRaw.icon || 'fas fa-gem';
+      const badge = tRaw.featured ? `<span class="mtier__badge">${esc(badgeText)}</span>` : '';
+      const priceNum = (tRaw.price != null && tRaw.price !== '') ? esc(String(tRaw.price)) : '';
+      const priceUnit = (t.unit != null && t.unit !== '') ? `<small>${esc(t.unit)}</small>` : '';
+      const perksHtml = (typeof t.perks === 'string') ? t.perks.split(/\r?\n/)
+        .map(l => l.replace(/\s+$/, '')).filter(l => l.length)
+        .map(line => `<li>${fmtPerk(line)}</li>`).join('') : '';
+      // Build CTA href + class — gold/featured uses gold button, others outline
+      const ctaSlug = (tRaw.tier || `Tier${i+1}`).replace(/[^A-Za-z0-9]+/g, '');
+      const ctaHref = `member-signup.html?tier=${encodeURIComponent(ctaSlug)}`;
+      const ctaCls  = 'btn ' + (tRaw.featured ? 'btn--gold' : 'btn--outline') + ' btn--block';
+      const ctaIcon = `<i class="${esc(iconCls)}"></i>`;
+      return `<article class="${cls}">
+        ${badge}
+        <div class="mtier__crown"><i class="${esc(iconCls)}"></i></div>
+        <span class="mtier__tier">${esc(t.tier || '')}</span>
+        <h3>${esc(t.name || '')}</h3>
+        <p class="mtier__sub">${esc(t.sub || '')}</p>
+        <div class="mtier__price">${priceNum}${priceUnit}</div>
+        <div class="mtier__divider"></div>
+        <span class="mtier__perks-label">${esc(perksLabel)}</span>
+        <ul class="mtier__perks">${perksHtml}</ul>
+        <a href="${ctaHref}" class="${ctaCls}">${ctaIcon} ${esc(t.ctaLabel || '')}</a>
+      </article>`;
+    }).join('');
   }
 
   function renderMarquee(got) {
