@@ -103,10 +103,6 @@
         quote:   '"Every detail at Taj Al Sukun is chosen with care — every fragrance, every silence, every fabric. We don\'t simply offer treatments; we curate moments of stillness."',
         image:   'assets/images/manager-portrait.jpg'
       },
-      testimonials: {
-        eyebrow: 'What Guests Say',
-        title:   'Words from our *circle*.'
-      },
       pricing: {
         eyebrow:  'Annual Memberships',
         title:    'Become a *member*, save year-round.',

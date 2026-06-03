@@ -100,8 +100,6 @@
             F.quote,
             F.image('Portrait')
           ] },
-        { id: 'testimonials', title: 'Testimonials — section head',
-          fields: [ F.eyebrow, F.headline(2) ] },
         { id: 'pricing', title: 'Pricing / Memberships — section + plans',
           fields: [
             F.eyebrow, F.headline(2), F.subtitle, F.button,

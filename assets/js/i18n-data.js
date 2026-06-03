@@ -214,19 +214,11 @@ window.TAJ_I18N = {
     '120-min Luxury Ritual': 'طقس فاخر 120 دقيقة',
     'Foot reflexology (30 min)': 'ريفلكسولوجي للقدم (30 دقيقة)',
 
-    // home — testimonial quotes + locations
+    // home — Manama-area location names (kept; used elsewhere in chrome)
     'Manama': 'المنامة',
     'Riffa': 'الرفاع',
     'Adliya': 'العدلية',
     'Seef': 'السيف',
-    "A perfect escape from the city. The Royal Hammam left my skin glowing and my mind completely at ease. Sofia's touch is sheer magic.":
-      'ملاذٌ مثاليّ بعيدًا عن صخب المدينة. الحمّام الملكي ترك بشرتي متألّقة وذهني في راحةٍ تامّة. لمسة صوفيا سحرٌ خالص.',
-    "The atmosphere in the studio is incredibly calming from the very first minute. Sofia's touch is gentle and powerful, more than just a massage — it's therapy for the soul.":
-      'الأجواء في الاستوديو مهدّئة بعمقٍ من الدقيقة الأولى. لمسة صوفيا لطيفةٌ وقويةٌ في آنٍ معًا — أكثر من مجرّد تدليك، إنه علاجٌ للروح.',
-    "I've tried many massage therapists before, but Sofia's approach is truly unique. Each movement feels thoughtful and precise. My back pain has eased.":
-      'جرّبت معالجين كثيرين من قبل، لكن أسلوب صوفيا فريدٌ حقًا. كل حركة تبدو مدروسة ودقيقة. وآلام ظهري خفّت.',
-    "Last night I slept like a child! I immediately felt my upper back, my legs, neck and lower body felt so much lighter. After my session everything was toned. Thank you.":
-      'نمت ليلة أمس كطفل! شعرت فورًا أن أعلى ظهري وساقَيّ ورقبتي وأسفل جسدي أصبحت أخفّ بكثير. بعد جلستي كان كل شيء في توازنه. شكرًا لكم.',
 
     // about — values cards
     'Quality': 'الجودة',
@@ -383,8 +375,6 @@ window.TAJ_I18N = {
     'page-home.founder.title':   'أيادٍ <em>تفهم</em>.',
     'page-home.founder.name':    'صوفيا ماريني',
     'page-home.founder.role':    'المؤسِّسة',
-    'page-home.testimonials.eyebrow': 'آراء عملائنا',
-    'page-home.testimonials.title': 'كلماتٌ ممّن <em>زارونا</em>.',
     'page-home.pricing.eyebrow': 'أسعارٌ مرنة',
     'page-home.pricing.title': 'لكل <em>لحظة</em>',
     'page-home.offer.eyebrow': 'عرض الترحيب',
