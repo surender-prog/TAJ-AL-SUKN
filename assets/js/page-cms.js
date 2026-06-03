@@ -557,6 +557,9 @@
     renderFaqList(got);
     // Contact → Subject dropdown options + Hours table (sync).
     renderContactExtras(got);
+    // Site-wide WhatsApp CTA links — label + href derived from the
+    // page-footer.contact.whatsapp setting. Sync.
+    renderWhatsappLinks(got);
     // Signal that CMS content is on the page so the i18n layer can (re)translate.
     try { document.dispatchEvent(new CustomEvent('taj-cms-applied')); } catch (_) {}
   }
@@ -768,6 +771,25 @@
     if (goldBadge && shared.badgeText) goldBadge.textContent = pickI18n('page-membership.tiersShared.badgeText', shared.badgeText);
   }
 
+  function renderWhatsappLinks(got) {
+    const links = document.querySelectorAll('[data-whatsapp-link]');
+    if (!links.length) return;
+    const cfg = ((got['page-footer'] || DEFAULTS['page-footer'] || {}).contact) || {};
+    const raw = (cfg.whatsapp || '').trim();
+    if (!raw) return;
+    // Build href: digits only for wa.me, drop "+" and any leading zeros
+    const digits = raw.replace(/\D+/g, '').replace(/^0+/, '');
+    if (!digits) return;
+    const href = 'https://wa.me/' + digits;
+    links.forEach(a => {
+      a.setAttribute('href', href);
+      a.setAttribute('target', '_blank');
+      a.setAttribute('rel', 'noopener');
+      const labelEl = a.querySelector('[data-whatsapp-label]');
+      if (labelEl) labelEl.textContent = raw;
+    });
+  }
+
   function renderInstagramCTA(got) {
     const link = document.getElementById('instagram-cta-link');
     const label = document.getElementById('instagram-cta-handle');
@@ -883,6 +905,7 @@
     try { renderPortalExtras(got); } catch (_) {}
     try { renderFaqList(got); } catch (_) {}
     try { renderContactExtras(got); } catch (_) {}
+    try { renderWhatsappLinks(got); } catch (_) {}
   });
 
   // Run on DOM ready
