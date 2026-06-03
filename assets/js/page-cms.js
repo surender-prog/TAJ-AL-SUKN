@@ -909,6 +909,17 @@
   // and for tests / other modules.
   window.TajPageCMS = { load, applyContent, getDefaults: () => DEFAULTS };
 
+  // Re-fetch CMS settings whenever the user comes back to this tab. Catches
+  // the common flow of editing in /admin and switching back to the public
+  // site to verify — without this the page would still show stale settings
+  // until the next full reload. Debounced to ignore rapid switches.
+  let __refetchTimer = null;
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible') return;
+    if (__refetchTimer) clearTimeout(__refetchTimer);
+    __refetchTimer = setTimeout(() => { try { load(); } catch (_) {} }, 250);
+  });
+
   // When i18n flips the language, re-run the imperatively-built sections
   // (membership tiers, comparison table, portal preview, FAQ, contact extras,
   // pricing plans) so their copy switches with the chosen language.
