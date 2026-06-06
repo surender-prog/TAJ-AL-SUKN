@@ -1249,12 +1249,41 @@ let payMethods = (function () {
   }
   return base;
 })();
+// Read the editable payment-detail fields (bank transfer + BenefitPay) so they
+// can be saved alongside the method toggles and shown on the public checkout.
+function readPayDetails() {
+  const v = id => (document.getElementById(id)?.value || '').trim();
+  return {
+    bank: {
+      accountName:   v('pm-bank-name'),
+      bank:          v('pm-bank-bank'),
+      accountNumber: v('pm-bank-acct'),
+      iban:          v('pm-bank-iban'),
+      swift:         v('pm-bank-swift'),
+      reference:     v('pm-bank-ref'),
+      note:          v('pm-bank-note')
+    },
+    benefit: {
+      merchantId:    v('pm-benefit-mid'),
+      merchantPhone: v('pm-benefit-phone'),
+      note:          v('pm-benefit-note')
+    }
+  };
+}
+function fillPayDetails(details) {
+  if (!details) return;
+  const set = (id, val) => { const el = document.getElementById(id); if (el != null && val != null && val !== '') el.value = val; };
+  const b = details.bank || {}, bp = details.benefit || {};
+  set('pm-bank-name', b.accountName); set('pm-bank-bank', b.bank); set('pm-bank-acct', b.accountNumber);
+  set('pm-bank-iban', b.iban); set('pm-bank-swift', b.swift); set('pm-bank-ref', b.reference); set('pm-bank-note', b.note);
+  set('pm-benefit-mid', bp.merchantId); set('pm-benefit-phone', bp.merchantPhone); set('pm-benefit-note', bp.note);
+}
 function persistPay() {
   localStorage.setItem('taj-pay-methods', JSON.stringify(payMethods));
   // Mirror to the shared settings store so the public signup/booking flows
-  // read the same enabled-methods list (key: admin-payments).
+  // read the same enabled-methods list + detail fields (key: admin-payments).
   try {
-    if (window.TajData?.settings?.set) TajData.settings.set('admin-payments', { methods: payMethods });
+    if (window.TajData?.settings?.set) TajData.settings.set('admin-payments', { methods: payMethods, details: readPayDetails() });
   } catch (_) {}
 }
 
@@ -1291,14 +1320,23 @@ function renderPayMethods() {
         payMethods.forEach(o => { if (o.key in on) o.enabled = on[o.key]; });
         localStorage.setItem('taj-pay-methods', JSON.stringify(payMethods));
         renderPayMethods();
+        fillPayDetails(saved.details);
         // Re-publish in the canonical key-based shape so downstream consumers
         // (signup payment cards) get a consistent structure going forward.
-        if (window.TajData?.settings?.set) TajData.settings.set('admin-payments', { methods: payMethods });
+        if (window.TajData?.settings?.set) TajData.settings.set('admin-payments', { methods: payMethods, details: readPayDetails() });
       } else {
         // First run — publish the current defaults so the public flows have data
-        if (window.TajData?.settings?.set) TajData.settings.set('admin-payments', { methods: payMethods });
+        if (window.TajData?.settings?.set) TajData.settings.set('admin-payments', { methods: payMethods, details: readPayDetails() });
       }
     }
+    // Persist detail edits (bank / BenefitPay) automatically, debounced.
+    let dt = null;
+    ['pm-bank-name','pm-bank-bank','pm-bank-acct','pm-bank-iban','pm-bank-swift','pm-bank-ref','pm-bank-note','pm-benefit-mid','pm-benefit-phone','pm-benefit-note'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const ev = el.tagName === 'SELECT' ? 'change' : 'input';
+      el.addEventListener(ev, () => { clearTimeout(dt); dt = setTimeout(persistPay, 350); });
+    });
   } catch (_) {}
 })();
 

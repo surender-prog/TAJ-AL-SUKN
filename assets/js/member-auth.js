@@ -611,6 +611,33 @@
       syncPayPanels();
     }
 
+    // Populate the per-method detail panels (bank instructions, BenefitPay
+    // note) from the admin-captured details.
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[c]); }
+    function renderPayDetails(details) {
+      if (!details) return;
+      const b = details.bank || {};
+      const bankInfo = document.querySelector('#pay-detail-bank .bank-info');
+      if (bankInfo && (b.accountName || b.iban || b.accountNumber)) {
+        const row = (dt, dd) => dd ? `<dt>${esc(dt)}</dt><dd>${esc(dd)}</dd>` : '';
+        bankInfo.innerHTML =
+          `<h4>Bank Transfer Instructions</h4><dl>` +
+          row('Account Name', b.accountName) +
+          row('Bank', b.bank) +
+          row('Account Number', b.accountNumber) +
+          row('IBAN', b.iban) +
+          row('SWIFT', b.swift) +
+          row('Reference', b.reference) +
+          `</dl>` +
+          (b.note ? `<p class="field__note">${esc(b.note)}</p>` : '');
+      }
+      const bp = details.benefit || {};
+      const benefitPanel = document.getElementById('pay-detail-benefit');
+      if (benefitPanel && bp.note) {
+        benefitPanel.innerHTML = `<p class="field__note"><i class="fas fa-info-circle" style="color:var(--c-copper);"></i> ${esc(bp.note)}</p>`;
+      }
+    }
+
     // Bind the static fallback now, then swap in the admin-managed methods.
     bindPay();
     (async () => {
@@ -621,6 +648,7 @@
         }
         const methods = saved && Array.isArray(saved.methods) ? saved.methods : null;
         if (methods) { renderPayChoose(methods); bindPay(); }
+        if (saved && saved.details) renderPayDetails(saved.details);
       } catch (e) { console.warn('[signup] payment render failed:', e); }
     })();
 

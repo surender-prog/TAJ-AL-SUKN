@@ -803,27 +803,31 @@
 
           <div style="margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--c-line);">
             <h4 style="font-family:var(--f-display); margin-bottom: 14px; font-weight:500;">Bank Transfer Details</h4>
-            <p style="color: var(--c-text-soft); font-size: 0.88rem; margin-bottom: 14px;">These are shared with guests when they choose Bank Transfer at checkout.</p>
+            <p style="color: var(--c-text-soft); font-size: 0.88rem; margin-bottom: 14px;">Shown to guests on the booking &amp; signup pages when they choose Bank Transfer. Saved automatically.</p>
             <div class="form-grid">
-              <div class="field"><label>Account Name</label><input type="text" value="Taj Al Sukun Spa W.L.L."></div>
+              <div class="field"><label>Account Name</label><input type="text" id="pm-bank-name" value="Taj Al Sukun Spa W.L.L."></div>
               <div class="field"><label>Bank</label>
-                <select>
+                <select id="pm-bank-bank">
                   <option>National Bank of Bahrain (NBB)</option>
                   <option>BBK</option>
                   <option>Ahli United Bank</option>
                   <option>Bahrain Islamic Bank</option>
                 </select>
               </div>
-              <div class="field"><label>IBAN</label><input type="text" value="BH00 NBOB 0000 0000 0000 00"></div>
-              <div class="field"><label>SWIFT</label><input type="text" value="NBOBBHBM"></div>
+              <div class="field"><label>Account Number</label><input type="text" id="pm-bank-acct" value="BH00 NBOB 0000 0000 4400 00"></div>
+              <div class="field"><label>IBAN</label><input type="text" id="pm-bank-iban" value="BH00NBOB0000000044000"></div>
+              <div class="field"><label>SWIFT</label><input type="text" id="pm-bank-swift" value="NBOBBHBM"></div>
+              <div class="field"><label>Transfer reference</label><input type="text" id="pm-bank-ref" value='Your name + &quot;Membership&quot;'></div>
+              <div class="field full"><label>Confirmation note (receipt instructions)</label><input type="text" id="pm-bank-note" value="Once the transfer is sent, send the receipt to +973 35194422 on WhatsApp. Membership activates within 1 working hour."></div>
             </div>
           </div>
 
           <div style="margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--c-line);">
             <h4 style="font-family:var(--f-display); margin-bottom: 14px; font-weight:500;">BenefitPay Merchant</h4>
             <div class="form-grid">
-              <div class="field"><label>Merchant ID</label><input type="text" value="BNP-MERCHANT-99214"></div>
-              <div class="field"><label>Merchant Phone</label><input type="tel" value="+973 35194422"></div>
+              <div class="field"><label>Merchant ID</label><input type="text" id="pm-benefit-mid" value="BNP-MERCHANT-99214"></div>
+              <div class="field"><label>Merchant Phone</label><input type="tel" id="pm-benefit-phone" value="+973 35194422"></div>
+              <div class="field full"><label>BenefitPay note (shown at checkout)</label><input type="text" id="pm-benefit-note" value="When you confirm, you'll receive a BenefitPay QR. Scan it inside your BenefitPay app to authorise."></div>
             </div>
           </div>
         </div>
