@@ -320,6 +320,31 @@
       const norm = s => (s || '').replace(/[^\d]/g, '').replace(/^973/, '');
       return (LS.get(K.members, []) || []).find(m => norm(m.phone) === norm(phone)) || null;
     },
+    async loginByEmail(email) {
+      const e = (email || '').trim().toLowerCase();
+      if (!e) return null;
+      if (sb) {
+        // Try a dedicated RPC first (if deployed), then a direct case-insensitive
+        // match, then fall through to the offline cache.
+        try {
+          const { data, error } = await sb.rpc('member_find_by_email', { p_email: e });
+          if (!error && data && data[0]) return fromMember(data[0]);
+          if (!error) return null;
+        } catch (_) { /* RPC not deployed — fall through */ }
+        try {
+          const { data } = await sb.from('members').select('*').ilike('email', e).limit(1);
+          if (data && data[0]) return fromMember(data[0]);
+        } catch (_) { /* RLS may block direct select — fall through */ }
+      }
+      return (LS.get(K.members, []) || []).find(m => (m.email || '').trim().toLowerCase() === e) || null;
+    },
+    // Unified lookup: accepts an email OR a phone number and returns the member.
+    async lookupByContact(contact) {
+      const c = (contact || '').trim();
+      if (!c) return null;
+      if (c.includes('@')) return this.loginByEmail(c);
+      return this.loginByPhone(c);
+    },
     async bookingsFor(id, phone) {
       if (sb) {
         try {

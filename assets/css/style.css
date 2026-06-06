@@ -83,3 +83,16 @@
 /* Membership tier grid: center any number of cards (2, 3, etc.) */
 .mtier-grid{grid-template-columns:repeat(auto-fit,minmax(280px,380px))!important;justify-content:center!important;max-width:1240px!important}
 @media(min-width:1100px){.mtier-grid{grid-template-columns:repeat(auto-fit,minmax(280px,380px))!important}}
+
+/* === Booking: membership email/mobile lookup === */
+.member-lookup label{display:block;color:rgba(255,255,255,.72);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;margin-bottom:8px}
+.member-lookup__row{display:flex;gap:10px;flex-wrap:wrap}
+.member-lookup__row input{flex:1;min-width:200px;padding:12px 14px;border-radius:10px;border:1px solid rgba(212,184,150,.35);background:rgba(255,255,255,.06);color:#fff;font:inherit}
+.member-lookup__row input::placeholder{color:rgba(255,255,255,.45)}
+.member-lookup__row input:focus{outline:none;border-color:var(--c-gold);background:rgba(255,255,255,.1)}
+.member-lookup__row .btn{white-space:nowrap;flex:0 0 auto}
+.member-lookup__result{margin-top:12px;font-size:.9rem;line-height:1.5;padding:10px 14px;border-radius:10px}
+.member-lookup__result a{color:var(--c-gold);font-weight:600;text-decoration:underline}
+.member-lookup__result--ok{background:rgba(42,138,74,.16);color:#a8e0bb;border:1px solid rgba(42,138,74,.4)}
+.member-lookup__result--ok strong{color:#fff}
+.member-lookup__result--warn{background:rgba(212,184,150,.12);color:rgba(255,255,255,.82);border:1px solid rgba(212,184,150,.3)}

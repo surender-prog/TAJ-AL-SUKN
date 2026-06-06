@@ -281,17 +281,101 @@ function showToast(msg) {
   // Member toggle
   const memberToggle = document.getElementById('member-toggle');
   const memberHead   = document.getElementById('member-toggle-head');
-  const memberTier   = document.getElementById('member-tier');
-  const memberId     = document.getElementById('member-id');
+  const memberTier   = document.getElementById('member-tier');     // hidden — resolved by lookup
+  const memberId     = document.getElementById('member-id');       // hidden — resolved by lookup
+  const memberDisc   = document.getElementById('member-discount'); // hidden — resolved by lookup
+  const lookupInput  = document.getElementById('member-lookup-input');
+  const lookupBtn    = document.getElementById('member-lookup-btn');
+  const lookupResult = document.getElementById('member-lookup-result');
+
+  const tierToDiscount = { Silver: 10, Gold: 15, Platinum: 20 };
+
+  function setResolvedMember(m) {
+    // m = member record (or null to clear)
+    if (m) {
+      const tier = m.tier || 'Member';
+      const disc = (m.discount != null ? m.discount : tierToDiscount[tier]) || 0;
+      if (memberTier) memberTier.value = tier;
+      if (memberId)   memberId.value   = m.id || '';
+      if (memberDisc) memberDisc.value = String(disc);
+      if (memberToggle) memberToggle.classList.add('active');
+      if (lookupResult) {
+        lookupResult.hidden = false;
+        lookupResult.className = 'member-lookup__result member-lookup__result--ok';
+        lookupResult.innerHTML = `<i class="fas fa-check-circle"></i> ${tier} member — <strong>${disc}% off</strong> applied.`;
+      }
+    } else {
+      if (memberTier) memberTier.value = '';
+      if (memberId)   memberId.value   = '';
+      if (memberDisc) memberDisc.value = '0';
+      if (lookupResult) {
+        lookupResult.hidden = false;
+        lookupResult.className = 'member-lookup__result member-lookup__result--warn';
+        lookupResult.innerHTML = `<i class="fas fa-info-circle"></i> No active membership found for that contact. You can still book at standard rate or <a href="membership.html">become a member</a>.`;
+      }
+    }
+    update();
+  }
+
+  async function runLookup() {
+    const contact = (lookupInput && lookupInput.value || '').trim();
+    if (!contact) {
+      if (lookupResult) {
+        lookupResult.hidden = false;
+        lookupResult.className = 'member-lookup__result member-lookup__result--warn';
+        lookupResult.textContent = 'Enter your membership email or mobile number first.';
+      }
+      return;
+    }
+    if (!window.TajData || !TajData.members) {
+      if (lookupResult) {
+        lookupResult.hidden = false;
+        lookupResult.className = 'member-lookup__result member-lookup__result--warn';
+        lookupResult.textContent = 'Membership lookup is offline right now — please try again shortly.';
+      }
+      return;
+    }
+    const orig = lookupBtn ? lookupBtn.innerHTML : null;
+    if (lookupBtn) { lookupBtn.disabled = true; lookupBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking…'; }
+    try {
+      const m = await TajData.members.lookupByContact(contact);
+      setResolvedMember(m && m.status !== 'frozen' ? m : (m ? m : null));
+      // If the membership is frozen/expired we still found a record but no discount
+      if (m && m.status === 'frozen') {
+        if (lookupResult) {
+          lookupResult.className = 'member-lookup__result member-lookup__result--warn';
+          lookupResult.innerHTML = `<i class="fas fa-info-circle"></i> Membership on hold — discount not applied. Please contact us to reactivate.`;
+        }
+        if (memberDisc) memberDisc.value = '0';
+        update();
+      }
+    } catch (e) {
+      console.warn('[booking] member lookup failed:', e);
+      if (lookupResult) {
+        lookupResult.hidden = false;
+        lookupResult.className = 'member-lookup__result member-lookup__result--warn';
+        lookupResult.textContent = 'Could not check membership right now — please try again.';
+      }
+    } finally {
+      if (lookupBtn && orig != null) { lookupBtn.disabled = false; lookupBtn.innerHTML = orig; }
+    }
+  }
 
   if (memberHead && memberToggle) {
     memberHead.addEventListener('click', () => {
       memberToggle.classList.toggle('active');
+      // Clearing the toggle drops any applied discount
+      if (!memberToggle.classList.contains('active')) {
+        if (memberDisc) memberDisc.value = '0';
+        if (lookupResult) lookupResult.hidden = true;
+      }
       update();
     });
   }
-  if (memberTier) memberTier.addEventListener('change', update);
-  if (memberId) memberId.addEventListener('input', update);
+  if (lookupBtn) lookupBtn.addEventListener('click', runLookup);
+  if (lookupInput) lookupInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); runLookup(); }
+  });
 
   // Auto-fill from signed-in member session, if any
   if (window.TajMember && TajMember.isSignedIn()) {
@@ -332,16 +416,12 @@ function showToast(msg) {
         location.reload();
       });
 
-      // Mark the toggle as "active" so update() applies the discount.
-      // We do this even though it's hidden — update() reads memberToggle.classList.
+      // Mark the toggle as "active" and populate the hidden resolved-member
+      // fields (tier / id / discount) so update() applies the discount.
       if (memberToggle) memberToggle.classList.add('active');
-      // Inject a synthetic option onto memberTier so dataset.discount is correct
-      if (memberTier) {
-        // Make sure the current tier exists as an option (it should)
-        const opt = Array.from(memberTier.options).find(o => o.value === tier);
-        if (opt) memberTier.value = tier;
-      }
-      if (memberId) memberId.value = me.id || '';
+      if (memberTier) memberTier.value = tier;
+      if (memberId)   memberId.value   = me.id || '';
+      if (memberDisc) memberDisc.value = String(discount);
     }
 
     // Pre-fill guest fields too
@@ -422,11 +502,11 @@ function showToast(msg) {
     const sTotal = document.getElementById('sum-total');
     const sNm    = document.getElementById('sum-name');
 
-    // Member discount calculation
+    // Member discount calculation — discount + tier are resolved by the
+    // email/mobile lookup (or the signed-in session) into hidden fields.
     const isMember = memberToggle && memberToggle.classList.contains('active');
-    const tierOption = memberTier && memberTier.options[memberTier.selectedIndex];
-    const discountPct = (isMember && tierOption && tierOption.dataset.discount)
-      ? parseInt(tierOption.dataset.discount, 10) : 0;
+    const discountPct = isMember ? (parseInt(memberDisc && memberDisc.value, 10) || 0) : 0;
+    const resolvedTier = (memberTier && memberTier.value) || 'Member';
 
     const basePrice = sel ? parseFloat(sel.dataset.price) : 0;
     const discountAmount = (basePrice * discountPct) / 100;
@@ -448,11 +528,11 @@ function showToast(msg) {
 
     if (discountPct > 0 && discRow && discAmt) {
       discRow.style.display = '';
-      discLbl.textContent = (memberTier.value || 'Member') + ' Discount (' + discountPct + '%)';
+      discLbl.textContent = resolvedTier + ' Discount (' + discountPct + '%)';
       discAmt.textContent = '− ' + discountAmount.toFixed(discountAmount % 1 ? 2 : 0) + ' BHD';
       if (memberBadge) {
         memberBadge.style.display = '';
-        memberBadgeTier.textContent = memberTier.value;
+        memberBadgeTier.textContent = resolvedTier;
       }
     } else {
       if (discRow) discRow.style.display = 'none';
@@ -466,11 +546,9 @@ function showToast(msg) {
     if (!sel) { showToast('Please pick a service'); return; }
     const d = new FormData(form);
     const isMember = memberToggle && memberToggle.classList.contains('active');
-    const tier = isMember ? (memberTier.value || '—') : null;
-    const id = isMember ? (memberId.value || '—') : null;
-    const tierOption = memberTier && memberTier.options[memberTier.selectedIndex];
-    const discountPct = (isMember && tierOption && tierOption.dataset.discount)
-      ? parseInt(tierOption.dataset.discount, 10) : 0;
+    const discountPct = isMember ? (parseInt(memberDisc && memberDisc.value, 10) || 0) : 0;
+    const tier = (isMember && discountPct > 0) ? (memberTier.value || '—') : null;
+    const id = (isMember && discountPct > 0) ? (memberId.value || '—') : null;
     const basePrice = parseFloat(sel.dataset.price);
     const finalPrice = basePrice * (1 - discountPct / 100);
 

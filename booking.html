@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link rel="stylesheet" href="assets/css/style.css?v=20260604b">
+<link rel="stylesheet" href="assets/css/style.css?v=20260604c">
 </head>
 <body>
 
@@ -93,22 +93,19 @@
             <span class="switch"></span>
           </div>
           <div class="member-toggle__body">
-            <p style="color: rgba(255,255,255,.78); font-size: 0.92rem; margin-bottom: 18px;">Welcome back. Enter your tier and member ID to apply your benefits and discount automatically. Or <a href="member-signin.html" style="color: var(--c-gold); font-weight: 600; text-decoration: underline;">sign in</a> to skip this step next time.</p>
-            <div class="member-toggle__row">
-              <div>
-                <label>Membership Tier</label>
-                <select name="member_tier" id="member-tier">
-                  <option value="">Select tier…</option>
-                  <option value="Silver" data-discount="10">Silver — 10% off</option>
-                  <option value="Gold" data-discount="15">Gold — 15% off</option>
-                  <option value="Platinum" data-discount="20">Platinum — 20% off</option>
-                </select>
+            <p style="color: rgba(255,255,255,.78); font-size: 0.92rem; margin-bottom: 18px;">Enter the email or mobile number on your membership and we'll apply your tier discount automatically. Or <a href="member-signin.html" style="color: var(--c-gold); font-weight: 600; text-decoration: underline;">sign in</a> to skip this step next time.</p>
+            <div class="member-lookup">
+              <label for="member-lookup-input">Membership email or mobile</label>
+              <div class="member-lookup__row">
+                <input type="text" id="member-lookup-input" inputmode="email" autocomplete="off" placeholder="you@email.com  or  +973 …">
+                <button type="button" id="member-lookup-btn" class="btn btn--gold"><i class="fas fa-search"></i> Apply</button>
               </div>
-              <div>
-                <label>Member ID</label>
-                <input type="text" name="member_id" id="member-id" placeholder="TAS-2025-XXXX">
-              </div>
+              <p id="member-lookup-result" class="member-lookup__result" hidden></p>
             </div>
+            <!-- Resolved by the lookup; carried with the booking record -->
+            <input type="hidden" name="member_tier" id="member-tier" value="">
+            <input type="hidden" name="member_id"   id="member-id"   value="">
+            <input type="hidden" id="member-discount" value="0">
             <p style="font-size: 0.82rem; color: rgba(255,255,255,.65); margin-top: 14px;">
               <i class="fas fa-info-circle" style="color: var(--c-gold); margin-right: 6px;"></i>
               Don't have a membership yet? <a href="membership.html" style="color: var(--c-gold); font-weight: 600; text-decoration: underline;">Become a member</a> and start saving today.
@@ -336,10 +333,10 @@
 <!-- Supabase data layer -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="assets/js/supabase-config.js?v=20260520n" defer></script>
-<script src="assets/js/taj-data.js?v=20260520n" defer></script>
+<script src="assets/js/taj-data.js?v=20260604c" defer></script>
 <script src="assets/js/page-cms.js?v=20260604b" defer></script>
 <script src="assets/js/member-auth.js?v=20260520n" defer></script>
-<script src="assets/js/main.js?v=20260604b" defer></script>
+<script src="assets/js/main.js?v=20260604c" defer></script>
 <script src="assets/js/i18n-data.js?v=20260604b" defer></script>
 <script src="assets/js/i18n.js?v=20260526q" defer></script>
 </body>
