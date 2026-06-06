@@ -291,6 +291,21 @@
       preview: 'contact.html',
       blocks: [
         heroBlock(2),
+        { id: 'cards', title: 'Contact info cards (top row)',
+          fields: [
+            { key:'callTitle', label:'Call — Title',          type:'text' },
+            { key:'call1',     label:'Call — Primary number',  type:'text' },
+            { key:'call2',     label:'Call — Secondary number',type:'text' },
+            { key:'waTitle',   label:'WhatsApp — Title',       type:'text' },
+            { key:'waNum',     label:'WhatsApp — Number',      type:'text' },
+            { key:'waSub',     label:'WhatsApp — Subtitle',    type:'text' },
+            { key:'emailTitle',label:'Email — Title',          type:'text' },
+            { key:'emailAddr', label:'Email — Address',        type:'text' },
+            { key:'emailSub',  label:'Email — Subtitle',       type:'text' },
+            { key:'locTitle',  label:'Location — Title',       type:'text' },
+            { key:'loc1',      label:'Location — Line 1',      type:'text' },
+            { key:'loc2',      label:'Location — Line 2',      type:'text' }
+          ] },
         { id: 'form', title: 'Inquire / contact form (left column)',
           fields: [
             F.eyebrow, F.headline(2), F.body(3),

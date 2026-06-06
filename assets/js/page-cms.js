@@ -365,6 +365,12 @@
         subtitle:'Reach us by phone, WhatsApp, or the form below — we reply quickly.',
         image:   'assets/images/reception-desk.jpg'
       },
+      cards: {
+        callTitle: 'Call Us',   call1: '+973 35194422', call2: '+973 77924422',
+        waTitle:   'WhatsApp',  waNum: '+973 35194422', waSub: 'Fastest response',
+        emailTitle:'Email',     emailAddr: 'hello@tasukunspa.com', emailSub: 'Within 24 hours',
+        locTitle:  'Location',  loc1: 'Al Fateh, Manama', loc2: 'Complex 324 · Bld 950'
+      },
       form: {
         eyebrow: 'Send a Message',
         title:   'Inquire or *reserve*.',
@@ -527,6 +533,8 @@
     renderFaqList(got);
     // Contact → Subject dropdown options + Hours table (sync).
     renderContactExtras(got);
+    // Contact → top info cards (call / whatsapp / email / location).
+    renderContactCards(got);
     // Site-wide WhatsApp CTA links — label + href derived from the
     // page-footer.contact.whatsapp setting. Sync.
     renderWhatsappLinks(got);
@@ -548,6 +556,35 @@
     const cms = (window.TAJ_I18N && window.TAJ_I18N.cms) || {};
     const v = cms[key];
     return (typeof v === 'string' && v) ? v : enVal;
+  }
+
+  function renderContactCards(got) {
+    const cfg = ((got['page-contact'] || DEFAULTS['page-contact'] || {}).cards) || {};
+    const setText = (id, key) => {
+      const el = document.getElementById(id);
+      if (el && cfg[key] != null && cfg[key] !== '') el.textContent = pickI18n('page-contact.cards.' + key, cfg[key]);
+    };
+    const digits = s => String(s || '').replace(/\D+/g, '').replace(/^0+/, '');
+    // Call card — two tel links (numbers aren't translated)
+    const c1 = document.getElementById('cc-call-1');
+    if (c1 && cfg.call1) { c1.textContent = cfg.call1; c1.setAttribute('href', 'tel:+' + digits(cfg.call1)); }
+    const c2 = document.getElementById('cc-call-2');
+    if (c2 && cfg.call2) { c2.textContent = cfg.call2; c2.setAttribute('href', 'tel:+' + digits(cfg.call2)); }
+    setText('cc-call-title', 'callTitle');
+    // WhatsApp card
+    const wa = document.getElementById('cc-wa-num');
+    if (wa && cfg.waNum) { wa.textContent = cfg.waNum; wa.setAttribute('href', 'https://wa.me/' + digits(cfg.waNum)); }
+    setText('cc-wa-title', 'waTitle');
+    setText('cc-wa-sub', 'waSub');
+    // Email card
+    const em = document.getElementById('cc-email-addr');
+    if (em && cfg.emailAddr) { em.textContent = cfg.emailAddr; em.setAttribute('href', 'mailto:' + cfg.emailAddr); }
+    setText('cc-email-title', 'emailTitle');
+    setText('cc-email-sub', 'emailSub');
+    // Location card
+    setText('cc-loc-title', 'locTitle');
+    setText('cc-loc-1', 'loc1');
+    setText('cc-loc-2', 'loc2');
   }
 
   function renderContactExtras(got) {
@@ -864,6 +901,7 @@
     try { renderPortalExtras(got); } catch (_) {}
     try { renderFaqList(got); } catch (_) {}
     try { renderContactExtras(got); } catch (_) {}
+    try { renderContactCards(got); } catch (_) {}
     try { renderWhatsappLinks(got); } catch (_) {}
     try { renderMarquee(got); } catch (_) {}
   });
