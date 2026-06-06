@@ -638,19 +638,6 @@ function showToast(msg) {
   });
 })();
 
-/* ---------- Email capture form (home page) ---------- */
-(function () {
-  const f = document.getElementById('capture-form');
-  if (!f) return;
-  f.addEventListener('submit', e => {
-    e.preventDefault();
-    const d = new FormData(f);
-    const text = `Hello Taj Al Sukun Spa, I'd like to claim my 10% welcome offer.\n\nName: ${d.get('name')}\nEmail: ${d.get('email')}\nPhone: ${d.get('phone') || '—'}`;
-    window.open('https://wa.me/97335194422?text=' + encodeURIComponent(text), '_blank');
-    showToast('Opening WhatsApp to claim your offer…');
-  });
-})();
-
 /* ---------- Date min (today) ---------- */
 (function () {
   const d = document.querySelector('input[type="date"]');

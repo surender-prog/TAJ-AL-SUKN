@@ -100,15 +100,6 @@
             F.quote,
             F.image('Portrait')
           ] },
-        { id: 'offer', title: '10% off welcome banner',
-          fields: [
-            F.eyebrow, F.headline(2), F.body(3), F.button,
-            { key:'namePh',  label:'Form — Name placeholder',  type:'text' },
-            { key:'emailPh', label:'Form — Email placeholder', type:'text' },
-            { key:'phonePh', label:'Form — Phone placeholder', type:'text' },
-            { key:'img1', label:'Image 1 — Left (smaller)',  type:'image' },
-            { key:'img2', label:'Image 2 — Right (taller)',  type:'image' }
-          ] },
         { id: 'cta', title: 'Closing CTA',
           fields: [ F.eyebrow, F.headline(2), F.body(3), F.button ] }
       ]

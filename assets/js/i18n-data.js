@@ -375,9 +375,6 @@ window.TAJ_I18N = {
     'page-home.founder.title':   'أيادٍ <em>تفهم</em>.',
     'page-home.founder.name':    'صوفيا ماريني',
     'page-home.founder.role':    'المؤسِّسة',
-    'page-home.offer.eyebrow': 'عرض الترحيب',
-    'page-home.offer.title': 'استمتع بخصم <em>10٪</em>',
-    'page-home.offer.body': 'املأ النموذج وسنتواصل معك لتأكيد موعدك والاستمتاع بخصمٍ ترحيبي على زيارتك الأولى.',
     'page-home.cta.eyebrow': 'احجز لحظتك',
     'page-home.cta.title': 'ملاذك <em>بانتظارك</em>',
     'page-home.cta.body': 'تتوفر مواعيد في اليوم نفسه غالبًا. احجز عبر الإنترنت أو راسلنا مباشرةً على واتساب.',
@@ -522,11 +519,6 @@ window.TAJ_I18N = {
 
     'page-home.treatments.subtitle': 'من العلاج العميق إلى الحمّام الملكي — كل طقسٍ يُقدَّم بهدوء، شخصي بعمق، ومصمَّم لاستعادة توازنك.',
     'page-home.treatments.button':   'استعرض القائمة الكاملة',
-
-    'page-home.offer.namePh':  'الاسم *',
-    'page-home.offer.emailPh': 'البريد الإلكتروني *',
-    'page-home.offer.phonePh': 'الهاتف (اختياري)',
-    'page-home.offer.button':  'احصل على خصم 10٪',
 
     /* ---------------- ABOUT — extras added via admin CMS ---------------- */
     'page-about.story.eyebrow': 'قصتنا',

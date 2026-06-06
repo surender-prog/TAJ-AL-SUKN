@@ -103,17 +103,6 @@
         quote:   '"Every detail at Taj Al Sukun is chosen with care — every fragrance, every silence, every fabric. We don\'t simply offer treatments; we curate moments of stillness."',
         image:   'assets/images/manager-portrait.jpg'
       },
-      offer: {
-        eyebrow: 'Limited Welcome Offer',
-        title:   'Save *10%* on your first ritual.',
-        body:    'New guests receive 10% off any signature treatment when booked this month. Mention "First Visit" on WhatsApp to claim.',
-        button:  'Claim 10% Off',
-        namePh:  'Name *',
-        emailPh: 'Email *',
-        phonePh: 'Phone (optional)',
-        img1:    'assets/images/team-reception.jpg',
-        img2:    'assets/images/therapist-prep.jpg'
-      },
       cta: {
         eyebrow: 'Your Sanctuary Awaits',
         title:   'Reserve a *ritual* today.',
