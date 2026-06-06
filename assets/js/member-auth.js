@@ -432,31 +432,103 @@
       return ok;
     }
 
-    /* ---- Tier card visuals ---- */
-    const tierInputs = form.querySelectorAll('input[name="tier"]');
-
-    // If we arrived here from "Become Silver/Gold/Platinum" on the membership page,
-    // pre-select the requested tier and skip straight to step 2.
+    /* ---- Tier cards: rendered from the CMS membership tier list (DB) ---- */
     const qpTier = new URLSearchParams(location.search).get('tier');
-    if (qpTier) {
-      const pre = Array.from(tierInputs).find(r => r.value.toLowerCase() === qpTier.toLowerCase());
-      if (pre) pre.checked = true;
+    const TIER_DISCOUNT = { Silver: 10, Gold: 15, Platinum: 20 };
+    let tierInputs = form.querySelectorAll('input[name="tier"]'); // reassigned after render
+
+    const tierChoose = form.querySelector('.tier-choose');
+
+    function escHtml(s) {
+      return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' })[c]);
+    }
+    // Pull a sensible "complimentary services count" from a tier's perks text
+    // when the structured `services` field is absent (legacy saved rows).
+    function servicesFromPerks(perks) {
+      const lines = String(perks || '').split(/\r?\n/);
+      for (const l of lines) {
+        if (/complimentary|service/i.test(l)) {
+          const m = l.match(/\d+/);
+          if (m) return parseInt(m[0], 10);
+        }
+      }
+      return 0;
+    }
+
+    function renderTiers(tiers) {
+      if (!tierChoose || !Array.isArray(tiers) || !tiers.length) return;
+      const wanted = (qpTier || '').toLowerCase();
+      // Which card is checked by default: the requested tier, else the featured one, else first.
+      let checkedIdx = tiers.findIndex(t => (t.tier || '').toLowerCase() === wanted);
+      if (checkedIdx < 0) checkedIdx = tiers.findIndex(t => t.featured);
+      if (checkedIdx < 0) checkedIdx = 0;
+
+      tierChoose.innerHTML = tiers.map((t, i) => {
+        const tierName = t.tier || t.name || `Tier ${i + 1}`;
+        const price    = (t.price != null && t.price !== '') ? String(t.price) : '0';
+        const unit     = t.unit ? String(t.unit) : 'BHD · per year';
+        const discount = (t.discount != null && t.discount !== '') ? parseInt(t.discount, 10) : (TIER_DISCOUNT[tierName] || 0);
+        const services = (t.services != null && t.services !== '') ? parseInt(t.services, 10) : servicesFromPerks(t.perks);
+        const icon     = t.icon || 'fas fa-gem';
+        const perks    = String(t.perks || '').split(/\r?\n/).map(l => l.replace(/\s+$/, '')).filter(Boolean).slice(0, 4)
+          .map(l => `<li><i class="fas fa-check"></i> ${escHtml(l.replace(/\*\*/g, ''))}</li>`).join('');
+        const popular  = t.featured ? ' tier-choose__card--popular' : '';
+        const ribbon   = t.featured ? `<span class="tier-choose__ribbon">MOST POPULAR</span>` : '';
+        return `<label class="tier-choose__card${popular}">
+          <input type="radio" name="tier" value="${escHtml(tierName)}" data-price="${escHtml(price)}" data-discount="${discount}" data-services="${services}"${i === checkedIdx ? ' checked' : ''}>
+          ${ribbon}
+          <div class="tier-choose__inner">
+            <div class="tier-choose__icon"><i class="${escHtml(icon)}"></i></div>
+            <span class="tier-choose__name">${escHtml(tierName)}</span>
+            <p class="tier-choose__tag">${escHtml(t.sub || '')}</p>
+            <div class="tier-choose__price"><span class="num">${escHtml(price)}</span><span class="unit">${escHtml(unit)}</span></div>
+            <ul>${perks}</ul>
+            <span class="tier-choose__pick">${escHtml(t.ctaLabel || ('Select ' + tierName))}</span>
+          </div>
+        </label>`;
+      }).join('');
     }
 
     function syncTierVisuals() {
       tierInputs.forEach(r => {
-        r.closest('.tier-choose__card').classList.toggle('is-selected', r.checked);
+        const card = r.closest('.tier-choose__card');
+        if (card) card.classList.toggle('is-selected', r.checked);
       });
-      // Update summary on step 3
       const selected = Array.from(tierInputs).find(r => r.checked);
       if (selected) {
         const price = selected.dataset.price;
-        document.getElementById('sum-tier').textContent = selected.value + ' Membership';
-        document.getElementById('sum-price').textContent = price + ' BHD';
+        const st = document.getElementById('sum-tier');
+        const sp = document.getElementById('sum-price');
+        if (st) st.textContent = selected.value + ' Membership';
+        if (sp) sp.textContent = price + ' BHD';
       }
     }
-    tierInputs.forEach(r => r.addEventListener('change', syncTierVisuals));
-    syncTierVisuals();
+
+    function bindTiers() {
+      tierInputs = form.querySelectorAll('input[name="tier"]');
+      tierInputs.forEach(r => r.addEventListener('change', syncTierVisuals));
+      syncTierVisuals();
+    }
+
+    // Bind the static fallback markup immediately, then swap in DB tiers.
+    bindTiers();
+    (async () => {
+      try {
+        let cfg = null;
+        if (window.TajData && TajData.settings && TajData.settings.get) {
+          cfg = await TajData.settings.get('page-membership');
+        }
+        if ((!cfg || !cfg.tierList) && window.TajPageCMS && TajPageCMS.getDefaults) {
+          cfg = cfg || {};
+          if (!cfg.tierList) cfg.tierList = (TajPageCMS.getDefaults()['page-membership'] || {}).tierList;
+        }
+        const tiers = cfg && cfg.tierList && Array.isArray(cfg.tierList.tiers) ? cfg.tierList.tiers : null;
+        if (tiers && tiers.length) {
+          renderTiers(tiers);
+          bindTiers();
+        }
+      } catch (e) { console.warn('[signup] tier render failed:', e); }
+    })();
 
     /* ---- Payment method panels ---- */
     const payInputs = form.querySelectorAll('input[name="payment_method"]');

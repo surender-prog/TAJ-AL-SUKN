@@ -262,21 +262,21 @@
         {
           tier: 'Silver', name: 'The Companion',
           sub:  'An invitation to begin — a year of considered moments.',
-          price: '150', unit: 'BHD · per year',
+          price: '150', unit: 'BHD · per year', discount: '10', services: '6',
           perks: '**2 complimentary** 60-min signature massages\n**1 complimentary** Foot Reflexology ritual\n**10% off** all additional treatments\nPriority booking — 24 hours ahead\nWelcome ritual on signup\nBirthday gift — free Foot Relaxing\nMember-only seasonal offers',
           ctaLabel: 'Become Silver', icon: 'fas fa-gem', featured: false
         },
         {
           tier: 'Gold', name: 'The Sanctuary',
           sub:  'A generous year of regular restoration and signature care.',
-          price: '350', unit: 'BHD · per year',
+          price: '350', unit: 'BHD · per year', discount: '15', services: '14',
           perks: '**6 complimentary** 60-min signature massages\n**1 Royal Hammam** ritual included\n**2 complimentary** foot rituals\n**15% off** all additional treatments\nPriority booking — 48 hours ahead\n**1 guest pass** per year\nWelcome Hammam ritual on signup\nBirthday spa journey (90 min)\nMembers-only seasonal events',
           ctaLabel: 'Become Gold', icon: 'fas fa-crown', featured: true
         },
         {
           tier: 'Platinum', name: 'The Royal Circle',
           sub:  'Unlimited stillness — the highest tier of care, for the most devoted.',
-          price: '750', unit: 'BHD · per year',
+          price: '750', unit: 'BHD · per year', discount: '20', services: '30',
           perks: '**Unlimited** signature massages (max 2/month)\n**12 Royal Hammams** per year\n**4 Hot Stone** sessions included\n**20% off** additional treatments & products\nPriority booking — anytime\n**4 guest passes** per year\nWelcome Sultan Suite ritual\nPersonal therapist match\nBirthday Day at the Spa (4 hours)\nAnnual gift box of premium products\nConcierge appointment scheduling',
           ctaLabel: 'Become Platinum', icon: 'fas fa-star', featured: false
         }

@@ -560,6 +560,8 @@
     { key:'sub',      label:'Tagline',                 type:'textarea', rows:2 },
     { key:'price',    label:'Price (number only)',     type:'text', placeholder:'150' },
     { key:'unit',     label:'Price unit',              type:'text', placeholder:'BHD · per year' },
+    { key:'discount', label:'Member discount %',       type:'text', placeholder:'10', hint:'Number only — the % off additional treatments this tier unlocks.' },
+    { key:'services', label:'Complimentary services / year', type:'text', placeholder:'6', hint:'Number only — how many complimentary services are included annually.' },
     { key:'perks',    label:'Perks (one per line, **bold** for emphasis)', type:'textarea', rows:8 },
     { key:'ctaLabel', label:'CTA button label',        type:'text', placeholder:'e.g., Become Silver' },
     { key:'icon',     label:'Crown icon (Font Awesome class)', type:'text', placeholder:'fas fa-gem' },
@@ -622,7 +624,7 @@
     el.innerHTML = tierListContainerHtml(items);
     // Add button
     el.querySelector('.cms-tier-list__add').onclick = () => {
-      items.push({ tier: '', name: 'New Tier', sub: '', price: '', unit: 'BHD · per year', perks: '', ctaLabel: '', icon: 'fas fa-gem', featured: false });
+      items.push({ tier: '', name: 'New Tier', sub: '', price: '', unit: 'BHD · per year', discount: '', services: '', perks: '', ctaLabel: '', icon: 'fas fa-gem', featured: false });
       set(workingContent, path, items);
       wireTierList(el, path, items);
     };
