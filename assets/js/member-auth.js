@@ -709,7 +709,9 @@
         paymentMethod: method,
         dob, notes,
         therapist_pref: document.getElementById('su-gender')?.value || null,
-        status: method === 'Cash' || method === 'Bank Transfer' ? 'pending-payment' : 'active'
+        // All new memberships start pending — Admin activates once payment is
+        // confirmed (regardless of the chosen method).
+        status: 'pending-payment'
       };
 
       // Disable the confirm button while we persist
@@ -726,8 +728,8 @@
           await TajData.members.upsert(newMember);
           await TajData.activity.log({
             type: 'member',
-            title: 'New member enrolled',
-            desc:  `${name} · ${tier} · ${method} · ${price} BHD`,
+            title: 'New member — pending activation',
+            desc:  `${name} · ${tier} · ${method} · ${price} BHD · awaiting payment confirmation`,
             ref:   newId,
             refType: 'member'
           });
@@ -737,8 +739,8 @@
           setMembers(all);
           logActivity({
             type: 'member',
-            title: 'New member enrolled',
-            desc:  `${name} · ${tier} · ${method} · ${price} BHD`,
+            title: 'New member — pending activation',
+            desc:  `${name} · ${tier} · ${method} · ${price} BHD · awaiting payment confirmation`,
             ref:   newId,
             refType: 'member'
           });
@@ -761,13 +763,23 @@
         confirmBtn.innerHTML = originalLabel || '<i class="fas fa-crown"></i> Confirm & Activate';
       }
 
-      // Step 4 — welcome
+      // Step 4 — welcome (membership is PENDING until Admin activates on payment)
       document.getElementById('welcome-tier').textContent = tier;
       document.getElementById('welcome-id').textContent   = newId;
       document.getElementById('welcome-email').textContent= email;
       document.getElementById('welcome-phone').textContent= phone;
       document.getElementById('welcome-discount').textContent = disc + '% on every treatment';
       document.getElementById('welcome-renews').textContent = fmtDate(newMember.endDate);
+      const welcomeMsg = document.getElementById('welcome-msg');
+      if (welcomeMsg) {
+        const firstName = first || 'there';
+        const payLine = (method === 'Bank Transfer')
+          ? 'Send your transfer receipt on WhatsApp and our team will activate your membership once it clears.'
+          : (method === 'Cash')
+            ? 'Pay at reception on your first visit and our team will activate your membership on receipt.'
+            : 'Our team will confirm your payment and activate your membership shortly.';
+        welcomeMsg.textContent = `Thank you, ${firstName}! Your ${tier} membership request has been received. ${payLine} You'll get a WhatsApp message the moment it's live.`;
+      }
       const waMsg = `Hello Taj Al Sukun, I've just enrolled as a *${tier}* member (${newId}). Looking forward to my first visit.`;
       document.getElementById('welcome-wa').href = 'https://wa.me/97335194422?text=' + encodeURIComponent(waMsg);
 

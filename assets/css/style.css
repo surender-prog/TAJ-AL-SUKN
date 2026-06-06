@@ -96,3 +96,8 @@
 .member-lookup__result--ok{background:rgba(42,138,74,.16);color:#a8e0bb;border:1px solid rgba(42,138,74,.4)}
 .member-lookup__result--ok strong{color:#fff}
 .member-lookup__result--warn{background:rgba(212,184,150,.12);color:rgba(255,255,255,.82);border:1px solid rgba(212,184,150,.3)}
+
+/* Signup welcome card: force centered column (older .welcome-card rule sets display:flex) */
+.wizard-panel--welcome .welcome-card{display:block;text-align:center;width:100%;gap:0}
+.wizard-panel--welcome .welcome-card__grid{grid-template-columns:repeat(2,1fr)}
+@media(max-width:560px){.wizard-panel--welcome .welcome-card__grid{grid-template-columns:1fr}}
