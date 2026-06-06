@@ -183,9 +183,19 @@ function render() {
     callout.style.display = 'none';
   }
 
-  // Frozen membership overrides the renewal-status display and flips the button.
+  // Status overrides the renewal display + flips the primary action button.
   const freezeBtn = document.getElementById('freeze-btn');
-  if (member.status === 'frozen') {
+  const isPending = member.status === 'pending-payment' || member.status === 'pending';
+  if (isPending) {
+    status.textContent = 'Pending Activation';
+    status.style.color = '#d49b2b';
+    detail.textContent = 'Awaiting payment confirmation';
+    callout.className = 'renew-callout warn';
+    callout.style.display = '';
+    document.getElementById('rc-title').textContent = 'Pending activation';
+    document.getElementById('rc-msg').textContent = 'Confirm payment received, then activate to unlock member benefits.';
+    if (freezeBtn) freezeBtn.innerHTML = '<i class="fas fa-check-circle"></i> Activate Membership';
+  } else if (member.status === 'frozen') {
     status.textContent = 'Frozen';
     status.style.color = '#6b7280';
     detail.textContent = 'Membership frozen — booking paused';
@@ -391,8 +401,17 @@ document.getElementById('upgrade-btn')?.addEventListener('click', () => {
 });
 
 document.getElementById('freeze-btn')?.addEventListener('click', () => {
-  // Freeze is persisted on the existing `status` column (status='frozen'); on
-  // reactivate we restore to 'active'. No dedicated `frozen` column needed.
+  // Pending → activate on confirmed payment. Active → freeze. Frozen → reactivate.
+  const isPending = member.status === 'pending-payment' || member.status === 'pending';
+  if (isPending) {
+    if (!confirm(`Activate ${member.name}'s membership? Confirm the payment has been received — this unlocks their member benefits.`)) return;
+    member.status = 'active';
+    persist();
+    render();
+    if (window.TajLog) TajLog.add({ type: 'member', title: `Membership activated: ${member.name}`, desc: `${member.tier} · payment confirmed`, ref: member.id, refType: 'member' });
+    showToast('Membership activated');
+    return;
+  }
   const willFreeze = member.status !== 'frozen';
   const msg = willFreeze
     ? `Freeze ${member.name}'s membership? They won't be able to book until reactivated.`

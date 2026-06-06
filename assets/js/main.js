@@ -339,15 +339,27 @@ function showToast(msg) {
     if (lookupBtn) { lookupBtn.disabled = true; lookupBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking…'; }
     try {
       const m = await TajData.members.lookupByContact(contact);
-      setResolvedMember(m && m.status !== 'frozen' ? m : (m ? m : null));
-      // If the membership is frozen/expired we still found a record but no discount
-      if (m && m.status === 'frozen') {
-        if (lookupResult) {
-          lookupResult.className = 'member-lookup__result member-lookup__result--warn';
-          lookupResult.innerHTML = `<i class="fas fa-info-circle"></i> Membership on hold — discount not applied. Please contact us to reactivate.`;
-        }
+      // Only an ACTIVE membership unlocks the discount. A found-but-not-active
+      // record (pending activation, frozen, etc.) gets a clear notice instead.
+      const isActive = m && (m.status === 'active' || m.status == null || m.status === '');
+      if (isActive) {
+        setResolvedMember(m);
+      } else if (m) {
+        // Found, but not yet active — no discount applied.
+        if (memberTier) memberTier.value = '';
+        if (memberId)   memberId.value   = '';
         if (memberDisc) memberDisc.value = '0';
+        if (lookupResult) {
+          lookupResult.hidden = false;
+          lookupResult.className = 'member-lookup__result member-lookup__result--warn';
+          const pending = (m.status === 'pending-payment' || m.status === 'pending');
+          lookupResult.innerHTML = pending
+            ? `<i class="fas fa-info-circle"></i> Membership pending activation — once our team confirms your payment, your discount applies automatically.`
+            : `<i class="fas fa-info-circle"></i> Membership on hold — discount not applied. Please contact us to reactivate.`;
+        }
         update();
+      } else {
+        setResolvedMember(null);
       }
     } catch (e) {
       console.warn('[booking] member lookup failed:', e);
