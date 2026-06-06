@@ -1222,8 +1222,41 @@ const PAY_OPTIONS = [
   { key: 'apple',   name: 'Apple Pay',     desc: 'Contactless via iPhone / Watch',      icon: 'fab fa-apple-pay',       enabled: false },
   { key: 'gpay',    name: 'Google Pay',    desc: 'Contactless via Android',             icon: 'fab fa-google-pay',      enabled: false },
 ];
-let payMethods = JSON.parse(localStorage.getItem('taj-pay-methods') || 'null') || PAY_OPTIONS;
-function persistPay() { localStorage.setItem('taj-pay-methods', JSON.stringify(payMethods)); }
+// Normalize any saved method object (key-based OR legacy id-based "pm-cash"
+// OR name-only) down to one of our canonical keys.
+function payKeyOf(m) {
+  if (!m) return '';
+  if (m.key) return m.key;
+  if (m.id)  return String(m.id).replace(/^pm-/, '');
+  const n = (m.name || '').toLowerCase();
+  if (n.includes('cash')) return 'cash';
+  if (n.includes('card')) return 'card';
+  if (n.includes('benefit')) return 'benefit';
+  if (n.includes('bank')) return 'bank';
+  if (n.includes('apple')) return 'apple';
+  if (n.includes('google')) return 'gpay';
+  return '';
+}
+// Start from the canonical PAY_OPTIONS, applying any saved enabled-state from
+// the localStorage cache (matched by normalized key) so icons/desc stay intact.
+let payMethods = (function () {
+  const base = PAY_OPTIONS.map(o => Object.assign({}, o));
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem('taj-pay-methods') || 'null'); } catch (_) {}
+  if (Array.isArray(saved)) {
+    const on = {}; saved.forEach(m => { const k = payKeyOf(m); if (k) on[k] = !!m.enabled; });
+    base.forEach(o => { if (o.key in on) o.enabled = on[o.key]; });
+  }
+  return base;
+})();
+function persistPay() {
+  localStorage.setItem('taj-pay-methods', JSON.stringify(payMethods));
+  // Mirror to the shared settings store so the public signup/booking flows
+  // read the same enabled-methods list (key: admin-payments).
+  try {
+    if (window.TajData?.settings?.set) TajData.settings.set('admin-payments', { methods: payMethods });
+  } catch (_) {}
+}
 
 function renderPayMethods() {
   const grid = document.getElementById('pay-toggles');
@@ -1244,6 +1277,30 @@ function renderPayMethods() {
     if (m) { m.enabled = !m.enabled; persistPay(); renderPayMethods(); }
   }));
 }
+
+// Load the saved enabled-methods list from the shared store on mount, so the
+// admin reflects what the public site uses (and seeds it on first run).
+(async function loadPayMethods() {
+  try {
+    if (window.TajData?.settings?.get) {
+      const saved = await TajData.settings.get('admin-payments');
+      if (saved && Array.isArray(saved.methods) && saved.methods.length) {
+        // Reconcile saved enabled-state onto the canonical list (handles any
+        // legacy shape) so the toggles always render with proper icons/labels.
+        const on = {}; saved.methods.forEach(m => { const k = payKeyOf(m); if (k) on[k] = !!m.enabled; });
+        payMethods.forEach(o => { if (o.key in on) o.enabled = on[o.key]; });
+        localStorage.setItem('taj-pay-methods', JSON.stringify(payMethods));
+        renderPayMethods();
+        // Re-publish in the canonical key-based shape so downstream consumers
+        // (signup payment cards) get a consistent structure going forward.
+        if (window.TajData?.settings?.set) TajData.settings.set('admin-payments', { methods: payMethods });
+      } else {
+        // First run — publish the current defaults so the public flows have data
+        if (window.TajData?.settings?.set) TajData.settings.set('admin-payments', { methods: payMethods });
+      }
+    }
+  } catch (_) {}
+})();
 
 /* ---------- Settings sub-nav scroll + active state ---------- */
 document.querySelectorAll('.settings-nav__chip').forEach(c => {

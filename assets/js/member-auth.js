@@ -531,9 +531,62 @@
     })();
 
     /* ---- Payment method panels ---- */
-    const payInputs = form.querySelectorAll('input[name="payment_method"]');
+    let payInputs = form.querySelectorAll('input[name="payment_method"]'); // reassigned after render
+    const payChoose = form.querySelector('.pay-choose');
+
+    // Map the admin payment-method keys → the wizard's card value, display
+    // label/sub, icon, and the detail panel each reveals.
+    const PAY_MAP = {
+      card:    { value: 'Card',          label: 'Credit / Debit Card', sub: 'Visa, Mastercard, Amex', icon: 'far fa-credit-card', detail: 'pay-detail-card' },
+      benefit: { value: 'BenefitPay',    label: 'BenefitPay',          sub: 'Bahrain wallet · QR',    icon: 'fas fa-mobile-alt',  detail: 'pay-detail-benefit' },
+      apple:   { value: 'Apple Pay',     label: 'Apple Pay',           sub: 'Touch / Face ID',        icon: 'fab fa-apple-pay',   detail: 'pay-detail-apple' },
+      gpay:    { value: 'Google Pay',    label: 'Google Pay',          sub: 'Contactless via Android',icon: 'fab fa-google-pay',  detail: null },
+      bank:    { value: 'Bank Transfer', label: 'Bank Transfer',       sub: 'NBB · BHD account',      icon: 'fas fa-university',  detail: 'pay-detail-bank' },
+      cash:    { value: 'Cash',          label: 'Pay on Arrival',      sub: 'Reception · cash',       icon: 'fas fa-money-bill-wave', detail: 'pay-detail-cash' }
+    };
+
+    // Normalize any saved method (key-based / legacy "pm-cash" id / name) to a key.
+    function payKeyOf(m) {
+      if (!m) return '';
+      if (m.key) return m.key;
+      if (m.id)  return String(m.id).replace(/^pm-/, '');
+      const n = (m.name || '').toLowerCase();
+      if (n.includes('cash')) return 'cash';
+      if (n.includes('card')) return 'card';
+      if (n.includes('benefit')) return 'benefit';
+      if (n.includes('bank')) return 'bank';
+      if (n.includes('apple')) return 'apple';
+      if (n.includes('google')) return 'gpay';
+      return '';
+    }
+
+    function renderPayChoose(methods) {
+      if (!payChoose || !Array.isArray(methods)) return;
+      const enabled = methods
+        .map(m => ({ def: PAY_MAP[payKeyOf(m)], on: m && m.enabled }))
+        .filter(x => x.def && x.on);
+      if (!enabled.length) return; // keep static fallback if nothing usable
+      // Default-check Card if it's available, else the first enabled method.
+      let checkedIdx = enabled.findIndex(x => x.def.value === 'Card');
+      if (checkedIdx < 0) checkedIdx = 0;
+      payChoose.innerHTML = enabled.map((x, i) => {
+        const def = x.def;
+        return `<label class="pay-choose__card">
+          <input type="radio" name="payment_method" value="${def.value}"${i === checkedIdx ? ' checked' : ''}>
+          <div class="pay-choose__inner">
+            <i class="${def.icon}"></i>
+            <strong>${def.label}</strong>
+            <small>${def.sub}</small>
+          </div>
+        </label>`;
+      }).join('');
+    }
+
     function syncPayPanels() {
-      payInputs.forEach(p => p.closest('.pay-choose__card').classList.toggle('is-selected', p.checked));
+      payInputs.forEach(p => {
+        const card = p.closest('.pay-choose__card');
+        if (card) card.classList.toggle('is-selected', p.checked);
+      });
       const map = {
         'Card':           'pay-detail-card',
         'BenefitPay':     'pay-detail-benefit',
@@ -551,8 +604,25 @@
         if (el) el.hidden = false;
       }
     }
-    payInputs.forEach(p => p.addEventListener('change', syncPayPanels));
-    syncPayPanels();
+
+    function bindPay() {
+      payInputs = form.querySelectorAll('input[name="payment_method"]');
+      payInputs.forEach(p => p.addEventListener('change', syncPayPanels));
+      syncPayPanels();
+    }
+
+    // Bind the static fallback now, then swap in the admin-managed methods.
+    bindPay();
+    (async () => {
+      try {
+        let saved = null;
+        if (window.TajData && TajData.settings && TajData.settings.get) {
+          saved = await TajData.settings.get('admin-payments');
+        }
+        const methods = saved && Array.isArray(saved.methods) ? saved.methods : null;
+        if (methods) { renderPayChoose(methods); bindPay(); }
+      } catch (e) { console.warn('[signup] payment render failed:', e); }
+    })();
 
     /* ---- Card number formatting ---- */
     const cardNum = document.getElementById('pay-card-num');
