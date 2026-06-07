@@ -714,6 +714,22 @@
         status: 'pending-payment'
       };
 
+      // Block duplicate email / phone across members before enrolling.
+      if (window.TajData && TajData.members.findDuplicate) {
+        try {
+          const dup = await TajData.members.findDuplicate({ email, phone });
+          if (dup) {
+            const which = dup.field === 'email' ? 'email address' : 'phone number';
+            toast(`That ${which} is already registered. Please sign in instead, or use a different ${which}.`);
+            goStep(1);
+            const el = document.getElementById(dup.field === 'email' ? 'su-email' : 'su-phone');
+            el?.closest('.field')?.classList.add('field--err');
+            el?.focus();
+            return;
+          }
+        } catch (_) { /* if the check itself errors, don't block a genuine signup */ }
+      }
+
       // Disable the confirm button while we persist
       const confirmBtn = document.getElementById('su-confirm');
       const originalLabel = confirmBtn ? confirmBtn.innerHTML : null;

@@ -345,6 +345,35 @@
       if (c.includes('@')) return this.loginByEmail(c);
       return this.loginByPhone(c);
     },
+    // Uniqueness guard: returns the first conflicting member (with the field
+    // that clashes) for a given email / phone, or null if both are free.
+    // Pass excludeId when editing so a member doesn't clash with itself.
+    // Checks Supabase (via the RPC/select-backed lookups) AND the local cache,
+    // so it works in both the admin console and the public signup.
+    async findDuplicate(opts) {
+      const o = opts || {};
+      const exId = (o.excludeId == null ? '' : String(o.excludeId)).toLowerCase();
+      const normPhone = s => String(s || '').replace(/[^\d]/g, '').replace(/^973/, '');
+      const cache = LS.get(K.members, []) || [];
+      const notSelf = m => m && String(m.id || '').toLowerCase() !== exId;
+
+      const email = (o.email || '').trim().toLowerCase();
+      if (email) {
+        let m = await this.loginByEmail(email);
+        if (!notSelf(m)) m = null;
+        if (!m) m = cache.find(x => notSelf(x) && (x.email || '').trim().toLowerCase() === email) || null;
+        if (m) return { field: 'email', member: m };
+      }
+
+      const phoneN = normPhone(o.phone);
+      if (phoneN) {
+        let m = await this.loginByPhone(o.phone);
+        if (!notSelf(m)) m = null;
+        if (!m) m = cache.find(x => notSelf(x) && normPhone(x.phone) === phoneN) || null;
+        if (m) return { field: 'phone', member: m };
+      }
+      return null;
+    },
     async bookingsFor(id, phone) {
       if (sb) {
         try {

@@ -205,6 +205,28 @@ async function saveMember() {
 
   const tier = getSelectedTier();
   const fd = new FormData(form);
+
+  // Block duplicate email / phone across members (the same person must not be
+  // enrolled twice). editId is set on the page when editing an existing member.
+  const dupEmail = (fd.get('email') || '').trim();
+  const dupPhone = (fd.get('phone') || '').trim();
+  if (window.TajData && TajData.members.findDuplicate && (dupEmail || dupPhone)) {
+    try {
+      const dup = await TajData.members.findDuplicate({
+        email: dupEmail, phone: dupPhone,
+        excludeId: (typeof editId !== 'undefined' ? editId : null)
+      });
+      if (dup) {
+        const which = dup.field === 'email' ? 'email address' : 'phone number';
+        const val   = dup.field === 'email' ? dupEmail : dupPhone;
+        alert(`That ${which} (${val}) is already registered to ${dup.member.name || 'another member'} (${dup.member.id}). ` +
+              `Each member must have a unique email and phone — please use a different ${which}.`);
+        const fld = form.querySelector(`[name="${dup.field}"]`);
+        fld?.focus();
+        return null;
+      }
+    } catch (_) { /* if the check itself errors, don't block a genuine enrollment */ }
+  }
   const today = new Date();
   const renews = new Date(); renews.setFullYear(renews.getFullYear() + 1);
   const fmtIso = dt => dt.toISOString().split('T')[0];
