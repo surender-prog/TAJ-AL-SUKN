@@ -13,19 +13,51 @@ if (sessionStorage.getItem('taj-admin-auth') !== '1') {
 
 /* ---- Data ---- */
 const STORE = 'taj-services';
-const QUICK_IMAGES = [
-  'assets/images/spa-detail-1.jpg',
-  'assets/images/spa-detail-2.jpg',
-  'assets/images/sanctuary-bed.jpg',
-  'assets/images/treatment-room.jpg',
-  'assets/images/lounge-flowers.jpg',
-  'assets/images/spa-relax-1.jpg',
-  'assets/images/spa-relax-2.jpg',
-  'assets/images/spa-relax-3.jpg',
-  'assets/images/therapist-products.jpg',
-  'assets/images/therapist-prep.jpg',
-  'assets/images/deep-tissue.jpg',
-  'assets/images/couples-massage.jpg'
+/* Complete image library, each photo tagged with the categories it suits.
+   The picker groups these into category "folders" so the right images are
+   easy to find. `cat` keys match the Category dropdown values exactly so the
+   matching folder can auto-open; 'Venue' is a general ambience folder. */
+const GALLERY = [
+  { src:'assets/images/spa-detail-1.jpg',       cats:['Hammam','Body'] },
+  { src:'assets/images/spa-detail-2.jpg',       cats:['Hammam','Body'] },
+  { src:'assets/images/spa-relax-1.jpg',        cats:['Massage','Couple'] },
+  { src:'assets/images/spa-relax-2.jpg',        cats:['Massage','Face'] },
+  { src:'assets/images/spa-relax-3.jpg',        cats:['Foot','Massage'] },
+  { src:'assets/images/deep-tissue.jpg',        cats:['Massage'] },
+  { src:'assets/images/sanctuary-bed.jpg',      cats:['Massage','Body'] },
+  { src:'assets/images/treatment-room.jpg',     cats:['Massage','Venue'] },
+  { src:'assets/images/couples-massage.jpg',    cats:['Couple','Massage','Package'] },
+  { src:'assets/images/therapist-prep.jpg',     cats:['Massage','Waxing','Foot'] },
+  { src:'assets/images/therapist-products.jpg', cats:['Nails','Face','Massage'] },
+  { src:'assets/images/products-shelf.jpg',     cats:['Nails','Face','Venue'] },
+  { src:'assets/images/lounge-flowers.jpg',     cats:['Venue','Couple'] },
+  { src:'assets/images/packages-menu.jpg',      cats:['Package','Venue'] },
+  { src:'assets/images/services-menu.jpg',      cats:['Package','Venue'] },
+  { src:'assets/images/spa-foyer.jpg',          cats:['Package','Venue'] },
+  { src:'assets/images/lobby-table.jpg',        cats:['Package','Venue'] },
+  { src:'assets/images/waiting-lounge.jpg',     cats:['Venue'] },
+  { src:'assets/images/spa-corridor.jpg',       cats:['Venue','Barber'] },
+  { src:'assets/images/reception-desk.jpg',     cats:['Barber','Venue'] },
+  { src:'assets/images/team-reception.jpg',     cats:['Barber','Venue'] },
+  { src:'assets/images/spa-entrance.jpg',       cats:['Venue'] },
+  { src:'assets/images/spa-exterior.jpg',       cats:['Venue'] },
+  { src:'assets/images/exterior-front.jpg',     cats:['Venue'] },
+  { src:'assets/images/manager-portrait.jpg',   cats:['Venue'] }
+];
+/* Folder order + labels. `key` matches the Category value (or 'all'/'Venue'). */
+const GALLERY_FOLDERS = [
+  { key:'all',     label:'All Images' },
+  { key:'Hammam',  label:'Hammam' },
+  { key:'Massage', label:'Massage' },
+  { key:'Foot',    label:'Foot Ritual' },
+  { key:'Face',    label:'Face / Skincare' },
+  { key:'Body',    label:'Body Treatment' },
+  { key:'Couple',  label:'Couple' },
+  { key:'Package', label:'Packages' },
+  { key:'Waxing',  label:'Waxing / Hair Removal' },
+  { key:'Nails',   label:'Nails / Beauty' },
+  { key:'Barber',  label:'Barber / Grooming' },
+  { key:'Venue',   label:'Spa & Venue' }
 ];
 
 function loadServices() {
@@ -136,20 +168,54 @@ let audienceMap = {};
   } catch (_) {}
 })();
 
-/* ---- Image quick-picks ---- */
-const sg = document.getElementById('svc-img-suggest');
-QUICK_IMAGES.forEach(src => {
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.className = 'svc-img-quick';
-  btn.title = src.split('/').pop();
-  btn.innerHTML = `<img src="${src}" alt="">`;
-  btn.addEventListener('click', () => {
-    F.image.value = src;
-    refresh();
-  });
-  sg.appendChild(btn);
-});
+/* ---- Image gallery (complete library, grouped into category folders) ---- */
+const sg          = document.getElementById('svc-img-suggest');     // grid
+const elFolders   = document.getElementById('svc-gallery-folders');
+const elCount     = document.getElementById('svc-gallery-count');
+let galleryFolder = 'all';
+
+function galleryItems(folder) {
+  return folder === 'all' ? GALLERY : GALLERY.filter(g => g.cats.includes(folder));
+}
+function renderFolders() {
+  if (!elFolders) return;
+  elFolders.innerHTML = GALLERY_FOLDERS.map(f => {
+    const n = galleryItems(f.key).length;
+    if (f.key !== 'all' && n === 0) return '';                 // hide empty folders
+    const active = f.key === galleryFolder;
+    return `<button type="button" class="svc-folder${active ? ' is-active' : ''}" data-folder="${f.key}">
+      <i class="fas ${active ? 'fa-folder-open' : 'fa-folder'}"></i><span>${f.label}</span><b>${n}</b>
+    </button>`;
+  }).join('');
+  elFolders.querySelectorAll('.svc-folder').forEach(b =>
+    b.addEventListener('click', () => { galleryFolder = b.dataset.folder; renderGallery(); }));
+}
+function renderGrid() {
+  if (!sg) return;
+  const items = galleryItems(galleryFolder);
+  const current = (F.image.value || '').trim();
+  sg.innerHTML = items.map(g => {
+    const name = g.src.split('/').pop();
+    const sel = current === g.src ? ' is-selected' : '';
+    return `<button type="button" class="svc-img-quick${sel}" data-src="${g.src}" title="${name}">
+      <img src="${g.src}" alt="" loading="lazy"><span class="svc-img-quick__name">${name}</span>
+    </button>`;
+  }).join('') || '<p class="svc-gallery__empty">No images in this folder yet.</p>';
+  sg.querySelectorAll('.svc-img-quick').forEach(b =>
+    b.addEventListener('click', () => { F.image.value = b.dataset.src; refresh(); renderGrid(); }));
+  if (elCount) elCount.textContent = items.length + ' image' + (items.length === 1 ? '' : 's');
+}
+function renderGallery() { renderFolders(); renderGrid(); }
+
+// Open the folder that matches the service's category (falls back to "All").
+function syncGalleryToCategory() {
+  const c = F.category && F.category.value;
+  galleryFolder = (c && galleryItems(c).length) ? c : 'all';
+  renderGallery();
+}
+if (F.category) F.category.addEventListener('change', syncGalleryToCategory);
+if (F.image)    F.image.addEventListener('input', renderGrid);
+syncGalleryToCategory();
 
 /* ---- Live preview ---- */
 function refresh() {
