@@ -970,23 +970,79 @@ document.getElementById('add-therapist')?.addEventListener('click', () => {
    The public services.html grid, booking.html picker, and
    admin-new-booking dropdown all read from this store. */
 
+// Catalog mirrors Taj_AlSukun_Services.xlsx. `audience` ('both'|'ladies'|'men')
+// is persisted separately in the `service-audience` settings map (the services
+// table has no audience column) — it's included here so the seed + admin list
+// stay consistent offline.
 const SEED_SERVICES = [
-  { id:'SV-01', name:'Royal Hammam',      category:'Hammam',  tag:'Signature',     duration:'75 min',     price:45, image:'assets/images/spa-detail-2.jpg',     description:'An indulgent steam ritual featuring exfoliation and cleansing — purifying body and skin.' },
-  { id:'SV-02', name:'Casablanca Hammam', category:'Hammam',  tag:'',              duration:'60 min',     price:25, image:'assets/images/spa-detail-1.jpg',     description:'A signature wellness ritual combining steam, exfoliation, and cleansing for inner balance.' },
-  { id:'SV-03', name:'Argan Oil Ritual',  category:'Massage', tag:'Signature',     duration:'60 / 90 min',price:40, price_alt:55, image:'assets/images/therapist-products.jpg', description:'A luxurious massage using nutrient-rich Moroccan argan to nourish skin and ease tension.' },
-  { id:'SV-04', name:'Hot Stone Therapy', category:'Massage', tag:'Signature',     duration:'60 / 90 min',price:35, price_alt:50, image:'assets/images/spa-relax-2.jpg',  description:'Warm volcanic stones relax muscles, enhance circulation, and promote complete wellbeing.' },
-  { id:'SV-05', name:'Aroma Relaxing',    category:'Massage', tag:'',              duration:'60 / 90 min',price:35, price_alt:50, image:'assets/images/lounge-flowers.jpg', description:'A deeply calming massage using aromatic essential oils to ease stress and balance the senses.' },
-  { id:'SV-06', name:'Balinese Massage',  category:'Massage', tag:'',              duration:'60 / 90 min',price:35, price_alt:50, image:'assets/images/spa-relax-1.jpg',  description:'A holistic therapy blending gentle stretches, rhythmic strokes, and aromatic oils.' },
-  { id:'SV-07', name:'Royal Thai',        category:'Massage', tag:'',              duration:'60 / 90 min',price:30, price_alt:45, image:'assets/images/treatment-room.jpg', description:'Traditional rhythmic stretching and assisted movements to restore energy flow.' },
-  { id:'SV-08', name:'Swedish Massage',   category:'Massage', tag:'',              duration:'60 / 90 min',price:25, price_alt:40, image:'assets/images/sanctuary-bed.jpg', description:'A classic full-body massage using gentle to medium pressure to ease tension.' },
-  { id:'SV-09', name:'Deep Tissue',       category:'Massage', tag:'Signature',     duration:'60 / 90 min',price:30, price_alt:45, image:'assets/images/deep-tissue.jpg',  description:'Targeted release of chronic tension, improved mobility, and lasting muscular recovery.' },
-  { id:'SV-10', name:'Reflexology',       category:'Foot',    tag:'',              duration:'30 min',     price:15, image:'assets/images/spa-relax-3.jpg',  description:'Therapeutic foot massage applying gentle pressure to specific reflexes to ease stress.' },
-  { id:'SV-11', name:'Foot Relaxing',     category:'Foot',    tag:'',              duration:'30 min',     price:10, image:'assets/images/therapist-prep.jpg', description:'A soothing foot massage that relieves fatigue and supports overall balance.' },
-  { id:'SV-12', name:'Couples Sanctuary', category:'Couple',  tag:'',              duration:'60 / 90 min',price:75, price_alt:110, image:'assets/images/couples-massage.jpg', description:'A side-by-side experience for two — choose your massage in a private suite with candles & tea.' },
-  { id:'SV-13', name:'Sultan Suite',      category:'Package', tag:'Most Popular',  duration:'120 min',    price:50, image:'assets/images/spa-foyer.jpg',     description:'A premium sequence designed for full-day restoration.' }
+  /* —— COMMON · Massage —— */
+  { id:'SV-01', name:'Swedish Massage',            category:'Massage', tag:'',           duration:'60 / 90 min', price:25, price_alt:35, audience:'both', book:true, image:'assets/images/sanctuary-bed.jpg',      description:'A classic full-body massage using gentle to medium pressure to ease tension.' },
+  { id:'SV-02', name:'Royal Thai Massage',         category:'Massage', tag:'',           duration:'60 / 90 min', price:30, price_alt:40, audience:'both', book:true, image:'assets/images/treatment-room.jpg',     description:'Traditional rhythmic stretching and assisted movements to restore energy flow.' },
+  { id:'SV-03', name:'Deep Tissue Massage',        category:'Massage', tag:'Signature',  duration:'60 / 90 min', price:30, price_alt:40, audience:'both', book:true, image:'assets/images/deep-tissue.jpg',        description:'Targeted release of chronic tension, improved mobility, and lasting muscular recovery.' },
+  { id:'SV-04', name:'Aroma Relaxing Massage',     category:'Massage', tag:'',           duration:'60 / 90 min', price:35, price_alt:45, audience:'both', book:true, image:'assets/images/lounge-flowers.jpg',     description:'A deeply calming massage using aromatic essential oils to ease stress and balance the senses.' },
+  { id:'SV-05', name:'Balinese Massage',           category:'Massage', tag:'',           duration:'60 / 90 min', price:35, price_alt:45, audience:'both', book:true, image:'assets/images/spa-relax-1.jpg',        description:'A holistic therapy blending gentle stretches, rhythmic strokes, and aromatic oils.' },
+  { id:'SV-06', name:'Hot Stone Massage',          category:'Massage', tag:'Signature',  duration:'60 / 90 min', price:35, price_alt:45, audience:'both', book:true, image:'assets/images/spa-relax-2.jpg',        description:'Warm volcanic stones relax muscles, enhance circulation, and promote complete wellbeing.' },
+  { id:'SV-07', name:'Argan Oil Relaxing Massage', category:'Massage', tag:'Signature',  duration:'60 / 90 min', price:40, price_alt:50, audience:'both', book:true, image:'assets/images/therapist-products.jpg', description:'A luxurious massage using nutrient-rich Moroccan argan to nourish skin and ease tension.' },
+  /* —— COMMON · Hammam —— */
+  { id:'SV-08', name:'Casablanca Hammam (Moroccan Bath)', category:'Hammam', tag:'',        duration:'60 min', price:25, audience:'both', book:true, image:'assets/images/spa-detail-1.jpg', description:'A signature wellness ritual combining steam, exfoliation, and cleansing for inner balance.' },
+  { id:'SV-09', name:'Royal Hammam',               category:'Hammam',  tag:'Signature',  duration:'75 min', price:45, audience:'both', book:true, image:'assets/images/spa-detail-2.jpg', description:'An indulgent steam ritual featuring exfoliation and cleansing — purifying body and skin.' },
+  /* —— COMMON · Foot Care —— */
+  { id:'SV-10', name:'Reflexology Foot Massage',   category:'Foot',    tag:'',           duration:'30 min', price:15, audience:'both', book:true, image:'assets/images/spa-relax-3.jpg',  description:'Therapeutic foot massage applying gentle pressure to specific reflexes to ease stress.' },
+  { id:'SV-11', name:'Foot Relaxing Massage',      category:'Foot',    tag:'',           duration:'30 min', price:10, audience:'both', book:true, image:'assets/images/therapist-prep.jpg', description:'A soothing foot massage that relieves fatigue and supports overall balance.' },
+  /* —— COMMON · Packages —— */
+  { id:'SV-12', name:'Moroccan Bath + Reflexology Foot Massage', category:'Package', tag:'', duration:'75 min',  price:35, audience:'both', book:true, image:'assets/images/spa-foyer.jpg',       description:'Exfoliating Moroccan bath followed by a reflexology foot massage.' },
+  { id:'SV-13', name:'Swedish Massage + Jacuzzi',  category:'Package', tag:'',           duration:'90 min',  price:35, audience:'both', book:true, image:'assets/images/waiting-lounge.jpg',  description:'Tension-easing Swedish massage followed by a private jacuzzi soak.' },
+  { id:'SV-14', name:'Massage + Body Scrub',       category:'Package', tag:'',           duration:'90 min',  price:35, audience:'both', book:true, image:'assets/images/spa-relax-1.jpg',     description:'Your choice of massage paired with a full-body exfoliation ritual.' },
+  { id:'SV-15', name:'Moroccan Bath + Foot Relaxing Massage', category:'Package', tag:'',  duration:'75 min',  price:30, audience:'both', book:true, image:'assets/images/lobby-table.jpg',     description:'Moroccan bath followed by a soothing foot relaxing massage.' },
+  { id:'SV-16', name:'Massage + Foot Scrub',       category:'Package', tag:'',           duration:'90 min',  price:25, audience:'both', book:true, image:'assets/images/spa-relax-3.jpg',     description:'A relaxing massage paired with an invigorating foot scrub.' },
+  { id:'SV-17', name:'Massage + Face Mask',        category:'Package', tag:'',           duration:'90 min',  price:25, audience:'both', book:true, image:'assets/images/therapist-products.jpg', description:'A calming massage finished with a nourishing face mask.' },
+  { id:'SV-18', name:'Moroccan Bath with Argan Oil Massage', category:'Package', tag:'Signature', duration:'100 min', price:60, audience:'both', book:true, image:'assets/images/spa-detail-2.jpg', description:'The classic pairing — exfoliating Hammam followed by an argan oil massage.' },
+  { id:'SV-19', name:'Royal Hammam + Massage',     category:'Package', tag:'Most Popular', duration:'120 min', price:50, audience:'both', book:true, image:'assets/images/spa-detail-1.jpg',  description:'Our most-loved pairing — Royal Hammam followed by a signature massage.' },
+  { id:'SV-20', name:'Sultan Suite',               category:'Package', tag:'',           duration:'120 min', price:50, audience:'both', book:true, image:'assets/images/spa-foyer.jpg',       description:'A premium sequence designed for full-day restoration.' },
+  { id:'SV-21', name:'Massage + Moroccan Bath',    category:'Package', tag:'',           duration:'100 min', price:50, audience:'both', book:true, image:'assets/images/couples-massage.jpg', description:'Choose your massage style and follow with the traditional Moroccan Hammam.' },
+  { id:'SV-22', name:'Balinese Massage + Body Scrub', category:'Package', tag:'',        duration:'90 min',  price:45, audience:'both', book:true, image:'assets/images/spa-relax-1.jpg',     description:'Aromatic Balinese massage paired with an invigorating full-body scrub.' },
+  /* —— MEN ONLY · Waxing & Hair Removal —— */
+  { id:'SV-23', name:'Chest Shaving',     category:'Waxing', tag:'', duration:'', price:5,  audience:'men', book:false, image:'assets/images/therapist-prep.jpg', description:'Men’s chest shaving.' },
+  { id:'SV-24', name:'Chest Waxing',      category:'Waxing', tag:'', duration:'', price:8,  audience:'men', book:false, image:'assets/images/therapist-prep.jpg', description:'Men’s chest waxing.' },
+  { id:'SV-25', name:'Full Arms Shaving', category:'Waxing', tag:'', duration:'', price:5,  audience:'men', book:false, image:'assets/images/therapist-prep.jpg', description:'Men’s full arms shaving.' },
+  { id:'SV-26', name:'Full Arms Waxing',  category:'Waxing', tag:'', duration:'', price:7,  audience:'men', book:false, image:'assets/images/therapist-prep.jpg', description:'Men’s full arms waxing.' },
+  { id:'SV-27', name:'Underarms Shaving', category:'Waxing', tag:'', duration:'', price:2,  audience:'men', book:false, image:'assets/images/therapist-prep.jpg', description:'Men’s underarms shaving.' },
+  { id:'SV-28', name:'Underarms Waxing',  category:'Waxing', tag:'', duration:'', price:4,  audience:'men', book:false, image:'assets/images/therapist-prep.jpg', description:'Men’s underarms waxing.' },
+  { id:'SV-29', name:'Bikini Line Shaving', category:'Waxing', tag:'', duration:'', price:3, audience:'men', book:false, image:'assets/images/therapist-prep.jpg', description:'Men’s bikini line shaving.' },
+  { id:'SV-30', name:'Bikini Line Waxing',  category:'Waxing', tag:'', duration:'', price:5, audience:'men', book:false, image:'assets/images/therapist-prep.jpg', description:'Men’s bikini line waxing.' },
+  { id:'SV-31', name:'Back Shaving',      category:'Waxing', tag:'', duration:'', price:5,  audience:'men', book:false, image:'assets/images/therapist-prep.jpg', description:'Men’s back shaving.' },
+  { id:'SV-32', name:'Back Waxing',       category:'Waxing', tag:'', duration:'', price:8,  audience:'men', book:false, image:'assets/images/therapist-prep.jpg', description:'Men’s back waxing.' },
+  { id:'SV-33', name:'Full Legs Shaving', category:'Waxing', tag:'', duration:'', price:7,  audience:'men', book:false, image:'assets/images/therapist-prep.jpg', description:'Men’s full legs shaving.' },
+  { id:'SV-34', name:'Full Legs Waxing',  category:'Waxing', tag:'', duration:'', price:9,  audience:'men', book:false, image:'assets/images/therapist-prep.jpg', description:'Men’s full legs waxing.' },
+  { id:'SV-35', name:'Brazilian Shaving', category:'Waxing', tag:'', duration:'', price:12, audience:'men', book:false, image:'assets/images/therapist-prep.jpg', description:'Men’s Brazilian shaving.' },
+  { id:'SV-36', name:'Brazilian Waxing',  category:'Waxing', tag:'', duration:'', price:15, audience:'men', book:false, image:'assets/images/therapist-prep.jpg', description:'Men’s Brazilian waxing.' },
+  { id:'SV-37', name:'Full Body Shaving', category:'Waxing', tag:'', duration:'', price:12, audience:'men', book:false, image:'assets/images/therapist-prep.jpg', description:'Men’s full body shaving.' },
+  { id:'SV-38', name:'Full Body Waxing',  category:'Waxing', tag:'', duration:'', price:20, audience:'men', book:false, image:'assets/images/therapist-prep.jpg', description:'Men’s full body waxing.' },
+  /* —— MEN ONLY · Barber & Grooming —— */
+  { id:'SV-39', name:'Haircut & Shave',         category:'Barber', tag:'', duration:'', price:8,   audience:'men', book:false, image:'assets/images/reception-desk.jpg', description:'Men’s haircut with a traditional shave.' },
+  { id:'SV-40', name:'Mustache Color',          category:'Barber', tag:'', duration:'', price:7.5, audience:'men', book:false, image:'assets/images/reception-desk.jpg', description:'Mustache colouring.' },
+  { id:'SV-41', name:'Beard Color',             category:'Barber', tag:'', duration:'', price:4.5, audience:'men', book:false, image:'assets/images/reception-desk.jpg', description:'Beard colouring.' },
+  { id:'SV-42', name:'Full Head Color',         category:'Barber', tag:'', duration:'', price:10,  audience:'men', book:false, image:'assets/images/reception-desk.jpg', description:'Full head hair colouring.' },
+  { id:'SV-43', name:'Hair Straightening / Relaxing', category:'Barber', tag:'', duration:'', price:15, audience:'men', book:false, image:'assets/images/reception-desk.jpg', description:'Hair straightening / relaxing treatment.' },
+  { id:'SV-44', name:'Organic Hot Argan Oil Treatment', category:'Barber', tag:'', duration:'', price:7, audience:'men', book:false, image:'assets/images/reception-desk.jpg', description:'Nourishing hot argan oil hair treatment.' },
+  { id:'SV-45', name:'Shaving',                 category:'Barber', tag:'', duration:'', price:4,   audience:'men', book:false, image:'assets/images/reception-desk.jpg', description:'Classic shave.' },
+  { id:'SV-46', name:'Steam Shave',             category:'Barber', tag:'', duration:'', price:5,   audience:'men', book:false, image:'assets/images/reception-desk.jpg', description:'Steam shave for a closer finish.' },
+  { id:'SV-47', name:'Haircut',                 category:'Barber', tag:'', duration:'', price:5,   audience:'men', book:false, image:'assets/images/reception-desk.jpg', description:'Men’s haircut.' },
+  { id:'SV-48', name:'Haircut & Style',         category:'Barber', tag:'', duration:'', price:6,   audience:'men', book:false, image:'assets/images/reception-desk.jpg', description:'Men’s haircut with styling.' },
+  { id:'SV-49', name:'Hair Wash',               category:'Barber', tag:'', duration:'', price:1.5, audience:'men', book:false, image:'assets/images/reception-desk.jpg', description:'Hair wash.' },
+  { id:'SV-50', name:'Hair Style',              category:'Barber', tag:'', duration:'', price:2,   audience:'men', book:false, image:'assets/images/reception-desk.jpg', description:'Hair styling.' },
+  { id:'SV-51', name:'Face Scrub & Steam',      category:'Barber', tag:'', duration:'', price:4.5, audience:'men', book:false, image:'assets/images/reception-desk.jpg', description:'Face scrub with steam.' },
+  { id:'SV-52', name:'Eyebrow Threading (Men)', category:'Waxing', tag:'', duration:'', price:1.5, audience:'men', book:false, image:'assets/images/therapist-prep.jpg', description:'Men’s eyebrow threading.' },
+  /* —— LADIES ONLY · Beauty —— */
+  { id:'SV-53', name:'Eyebrow Threading',       category:'Waxing', tag:'', duration:'', price:1.5, audience:'ladies', book:false, image:'assets/images/therapist-products.jpg', description:'Eyebrow threading.' },
+  { id:'SV-54', name:'Waxing — Ear, Nose & Cheeks', category:'Waxing', tag:'', duration:'', price:4.5, audience:'ladies', book:false, image:'assets/images/therapist-products.jpg', description:'Threading / waxing for ear, nose and cheeks.' },
+  { id:'SV-55', name:'Manicure',                category:'Nails', tag:'', duration:'25 min', price:6.5, audience:'ladies', book:true, image:'assets/images/therapist-products.jpg', description:'Hand care — nail shaping, cuticle care, and polish.' },
+  { id:'SV-56', name:'Foot Spa',                category:'Nails', tag:'', duration:'50 min', price:11,  audience:'ladies', book:true, image:'assets/images/spa-relax-3.jpg',        description:'Relaxing foot spa treatment.' },
+  { id:'SV-57', name:'Pedicure',                category:'Nails', tag:'', duration:'40 min', price:7,   audience:'ladies', book:true, image:'assets/images/spa-relax-3.jpg',        description:'Foot care — soak, scrub, nail shaping, and polish.' },
+  { id:'SV-58', name:'Manicure & Pedicure Combo', category:'Nails', tag:'', duration:'65 min', price:12, audience:'ladies', book:true, image:'assets/images/therapist-products.jpg', description:'Complete hand and foot care in one session.' }
 ].map((s, i) => Object.assign({
   show_on_website: true,
-  show_in_booking: true,
+  show_in_booking: s.book !== false,
   featured: false,
   member_only: false,
   status: 'active',

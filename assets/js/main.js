@@ -71,51 +71,83 @@
   } else { reveal(); }
 })();
 
-/* ---------- Services grid rendered from admin store ----------
-   On services.html (#svc-grid) and the home page "Treatments" rail
-   we render cards dynamically from the taj-services localStorage
-   master, so admin changes flow through to the website immediately.
-   If the store is empty, we keep the markup that already exists
-   in the HTML as a fallback. */
+/* ---------- Services grids rendered from admin store ----------
+   The Services page has three audience panels — Common (#svc-grid),
+   Ladies (#svc-grid-ladies) and Men (#svc-grid-men). Each service's
+   audience ('both' | 'ladies' | 'men') comes from the durable
+   settings map `service-audience` (the services table has no audience
+   column), defaulting to 'both'. Cards render from the taj-services
+   master so admin edits flow through immediately. */
 (function () {
-  const grid = document.getElementById('svc-grid');
-  if (!grid) return;
-  let list = [];
-  try { list = JSON.parse(localStorage.getItem('taj-services') || '[]') || []; }
-  catch (_) {}
-  // Filter for public consumption + sort
-  const visible = list
-    .filter(s => s && s.status === 'active' && s.show_on_website !== false)
-    .filter(s => !s.member_only || (window.TajMember && TajMember.isSignedIn()))
-    .sort((a, b) => (a.sort || 0) - (b.sort || 0) || (a.name || '').localeCompare(b.name || ''));
-
-  if (!visible.length) return; // keep the static fallback markup
-
-  const catClass = c => (c || 'massage').toLowerCase();
-  const altPriceStr = s => s.price_alt ? `${s.price} / ${s.price_alt}` : `${s.price}`;
-  grid.innerHTML = visible.map((s, i) => {
-    const tagText = s.tag || (s.category === 'Hammam' ? 'Hammam' :
-                              s.category === 'Foot'   ? 'Foot Ritual' :
-                              s.category === 'Couple' ? 'Couple' :
-                              s.category === 'Package'? 'Package' :
-                              'Massage');
-    const delay = ['', 'delay-1', 'delay-2'][i % 3];
-    const dataCat = (s.tag === 'Signature' ? 'signature ' : '') + catClass(s.category);
-    return `
-      <article class="svc-card reveal ${delay}" data-category="${dataCat}" data-svc-id="${s.id}">
-        <img src="${s.image || 'assets/images/spa-detail-1.jpg'}" alt="${(s.name || '').replace(/"/g,'&quot;')}">
-        <span class="tag">${tagText}</span>
-        <div class="svc-card__inner">
-          <h4>${escapeHTML(s.name || '')}</h4>
-          <p>${escapeHTML(s.description || '')}</p>
-          <div class="row"><span class="dur">${escapeHTML(s.duration || '')}</span><span class="price">${altPriceStr(s)}<small>BHD</small></span></div>
-        </div>
-      </article>`;
-  }).join('');
+  const gCommon = document.getElementById('svc-grid');
+  const gLadies = document.getElementById('svc-grid-ladies');
+  const gMen    = document.getElementById('svc-grid-men');
+  if (!gCommon && !gLadies && !gMen) return; // not the services page
 
   function escapeHTML(s) {
     return String(s || '').replace(/[&<>"']/g, c =>
       ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]);
+  }
+  const catClass = c => (c || 'massage').toLowerCase();
+  const altPriceStr = s => s.price_alt ? `${s.price} / ${s.price_alt}` : `${s.price}`;
+
+  function cardHTML(s, i) {
+    const tagText = s.tag || ({ Hammam:'Hammam', Foot:'Foot Ritual', Couple:'Couple',
+      Package:'Package', Waxing:'Waxing', Nails:'Beauty', Barber:'Barber' })[s.category] || 'Massage';
+    const delay = ['', 'delay-1', 'delay-2'][i % 3];
+    const dataCat = (s.tag === 'Signature' ? 'signature ' : '') + catClass(s.category);
+    const priceTxt = (s.price == null || s.price === '') ? 'Enquire' : `${altPriceStr(s)}<small>BHD</small>`;
+    return `
+      <article class="svc-card reveal ${delay}" data-category="${dataCat}" data-svc-id="${s.id}">
+        <img src="${s.image || 'assets/images/spa-detail-1.jpg'}" alt="${(s.name || '').replace(/"/g,'&quot;')}" loading="lazy" decoding="async">
+        <span class="tag">${escapeHTML(tagText)}</span>
+        <div class="svc-card__inner">
+          <h4>${escapeHTML(s.name || '')}</h4>
+          <p>${escapeHTML(s.description || '')}</p>
+          <div class="row"><span class="dur">${escapeHTML(s.duration || '')}</span><span class="price">${priceTxt}</span></div>
+        </div>
+      </article>`;
+  }
+
+  function paint(audienceMap) {
+    let list = [];
+    try { list = JSON.parse(localStorage.getItem('taj-services') || '[]') || []; } catch (_) {}
+    const visible = list
+      .filter(s => s && s.status === 'active' && s.show_on_website !== false)
+      .filter(s => !s.member_only || (window.TajMember && TajMember.isSignedIn()))
+      .sort((a, b) => (a.sort || 0) - (b.sort || 0) || (a.name || '').localeCompare(b.name || ''));
+    if (!visible.length) return; // keep static fallback if store is empty
+
+    const aud = s => (audienceMap && audienceMap[s.id]) || s.audience || 'both';
+    const fill = (grid, items, note) => {
+      if (!grid) return;
+      if (items.length) {
+        grid.innerHTML = items.map(cardHTML).join('');
+        if (note) note.hidden = false;
+      } else {
+        grid.innerHTML = '<p class="svc-note" style="grid-column:1/-1; text-align:center; color:var(--c-muted);">No services in this category yet.</p>';
+        if (note) note.hidden = true;
+      }
+    };
+    fill(gCommon, visible.filter(s => aud(s) === 'both'));
+    fill(gLadies, visible.filter(s => aud(s) === 'ladies'), document.getElementById('svc-note-ladies'));
+    fill(gMen,    visible.filter(s => aud(s) === 'men'));
+    // Re-run reveal-on-scroll for freshly injected cards
+    document.querySelectorAll('.svc-card.reveal').forEach(el => el.classList.add('visible'));
+  }
+
+  // Instant paint from the localStorage mirror, then refresh from the durable
+  // settings map (which also reflects cross-device edits).
+  let mapLocal = {};
+  try { mapLocal = JSON.parse(localStorage.getItem('taj-service-audience') || '{}') || {}; } catch (_) {}
+  paint(mapLocal);
+  if (window.TajData && TajData.settings && TajData.settings.get) {
+    TajData.settings.get('service-audience').then(m => {
+      if (m && typeof m === 'object') {
+        try { localStorage.setItem('taj-service-audience', JSON.stringify(m)); } catch (_) {}
+        paint(m);
+      }
+    }).catch(() => {});
   }
 })();
 

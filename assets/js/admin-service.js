@@ -69,6 +69,7 @@ if (isEdit) {
 const F = {
   name:       document.getElementById('sv-name'),
   category:   document.getElementById('sv-category'),
+  audience:   document.getElementById('sv-audience'),
   tag:        document.getElementById('sv-tag'),
   description:document.getElementById('sv-description'),
   long:       document.getElementById('sv-long'),
@@ -103,6 +104,7 @@ function hydrate(s) {
   F.memberOnly.checked= !!s.member_only;
   F.status.value      = s.status || 'active';
   F.sort.value        = (s.sort != null) ? s.sort : 100;
+  if (F.audience) F.audience.value = s.audience || 'both';
 }
 
 if (current) {
@@ -112,7 +114,27 @@ if (current) {
   F.duration.value = '60 min';
   F.status.value   = 'active';
   F.sort.value     = 100;
+  if (F.audience) F.audience.value = 'both';
 }
+
+/* ---- Audience is stored in a settings map (service-audience: { id: 'both'|
+   'ladies'|'men' }) because the services DB table has no audience column.
+   Load the current service's audience from there on edit. ---- */
+let audienceMap = {};
+(async function loadAudience() {
+  try {
+    if (window.TajData?.settings?.get) {
+      const saved = await TajData.settings.get('service-audience');
+      if (saved && typeof saved === 'object') audienceMap = saved;
+    }
+    if (!Object.keys(audienceMap).length) {
+      try { audienceMap = JSON.parse(localStorage.getItem('taj-service-audience') || '{}') || {}; } catch (_) {}
+    }
+    if (isEdit && current && F.audience && audienceMap[current.id]) {
+      F.audience.value = audienceMap[current.id];
+    }
+  } catch (_) {}
+})();
 
 /* ---- Image quick-picks ---- */
 const sg = document.getElementById('svc-img-suggest');
@@ -215,8 +237,18 @@ document.getElementById('service-form').addEventListener('submit', async e => {
     featured: F.featured.checked,
     member_only: F.memberOnly.checked,
     status: F.status.value,
-    sort: parseInt(F.sort.value, 10) || 100
+    sort: parseInt(F.sort.value, 10) || 100,
+    // Carried locally for instant UI; the durable copy is the settings map below.
+    audience: (F.audience && F.audience.value) || 'both'
   };
+
+  // Persist audience into the settings map (durable — survives DB sync, since
+  // the services table has no audience column).
+  try {
+    audienceMap[payload.id] = payload.audience;
+    localStorage.setItem('taj-service-audience', JSON.stringify(audienceMap));
+    if (window.TajData?.settings?.set) await TajData.settings.set('service-audience', audienceMap);
+  } catch (_) {}
 
   // Disable save button while we persist
   const saveBtn = document.querySelector('#service-form button[type="submit"]');
