@@ -123,3 +123,8 @@
 .svc-gallery__grid .svc-img-quick.is-selected{border-color:var(--c-copper)}
 .svc-gallery__grid .svc-img-quick.is-selected .svc-img-quick__name{color:var(--c-copper);font-weight:600}
 .svc-gallery__empty{grid-column:1/-1;text-align:center;color:var(--c-muted);font-size:0.82rem;padding:24px}
+
+/* Footer — developer credit line */
+.footer-credit{flex-basis:100%;text-align:center;padding-top:8px;font-size:0.8rem;color:rgba(200,179,154,.45);letter-spacing:0.02em}
+.footer-credit a{color:rgba(212,184,150,.7);font-weight:500;transition:color .3s ease}
+.footer-credit a:hover{color:rgba(212,184,150,1)}
