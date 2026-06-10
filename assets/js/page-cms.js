@@ -101,7 +101,7 @@
       // (page-about.leadership.*). Photo lives here because that's where the
       // uploaded image is stored; it renders on both Home and About.
       founder: {
-        eyebrow: 'Meet Our Operational Manager',
+        eyebrow: 'A Word from Our Operational Manager',
         title:   'Hands that *understand*.',
         image:   'assets/images/manager-portrait.jpg'
       },

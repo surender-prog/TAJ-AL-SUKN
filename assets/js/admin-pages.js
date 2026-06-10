@@ -92,8 +92,8 @@
           ] },
         { id: 'philosophy', title: 'Philosophy quote',
           fields: [ F.quote, F.by ] },
-        { id: 'founder', title: 'Manager section — heading & photo',
-          note: 'Shown on the Home page. The manager PHOTO set here also appears on the About page. The name, role, highlights and social links are shared from About → “Leadership (04) — manager profile card” and update on both pages automatically.',
+        { id: 'founder', title: 'Manager section — heading & photo (Home + About)',
+          note: 'The heading and photo set here appear on BOTH the Home page and the About page. The name, role, highlights and social links are shared from About → “Leadership (04) — manager profile” and update on both pages automatically.',
           fields: [
             F.eyebrow, F.headline(2),
             { key:'image', label:'Manager photo (Home + About)', type:'image' }
