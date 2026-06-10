@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link rel="stylesheet" href="assets/css/style.css?v=20260604g">
+<link rel="stylesheet" href="assets/css/style.css?v=20260604h">
 </head>
 <body>
 
@@ -283,26 +283,28 @@
       <h2 data-cms="page-home.founder.title">Hands that <em>understand</em>.</h2>
     </div>
 
-    <div class="founder reveal">
-      <div class="founder__media">
-        <img data-cms="page-home.founder.image" data-cms-prop="src" src="assets/images/manager-portrait.jpg" alt="Spa Director" loading="lazy" decoding="async">
+    <!-- Manager profile card — SHARED with About → Leadership (page-about.leadership.*).
+         Editing About → Leadership updates this card and the About page together. -->
+    <div class="editorial leader-profile reveal" style="margin-top: 50px;">
+      <div class="editorial__media">
+        <div class="main"><img data-cms="page-home.founder.image" data-cms-prop="src" src="assets/images/manager-portrait.jpg" alt="Carmen Santos — Operational Manager" loading="lazy" decoding="async"></div>
       </div>
-      <div class="founder__copy">
-        <span class="role" data-cms="page-home.founder.role">Studio Founder</span>
-        <h3 data-cms="page-home.founder.name">Sophia Brown</h3>
-        <ul class="founder__list">
-          <li>Internationally certified Thai massage practitioner</li>
-          <li>Holds a medical degree with 15 years of hospital experience</li>
-          <li>Internationally certified Access Bars practitioner</li>
-          <li>Over 5 years of expertise in professional body relaxation</li>
-          <li>Welcomes clients of any gender, age, and physical condition</li>
-          <li>Gently activates the body's natural self-healing processes</li>
+      <div class="editorial__copy">
+        <p class="leader-role"><span data-cms="page-about.leadership.role">Operational Manager</span> · <span data-cms="page-about.leadership.years">14 yrs</span></p>
+        <h2 class="leader-name" data-cms="page-about.leadership.name">Carmen Santos</h2>
+        <ul class="leader-points">
+          <li><span class="dot"></span><span data-cms="page-about.leadership.b1">Leads daily spa operations with a strong focus on service excellence and guest satisfaction.</span></li>
+          <li><span class="dot"></span><span data-cms="page-about.leadership.b2">Oversees therapist performance, training, and quality standards to ensure a consistent luxury experience.</span></li>
+          <li><span class="dot"></span><span data-cms="page-about.leadership.b3">Dedicated to creating a calm, welcoming environment where every guest feels valued and cared for.</span></li>
+          <li><span class="dot"></span><span data-cms="page-about.leadership.b4">Ensures smooth coordination between departments, maintaining efficiency and operational excellence.</span></li>
+          <li><span class="dot"></span><span data-cms="page-about.leadership.b5">Passionate about promoting wellness, professional growth, and continuous improvement within the team.</span></li>
+          <li><span class="dot"></span><span data-cms="page-about.leadership.b6">Committed to delivering exceptional service while upholding the highest standards of hospitality and care.</span></li>
         </ul>
-        <div class="founder__socials">
-          <a href="https://www.instagram.com/tajalsukunspa2026" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-          <a href="https://wa.me/97335194422" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        <div class="leader-socials">
+          <a data-cms="page-about.leadership.ig" data-cms-prop="href" href="https://www.instagram.com/tajalsukunspa2026" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a data-cms="page-about.leadership.fb" data-cms-prop="href" href="#" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a data-cms="page-about.leadership.li" data-cms-prop="href" href="#" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a data-cms="page-about.leadership.wa" data-cms-prop="href" href="https://wa.me/97335194422" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
         </div>
       </div>
     </div>
@@ -382,10 +384,10 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="assets/js/supabase-config.js?v=20260520n" defer></script>
 <script src="assets/js/taj-data.js?v=20260604e" defer></script>
-<script src="assets/js/page-cms.js?v=20260604g" defer></script>
+<script src="assets/js/page-cms.js?v=20260604i" defer></script>
 <script src="assets/js/member-auth.js?v=20260604e" defer></script>
 <script src="assets/js/main.js?v=20260604e" defer></script>
-<script src="assets/js/i18n-data.js?v=20260604g" defer></script>
+<script src="assets/js/i18n-data.js?v=20260604h" defer></script>
 <script src="assets/js/i18n.js?v=20260526q" defer></script>
 </body>
 </html>

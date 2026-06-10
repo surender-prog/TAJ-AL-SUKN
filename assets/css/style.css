@@ -139,3 +139,7 @@
 .leader-socials{display:flex;gap:12px}
 .leader-socials a{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--c-cream-2);color:var(--c-deep);font-size:1rem;transition:all .25s var(--ease)}
 .leader-socials a:hover{background:var(--c-copper);color:#fff;transform:translateY(-2px)}
+
+/* Admin CMS — block-level note/hint */
+.cms-block__note{font-size:0.82rem;line-height:1.5;color:var(--c-text-soft);background:var(--c-cream);border:1px solid var(--c-line);border-left:3px solid var(--c-copper);border-radius:8px;padding:10px 14px;margin:0 0 6px}
+.cms-block__note i{color:var(--c-copper);margin-right:6px}

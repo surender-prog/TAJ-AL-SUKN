@@ -96,11 +96,13 @@
         quote: '"True wellness is not in escape — it is in *returning to yourself*."',
         by:    '— Our Philosophy'
       },
+      // Section heading + the manager PHOTO. The profile text (name, role,
+      // highlights, socials) is SHARED from About → Leadership
+      // (page-about.leadership.*). Photo lives here because that's where the
+      // uploaded image is stored; it renders on both Home and About.
       founder: {
-        eyebrow: 'A Word from Our Director',
-        name:    'Sofia Marini',
-        role:    'Spa Director · 14 yrs',
-        quote:   '"Every detail at Taj Al Sukun is chosen with care — every fragrance, every silence, every fabric. We don\'t simply offer treatments; we curate moments of stillness."',
+        eyebrow: 'Meet Our Operational Manager',
+        title:   'Hands that *understand*.',
         image:   'assets/images/manager-portrait.jpg'
       },
       cta: {
@@ -163,12 +165,12 @@
         role:  'Operational Manager',
         years: '14 yrs',
         name:  'Carmen Santos',
-        b1: 'Internationally certified Thai massage practitioner',
-        b2: 'Holds a medical degree with 15 years of hospital experience',
-        b3: 'Internationally certified Access Bars practitioner',
-        b4: 'Over 5 years of expertise in professional body relaxation',
-        b5: 'Welcomes clients of any gender, age, and physical condition',
-        b6: "Gently activates the body's natural self-healing processes",
+        b1: 'Leads daily spa operations with a strong focus on service excellence and guest satisfaction.',
+        b2: 'Oversees therapist performance, training, and quality standards to ensure a consistent luxury experience.',
+        b3: 'Dedicated to creating a calm, welcoming environment where every guest feels valued and cared for.',
+        b4: 'Ensures smooth coordination between departments, maintaining efficiency and operational excellence.',
+        b5: 'Passionate about promoting wellness, professional growth, and continuous improvement within the team.',
+        b6: 'Committed to delivering exceptional service while upholding the highest standards of hospitality and care.',
         image: 'assets/images/manager-portrait.jpg',
         ig: 'https://www.instagram.com/tajalsukunspa2026',
         fb: '#',

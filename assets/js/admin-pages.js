@@ -92,13 +92,11 @@
           ] },
         { id: 'philosophy', title: 'Philosophy quote',
           fields: [ F.quote, F.by ] },
-        { id: 'founder', title: 'Founder / Director card',
+        { id: 'founder', title: 'Manager section — heading & photo',
+          note: 'Shown on the Home page. The manager PHOTO set here also appears on the About page. The name, role, highlights and social links are shared from About → “Leadership (04) — manager profile card” and update on both pages automatically.',
           fields: [
-            F.eyebrow,
-            { key:'name', label:'Name', type:'text' },
-            { key:'role', label:'Role', type:'text' },
-            F.quote,
-            F.image('Portrait')
+            F.eyebrow, F.headline(2),
+            { key:'image', label:'Manager photo (Home + About)', type:'image' }
           ] },
         { id: 'cta', title: 'Closing CTA',
           fields: [ F.eyebrow, F.headline(2), F.body(3), F.button ] }
@@ -153,9 +151,9 @@
             { key:'image',  label:'Main image',   type:'image' },
             { key:'accent', label:'Accent image', type:'image' }
           ] },
-        { id: 'leadership', title: 'Leadership (04) — manager profile card',
+        { id: 'leadership', title: 'Leadership (04) — manager profile (Home + About)',
+          note: 'This profile appears on BOTH the Home page and the About page. The manager PHOTO is set on the Home page → “Manager section — heading & photo”.',
           fields: [
-            { key:'image', label:'Portrait photo',                 type:'image' },
             { key:'name',  label:'Name',                           type:'text' },
             { key:'role',  label:'Role / title',                   type:'text' },
             { key:'years', label:'Experience (e.g., "14 yrs")',    type:'text' },
@@ -520,6 +518,7 @@
           <h4>${escHTML(block.title)}</h4>
           <span class="cms-block__id">${block.id}</span>
         </header>
+        ${block.note ? `<p class="cms-block__note"><i class="fas fa-info-circle"></i> ${escHTML(block.note)}</p>` : ''}
         <div class="cms-block__body">
           ${block.fields.map(f => renderField(block, f)).join('')}
         </div>
