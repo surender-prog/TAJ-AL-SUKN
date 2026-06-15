@@ -749,6 +749,8 @@
             ref:   newId,
             refType: 'member'
           });
+          // Welcome email (fire-and-forget; no-op if SMTP is off).
+          if (TajData.email && newMember.email) TajData.email.send({ type: 'membership_welcome', memberId: newId });
         } else {
           const all = getMembers();
           all.unshift(newMember);

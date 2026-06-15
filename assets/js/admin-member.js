@@ -409,6 +409,8 @@ document.getElementById('freeze-btn')?.addEventListener('click', () => {
     persist();
     render();
     if (window.TajLog) TajLog.add({ type: 'member', title: `Membership activated: ${member.name}`, desc: `${member.tier} · payment confirmed`, ref: member.id, refType: 'member' });
+    // Activation email (fire-and-forget; no-op if SMTP is off).
+    if (window.TajData && TajData.email && member.email) TajData.email.send({ type: 'membership_activated', memberId: member.id });
     showToast('Membership activated');
     return;
   }

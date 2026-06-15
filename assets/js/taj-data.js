@@ -536,12 +536,31 @@
     return _ready;
   }
 
+  // ---------------------------------------------------------- transactional email
+  // Fires the secure `send-email` Edge Function. Recipients/content for
+  // record-based types (booking/membership) are built server-side from the DB,
+  // so the public (anon) site can only trigger predefined emails. Admin pages
+  // share the authenticated client, so admin-only types (invoice/test) work.
+  const email = {
+    async send(payload) {
+      if (!sb) return { ok: false, error: 'offline' };
+      try {
+        const { data, error } = await sb.functions.invoke('send-email', { body: payload });
+        if (error) return { ok: false, error: error.message || String(error) };
+        return data || { ok: true };
+      } catch (e) {
+        console.warn('[TajData.email]', e);
+        return { ok: false, error: String(e && e.message || e) };
+      }
+    }
+  };
+
   // Public API
   window.TajData = {
     connected: HAS_REMOTE && !!sb,
     config:    cfg,
     ready,
-    bookings, members, services, therapists, activity, settings,
+    bookings, members, services, therapists, activity, settings, email,
     // Low-level for emergencies / migrations
     _ls: LS, _sb: sb
   };

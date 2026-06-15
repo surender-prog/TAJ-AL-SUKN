@@ -638,6 +638,11 @@ function showToast(msg) {
           refType: 'booking'
         });
         savedRemote = !!TajData.connected;
+        // Transactional emails (fire-and-forget; no-ops if SMTP is off).
+        if (TajData.email) {
+          if (booking.email) TajData.email.send({ type: 'booking_confirmation', bookingId: booking.id });
+          TajData.email.send({ type: 'new_booking_alert', bookingId: booking.id });
+        }
       } else {
         // Fallback if data layer didn't load for some reason
         const list = JSON.parse(localStorage.getItem('taj-bookings') || '[]') || [];

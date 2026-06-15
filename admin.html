@@ -626,6 +626,7 @@
         <nav class="settings-nav">
           <a href="#sg-general"   class="settings-nav__chip active"><i class="fas fa-info-circle"></i> General</a>
           <a href="#sg-notify"    class="settings-nav__chip"><i class="far fa-bell"></i> Notifications</a>
+          <a href="#sg-smtp"      class="settings-nav__chip"><i class="far fa-envelope"></i> Email (SMTP)</a>
           <a href="#sg-therapist" class="settings-nav__chip"><i class="fas fa-user-md"></i> Therapists</a>
           <a href="#sg-services"  class="settings-nav__chip"><i class="fas fa-spa"></i> Services</a>
           <a href="#sg-tax"       class="settings-nav__chip"><i class="fas fa-percent"></i> Tax &amp; VAT</a>
@@ -707,6 +708,61 @@
             </div>
           </div>
           <p id="notify-saved-flash" style="color: #2a8a4a; font-size: 0.82rem; margin-top: 14px; opacity: 0; transition: opacity .3s ease;"><i class="fas fa-check-circle"></i> Saved</p>
+        </div>
+
+        <!-- 2b. Email / SMTP -->
+        <div class="panel settings-section" id="sg-smtp">
+          <div class="panel__head">
+            <h3><i class="far fa-envelope" style="color:var(--c-copper); margin-right:10px;"></i>Email Account (SMTP)</h3>
+            <div class="section-actions">
+              <button class="btn btn--primary" id="smtp-save"><i class="fas fa-save"></i> Save SMTP</button>
+            </div>
+          </div>
+          <p style="color: var(--c-text-soft); margin-bottom: 8px;">Connect your email account to send transactional emails (booking confirmations, membership, invoices, admin alerts).</p>
+          <p style="color: var(--c-text-soft); font-size: 0.82rem; margin-bottom: 22px;"><i class="fas fa-lock" style="color:var(--c-copper);"></i> Credentials are stored securely server-side and are <strong>never</strong> exposed on the public website.</p>
+
+          <label class="smtp-master" style="display:flex; align-items:center; gap:12px; padding:14px 18px; border:1px solid var(--c-line); border-radius:var(--r-md); margin-bottom:22px;">
+            <input type="checkbox" id="smtp-enabled" style="width:20px; height:20px; accent-color:var(--c-copper);">
+            <span><strong style="color:var(--c-deep);">Enable email sending</strong><br><small style="color:var(--c-text-soft);">Master switch — when off, no transactional emails are sent.</small></span>
+          </label>
+
+          <h4 style="font-size:0.82rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--c-muted); margin:6px 0 14px;">Sender Identity</h4>
+          <div class="form-grid">
+            <div class="field"><label>From Name</label><input type="text" id="smtp-from-name" placeholder="Taj Al Sukun Spa"></div>
+            <div class="field"><label>From Email</label><input type="email" id="smtp-from-email" placeholder="no-reply@tasukunspa.com"></div>
+            <div class="field"><label>Reply-To (optional)</label><input type="email" id="smtp-reply-to" placeholder="hello@tasukunspa.com"></div>
+            <div class="field"><label>Admin Alert Email</label><input type="email" id="smtp-admin-email" placeholder="reception@tasukunspa.com"></div>
+          </div>
+
+          <h4 style="font-size:0.82rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--c-muted); margin:26px 0 14px;">SMTP Server</h4>
+          <div class="form-grid">
+            <div class="field"><label>SMTP Host</label><input type="text" id="smtp-host" placeholder="smtp.gmail.com" autocomplete="off"></div>
+            <div class="field"><label>Port</label><input type="number" id="smtp-port" placeholder="587" autocomplete="off"></div>
+            <div class="field">
+              <label>Security</label>
+              <select id="smtp-security">
+                <option value="tls">STARTTLS (587)</option>
+                <option value="ssl">SSL / TLS (465)</option>
+                <option value="none">None</option>
+              </select>
+            </div>
+            <div class="field"><label>Username</label><input type="text" id="smtp-username" placeholder="account login" autocomplete="off"></div>
+            <div class="field full"><label>Password / App Password</label><input type="password" id="smtp-password" placeholder="Leave blank to keep the saved password" autocomplete="new-password"><small style="color:var(--c-text-soft); font-size:0.78rem;">For Gmail/Outlook use an app password, not your login password.</small></div>
+          </div>
+
+          <h4 style="font-size:0.82rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--c-muted); margin:26px 0 14px;">Transactional Emails</h4>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <label class="smtp-toggle" style="display:flex; align-items:center; gap:12px; padding:13px 18px; border:1px solid var(--c-line); border-radius:var(--r-md);"><input type="checkbox" id="smtp-send-booking" style="width:18px; height:18px; accent-color:var(--c-copper);"><span><strong style="color:var(--c-deep);">Booking confirmation</strong> <small style="color:var(--c-text-soft);">— sent to the guest when a booking is made.</small></span></label>
+            <label class="smtp-toggle" style="display:flex; align-items:center; gap:12px; padding:13px 18px; border:1px solid var(--c-line); border-radius:var(--r-md);"><input type="checkbox" id="smtp-send-membership" style="width:18px; height:18px; accent-color:var(--c-copper);"><span><strong style="color:var(--c-deep);">Membership welcome &amp; activation</strong> <small style="color:var(--c-text-soft);">— sent to the member on signup and activation.</small></span></label>
+            <label class="smtp-toggle" style="display:flex; align-items:center; gap:12px; padding:13px 18px; border:1px solid var(--c-line); border-radius:var(--r-md);"><input type="checkbox" id="smtp-send-invoice" style="width:18px; height:18px; accent-color:var(--c-copper);"><span><strong style="color:var(--c-deep);">Invoice / Receipt</strong> <small style="color:var(--c-text-soft);">— enables the “Email” action on the invoice page.</small></span></label>
+            <label class="smtp-toggle" style="display:flex; align-items:center; gap:12px; padding:13px 18px; border:1px solid var(--c-line); border-radius:var(--r-md);"><input type="checkbox" id="smtp-send-admin-alert" style="width:18px; height:18px; accent-color:var(--c-copper);"><span><strong style="color:var(--c-deep);">New booking admin alert</strong> <small style="color:var(--c-text-soft);">— internal copy to your admin alert email.</small></span></label>
+          </div>
+
+          <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:24px; padding-top:20px; border-top:1px solid var(--c-line);">
+            <input type="email" id="smtp-test-to" placeholder="send test to…" style="padding:11px 14px; border:1px solid var(--c-line); border-radius:8px; min-width:240px;">
+            <button class="btn btn--outline" id="smtp-test"><i class="fas fa-paper-plane"></i> Send Test Email</button>
+            <span id="smtp-flash" style="font-size:0.86rem; opacity:0; transition:opacity .3s ease;"></span>
+          </div>
         </div>
 
         <!-- 3. Therapists -->
@@ -1162,10 +1218,11 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="assets/js/supabase-config.js?v=20260520n" defer></script>
 <script src="assets/js/admin-auth.js?v=20260520n" defer></script>
-<script src="assets/js/taj-data.js?v=20260604e" defer></script>
+<script src="assets/js/taj-data.js?v=20260612a" defer></script>
 <script src="assets/js/page-cms.js?v=20260604j" defer></script>
 <script src="assets/js/admin-shared.js" defer></script>
 <script src="assets/js/admin.js" defer></script>
+<script src="assets/js/admin-smtp.js?v=20260612a" defer></script>
 <script src="assets/js/i18n-data.js?v=20260604h" defer></script>
 <script src="assets/js/admin-upload.js?v=20260520n" defer></script>
 <script src="assets/js/admin-pages.js?v=20260604j" defer></script>

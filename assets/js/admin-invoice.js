@@ -207,9 +207,35 @@ function render() {
   const phone = (booking.phone || '').replace(/\D/g, '');
   document.getElementById('inv-wa').href = phone ? `https://wa.me/${phone}?text=${waMsg}` : '#';
 
-  const subject = encodeURIComponent(`${isReceipt ? 'Payment Receipt' : 'Invoice'} from Taj Al Sukun — ${docNo}`);
-  const body = encodeURIComponent(lines.join('\n'));
-  document.getElementById('inv-email').href = `mailto:?subject=${subject}&body=${body}`;
+  const subjectTxt = `${isReceipt ? 'Payment Receipt' : 'Invoice'} from Taj Al Sukun — ${docNo}`;
+  const mailHref = `mailto:${booking.email || ''}?subject=${encodeURIComponent(subjectTxt)}&body=${encodeURIComponent(lines.join('\n'))}`;
+  const emailBtn = document.getElementById('inv-email');
+  emailBtn.href = mailHref;
+
+  // Prefer sending through the configured SMTP account; fall back to the mail app.
+  emailBtn.onclick = async (e) => {
+    if (!window.TajData || !TajData.email || !booking.email) return; // no SMTP / no address → mailto
+    e.preventDefault();
+    const old = emailBtn.innerHTML;
+    emailBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending…';
+    const html = `
+      <div style="font-family:Helvetica,Arial,sans-serif;max-width:540px;margin:0 auto;color:#2D1F14;">
+        <h2 style="font-family:Georgia,serif;color:#3D2417;font-weight:500;">${isReceipt ? 'Payment Receipt' : 'Invoice'} — ${docNo}</h2>
+        <p style="color:#5A4636;font-size:14px;">Service: ${booking.service} (${getServiceDuration(booking.service)})<br>Date: ${fmtFullDate(booking.date)} · ${fmtTime(booking.time)}</p>
+        <table style="width:100%;border-collapse:collapse;font-size:14px;margin-top:8px;">
+          <tr><td style="padding:6px 0;color:#8A7363;">Subtotal</td><td style="padding:6px 0;text-align:right;">${fmtMoney(subtotal)}</td></tr>
+          ${memberDisc > 0 ? `<tr><td style="padding:6px 0;color:#8A7363;">${booking.tier} Discount (${memberDiscPct}%)</td><td style="padding:6px 0;text-align:right;">−${fmtMoney(memberDisc)}</td></tr>` : ''}
+          ${extraDisc > 0 ? `<tr><td style="padding:6px 0;color:#8A7363;">${ed.reason || 'Discount'}</td><td style="padding:6px 0;text-align:right;">−${fmtMoney(extraDisc)}</td></tr>` : ''}
+          <tr><td style="padding:6px 0;color:#8A7363;">VAT (10%)</td><td style="padding:6px 0;text-align:right;">${fmtMoney(tax)}</td></tr>
+          <tr><td style="padding:10px 0;font-weight:700;border-top:1px solid #e5d8c5;">Total ${isPaid ? 'Paid' : 'Due'}</td><td style="padding:10px 0;text-align:right;font-weight:700;border-top:1px solid #e5d8c5;color:#B07849;">${fmtMoney(total)}</td></tr>
+        </table>
+        <p style="color:#8A7363;font-size:12px;margin-top:18px;">Thank you for choosing Taj Al Sukun.</p>
+      </div>`;
+    const res = await TajData.email.send({ type: 'invoice', to: booking.email, subject: subjectTxt, html });
+    emailBtn.innerHTML = old;
+    if (res && res.ok) alert('Invoice emailed to ' + booking.email);
+    else if (confirm('Could not send via SMTP (' + ((res && res.error) || 'not configured') + ').\nOpen your mail app instead?')) window.location.href = mailHref;
+  };
 }
 
 /* Discount panel toggle */
