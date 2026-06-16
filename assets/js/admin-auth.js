@@ -69,10 +69,37 @@
     } catch (_) { return null; }
   }
 
+  function initials(s) {
+    return (String(s || 'A').trim().split(/\s+/).map(w => w[0]).slice(0, 2).join('') || 'A').toUpperCase();
+  }
+  // Fill the sidebar user card (.admin-side__user) with the signed-in admin's
+  // real name (from the `admins` profile), email, and initials.
+  async function populateUserCard() {
+    const card = document.querySelector('.admin-side__user');
+    if (!card) return;
+    const avEl = card.querySelector('.av');
+    const nameEl = card.querySelector('strong');
+    const emailEl = card.querySelector('small');
+    let email = (window.TAJ_ADMIN_EMAIL || '').trim();
+    let name = '';
+    if (SUPA && email) {
+      try {
+        const { data } = await client().from('admins').select('name,role').ilike('email', email).limit(1);
+        if (data && data[0] && data[0].name) name = data[0].name;
+      } catch (_) {}
+    }
+    if (!email) email = 'admin@tasukunspa.com';
+    if (!name) name = email.split('@')[0].replace(/[._-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    if (avEl) avEl.textContent = initials(name);
+    if (nameEl) nameEl.textContent = name;
+    if (emailEl) emailEl.textContent = email;
+  }
+
   async function guard() {
     if (!SUPA) {
       // Demo mode: keep the sessionStorage gate.
-      if (sessionStorage.getItem('taj-admin-auth') !== '1') location.replace('admin-login.html');
+      if (sessionStorage.getItem('taj-admin-auth') !== '1') { location.replace('admin-login.html'); return; }
+      populateUserCard();
       return;
     }
     const s = await session();
@@ -83,10 +110,11 @@
       // Keep the legacy marker in sync for the inline gates in admin-*.js
       sessionStorage.setItem('taj-admin-auth', '1');
       window.TAJ_ADMIN_EMAIL = s.user && s.user.email;
+      populateUserCard();
     }
   }
 
-  window.TajAdmin = { signIn, signOut, guard, session, client, isSupabase: SUPA };
+  window.TajAdmin = { signIn, signOut, guard, session, client, isSupabase: SUPA, refreshUserCard: populateUserCard };
 
   // Auto-guard every admin page except the login page itself.
   const onLogin = /admin-login\.html(?:$|[?#])/.test(location.pathname + location.search + location.hash)
