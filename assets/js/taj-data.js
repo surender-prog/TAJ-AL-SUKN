@@ -78,7 +78,7 @@
   // sending. Local cache keeps the full object so the UI doesn't lose fields.
   const SCHEMA = {
     bookings: new Set(['id','member_id','name','phone','email','service','service_id','therapist','therapist_id','date','time','duration','price','status','tier','payment','payment_method','paid','paid_at','notes','invoice','source','created_at','updated_at']),
-    members:  new Set(['id','name','email','phone','tier','start_date','end_date','discount','balance','total_spent','services_included','services_used','joined_via','payment_method','dob','notes','therapist_pref','status','created_at','updated_at']),
+    members:  new Set(['id','name','email','phone','tier','start_date','end_date','discount','balance','comp_balance','total_spent','services_included','services_used','joined_via','payment_method','dob','notes','therapist_pref','status','created_at','updated_at']),
     services: new Set(['id','name','category','tag','description','long_description','duration','price','price_alt','member_price','image','show_on_website','show_in_booking','featured','member_only','status','sort','created_at','updated_at']),
     therapists: new Set(['id','name','role','specialty','langs','exp','phone','status','commission','created_at','updated_at']),
     activity:  new Set(['id','type','title','description','ref','ref_type','actor','read','occurred_at']),

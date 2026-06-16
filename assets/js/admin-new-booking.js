@@ -226,6 +226,12 @@ function formatBalance(b) {
   if (b.foot)     p.push(`${b.foot} foot ritual${b.foot > 1 ? 's' : ''}`);
   return p.join(' · ') || 'no complimentary services left';
 }
+// Remaining complimentary services — prefer the durable comp_balance column.
+function remaining(m) {
+  const cb = m && m.comp_balance;
+  if (cb && typeof cb === 'object') return { massages: parseInt(cb.massages, 10) || 0, hammams: parseInt(cb.hammams, 10) || 0, foot: parseInt(cb.foot, 10) || 0 };
+  return parseBalance(m ? m.balance : '');
+}
 function svcBucket() {
   const cat = (svcCatByName[serviceSel.value.split('|')[0]] || '').toLowerCase();
   if (cat.indexOf('massage') >= 0) return 'massages';
@@ -237,12 +243,12 @@ function prepaidAvailable() {
   if (!loadedMember) return null;
   const bucket = svcBucket();
   if (!bucket) return null;
-  return parseBalance(loadedMember.balance)[bucket] > 0 ? bucket : null;
+  return remaining(loadedMember)[bucket] > 0 ? bucket : null;
 }
 function refreshPrepaid() {
   if (!loadedMember) { prepaidWrap.hidden = true; prepaidChk.checked = false; return; }
   prepaidWrap.hidden = false;
-  const bal = parseBalance(loadedMember.balance);
+  const bal = remaining(loadedMember);
   const bucket = prepaidAvailable();
   if (bucket) {
     prepaidInfo.textContent = `${loadedMember.name} has ${formatBalance(bal)}. Tick to apply one free ${serviceSel.value.split('|')[0]}.`;
@@ -346,9 +352,13 @@ async function saveBooking() {
   // If a complimentary service was redeemed, deduct it from the member's balance.
   if (prepaid && prepaidBucket && loadedMember && window.TajData && TajData.members) {
     try {
-      const bal = parseBalance(loadedMember.balance);
-      bal[prepaidBucket] = Math.max(0, (bal[prepaidBucket] || 0) - 1);
-      loadedMember.balance = formatBalance(bal);
+      const cb = remaining(loadedMember);
+      cb[prepaidBucket] = Math.max(0, (cb[prepaidBucket] || 0) - 1);
+      // Preserve the guest field (Guest Passes) that `remaining` doesn't track.
+      const prevGuest = (loadedMember.comp_balance && typeof loadedMember.comp_balance === 'object')
+        ? (parseInt(loadedMember.comp_balance.guest, 10) || 0) : 0;
+      loadedMember.comp_balance = { massages: cb.massages, hammams: cb.hammams, foot: cb.foot, guest: prevGuest };
+      loadedMember.balance = formatBalance(cb);   // keep the legacy text in step
       loadedMember.servicesUsed = (parseInt(loadedMember.servicesUsed ?? loadedMember.services_used, 10) || 0) + 1;
       await TajData.members.upsert(loadedMember);
     } catch (err) { console.warn('[booking] balance deduct failed:', err); }

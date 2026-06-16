@@ -702,6 +702,7 @@
         endDate:   addYears(today, 1),
         discount:  disc,
         balance:   0,
+        comp_balance: ({ Silver: { massages: 2, hammams: 0, foot: 1, guest: 0 }, Gold: { massages: 6, hammams: 1, foot: 2, guest: 1 } })[tier] || { massages: 0, hammams: 0, foot: 0, guest: 0 },
         totalSpent: price,
         servicesIncluded: services,
         servicesUsed: 0,

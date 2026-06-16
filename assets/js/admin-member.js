@@ -76,6 +76,21 @@ function tierAllowance(tier) {
     Gold:   { massages: 6, hammams: 1, foot: 2, guest: 1 },
   })[tier] || { massages: 0, hammams: 0, foot: 0, guest: 0 };
 }
+function _num(v, d) { const n = parseInt(v, 10); return isNaN(n) ? d : n; }
+// Durable remaining complimentary balance from the members.comp_balance JSONB
+// column; falls back to the legacy text string, then to a full tier allowance.
+function compBalance(m) {
+  const a = tierAllowance(m.tier);
+  const cb = m.comp_balance;
+  if (cb && typeof cb === 'object') {
+    return { massages: _num(cb.massages, a.massages), hammams: _num(cb.hammams, a.hammams), foot: _num(cb.foot, a.foot), guest: _num(cb.guest, a.guest) };
+  }
+  if (m.balance && /[a-z]/i.test(String(m.balance))) {
+    const u = parseUsedFromBalance(m.balance, a);
+    return { massages: Math.max(0, a.massages - u.massages), hammams: Math.max(0, a.hammams - u.hammams), foot: Math.max(0, a.foot - u.foot), guest: a.guest };
+  }
+  return { massages: a.massages, hammams: a.hammams, foot: a.foot, guest: a.guest };
+}
 
 function tierPerks(tier) {
   return ({
@@ -199,21 +214,21 @@ function render() {
     freezeBtn.innerHTML = '<i class="fas fa-pause"></i> Freeze Membership';
   }
 
-  // Balance list
+  // Balance list — remaining comes from the durable comp_balance column.
   const allowance = tierAllowance(member.tier);
-  const used = parseUsedFromBalance(member.balance, allowance);
-
+  const remain = compBalance(member);
   const balances = [
-    { name: 'Signature Massages', icon: 'fa-spa', total: allowance.massages, used: used.massages },
-    { name: 'Royal Hammam', icon: 'fa-hot-tub', total: allowance.hammams, used: used.hammams },
-    { name: 'Foot Rituals', icon: 'fa-shoe-prints', total: allowance.foot, used: used.foot },
-    { name: 'Guest Passes', icon: 'fa-user-friends', total: allowance.guest, used: used.guest || 0 },
+    { name: 'Signature Massages', icon: 'fa-spa', total: allowance.massages, remaining: Math.min(remain.massages, allowance.massages) },
+    { name: 'Royal Hammam', icon: 'fa-hot-tub', total: allowance.hammams, remaining: Math.min(remain.hammams, allowance.hammams) },
+    { name: 'Foot Rituals', icon: 'fa-shoe-prints', total: allowance.foot, remaining: Math.min(remain.foot, allowance.foot) },
+    { name: 'Guest Passes', icon: 'fa-user-friends', total: allowance.guest, remaining: Math.min(remain.guest, allowance.guest) },
   ];
 
   document.getElementById('balance-list').innerHTML = balances.map(b => {
     if (b.total === 0) return '';
-    const remaining = Math.max(0, b.total - b.used);
-    const pct = b.total > 0 ? (b.used / b.total) * 100 : 0;
+    const remaining = Math.max(0, b.remaining);
+    const used = Math.max(0, b.total - remaining);
+    const pct = b.total > 0 ? (used / b.total) * 100 : 0;
     return `
       <li>
         <span class="name"><i class="fas ${b.icon}"></i>${b.name}</span>
@@ -364,6 +379,7 @@ document.getElementById('renew-btn')?.addEventListener('click', () => {
     Gold: '6 massages · 1 hammam · 2 foot rituals'
   };
   member.balance = balanceMap[member.tier];
+  member.comp_balance = tierAllowance(member.tier);   // reset durable allowance
   persist();
   render();
   if (window.TajLog) TajLog.add({ type: 'member', title: `Membership renewed: ${member.name}`, desc: `${member.tier} · 1 year`, ref: member.id, refType: 'member' });
@@ -381,10 +397,53 @@ document.getElementById('upgrade-btn')?.addEventListener('click', () => {
     Gold: '6 massages · 1 hammam · 2 foot rituals'
   };
   member.balance = balanceMap[next];
+  member.comp_balance = tierAllowance(next);          // allowance for the new tier
   persist();
   render();
   if (window.TajLog) TajLog.add({ type: 'member', title: `Tier upgrade: ${member.name}`, desc: `${prev} → ${next}`, ref: member.id, refType: 'member' });
   showToast(`Upgraded to ${next} tier`);
+});
+
+/* ---- Adjust complimentary balance ---- */
+document.getElementById('edit-balance')?.addEventListener('click', () => {
+  const a = tierAllowance(member.tier);
+  const cur = compBalance(member);
+  const cats = [
+    { key: 'massages', label: 'Signature Massages', max: a.massages },
+    { key: 'hammams',  label: 'Royal Hammam',       max: a.hammams },
+    { key: 'foot',     label: 'Foot Rituals',       max: a.foot },
+    { key: 'guest',    label: 'Guest Passes',       max: a.guest },
+  ].filter(c => c.max > 0);
+  if (!cats.length) { alert('This tier has no complimentary services to adjust.'); return; }
+
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(36,19,8,.55);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;';
+  ov.innerHTML = `<div style="background:#fff;border-radius:18px;max-width:420px;width:100%;padding:28px 26px;box-shadow:0 30px 80px rgba(0,0,0,.3);">
+    <h3 style="font-family:var(--f-display);font-weight:500;color:var(--c-deep);margin-bottom:4px;">Adjust Balance</h3>
+    <p style="color:var(--c-text-soft);font-size:.86rem;margin-bottom:18px;">Set the complimentary services remaining for ${member.name} this membership year.</p>
+    ${cats.map(c => `<div class="field" style="margin-bottom:12px;"><label>${c.label} <small style="color:var(--c-text-soft);">/ ${c.max} per year</small></label><input type="number" id="adj-${c.key}" min="0" max="${c.max}" value="${Math.min(cur[c.key], c.max)}"></div>`).join('')}
+    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:16px;">
+      <button class="btn btn--outline" id="adj-cancel" style="padding:11px 20px;">Cancel</button>
+      <button class="btn btn--primary" id="adj-save" style="padding:11px 22px;"><i class="fas fa-save"></i> Save</button>
+    </div></div>`;
+  document.body.appendChild(ov);
+  const close = () => ov.remove();
+  ov.addEventListener('click', e => { if (e.target === ov) close(); });
+  ov.querySelector('#adj-cancel').addEventListener('click', close);
+  ov.querySelector('#adj-save').addEventListener('click', async () => {
+    const next = Object.assign({}, cur);
+    cats.forEach(c => {
+      let v = parseInt(ov.querySelector('#adj-' + c.key).value, 10);
+      if (isNaN(v)) v = 0;
+      next[c.key] = Math.max(0, Math.min(v, c.max));
+    });
+    member.comp_balance = next;
+    await persist();
+    render();
+    close();
+    showToast('Balance updated');
+    if (window.TajLog) TajLog.add({ type: 'note', title: `Balance adjusted: ${member.name}`, desc: member.tier, ref: member.id, refType: 'member' });
+  });
 });
 
 document.getElementById('freeze-btn')?.addEventListener('click', () => {
