@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Therapist Editor — Taj Al Sukun Admin</title>
+<link rel="icon" type="image/png" href="assets/images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css?v=20260604h">
+<style>
+  .th-chips{display:flex;flex-wrap:wrap;gap:6px;min-height:26px;margin:4px 0 8px}
+  .th-chip{display:inline-flex;align-items:center;gap:7px;background:var(--c-cream-2);color:var(--c-deep);border-radius:999px;padding:6px 13px;font-size:.86rem}
+  .th-chip button{background:none;border:0;color:var(--c-muted);cursor:pointer;font-size:1.1rem;line-height:1;padding:0}
+  .th-chip button:hover{color:#c0392b}
+  .th-quick{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+  .th-quick-btn{background:#fff;border:1px solid var(--c-line);border-radius:999px;padding:5px 12px;font-size:.78rem;color:var(--c-text-soft);cursor:pointer;transition:all .15s ease}
+  .th-quick-btn:hover{border-color:var(--c-copper);color:var(--c-deep)}
+  .th-quick-label{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--c-muted);margin-top:12px}
+  /* preview card */
+  .th-prev{background:#fff;border:1px solid var(--c-line);border-radius:var(--r-md);padding:24px;box-shadow:var(--shadow-sm)}
+  .th-prev__head{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+  .th-prev__av{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--c-copper),var(--c-copper-2));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:1.1rem;font-family:var(--f-display)}
+  .th-prev__tags{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+  .th-prev__tags span{background:var(--c-cream-2);border-radius:999px;padding:4px 11px;font-size:.76rem;color:var(--c-deep)}
+  .th-prev__meta div{display:flex;align-items:center;gap:8px;color:var(--c-text-soft);font-size:.84rem;padding:3px 0}
+  .th-prev__meta i{color:var(--c-copper);width:16px}
+  .th-prev__status{margin-left:auto;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;padding:4px 11px;border-radius:999px}
+  .th-prev__status.active{background:rgba(42,138,74,.12);color:#2a8a4a}
+  .th-prev__status.off{background:rgba(138,115,99,.14);color:var(--c-muted)}
+</style>
+</head>
+<body class="admin">
+
+<div class="admin-shell">
+  <aside class="admin-side">
+    <div class="admin-side__brand">
+      <span class="logo-frame"><img src="assets/images/logo.png" alt="" loading="lazy" decoding="async"></span>
+      <div><strong>Taj Al Sukun</strong><small>Admin Console</small></div>
+    </div>
+    <div class="admin-side__label">Workspace</div>
+    <ul class="admin-side__nav">
+      <li><a href="admin.html"><i class="fas fa-th-large"></i> Overview</a></li>
+      <li><a href="admin.html#bookings"><i class="far fa-calendar-check"></i> Bookings</a></li>
+      <li><a href="admin.html#members"><i class="fas fa-crown"></i> Members</a></li>
+      <li><a href="admin.html#calendar"><i class="far fa-calendar-alt"></i> Calendar</a></li>
+      <li><a href="admin.html#reports"><i class="fas fa-chart-line"></i> Reports</a></li>
+    </ul>
+    <div class="admin-side__label">Settings</div>
+    <ul class="admin-side__nav">
+      <li><a href="admin.html#settings" class="active"><i class="fas fa-cog"></i> Spa Settings</a></li>
+      <li><a href="index.html"><i class="fas fa-external-link-alt"></i> View Website</a></li>
+    </ul>
+    <div class="admin-side__user">
+      <div class="av">A</div>
+      <div><strong>Admin</strong><small>admin@tasukunspa.com</small></div>
+      <a id="admin-logout" title="Sign out" href="#"><i class="fas fa-sign-out-alt"></i></a>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-bar">
+      <div class="admin-bar__search"><i class="fas fa-search"></i><input type="text" placeholder="Search…"></div>
+      <div class="admin-bar__actions">
+        <a href="admin.html#sg-therapist" class="btn btn--outline" style="padding: 12px 22px; font-size: 0.7rem;"><i class="fas fa-arrow-left"></i> Back to Therapists</a>
+      </div>
+    </div>
+
+    <div class="admin-content service-editor-page">
+      <div class="admin-page__head">
+        <div>
+          <p style="font-size: 0.74rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--c-text-soft); font-weight: 700; margin-bottom: 6px;">
+            <a href="admin.html" style="color: inherit;">Admin</a> ·
+            <a href="admin.html#settings" style="color: inherit;">Settings</a> ·
+            <a href="admin.html#sg-therapist" style="color: inherit;">Therapists</a> ·
+            <span style="color: var(--c-copper);" id="crumb-mode">New Therapist</span>
+          </p>
+          <h1 id="page-title">Add a Therapist</h1>
+          <p id="page-sub">Saved to the live database — also available when assigning a therapist to a booking.</p>
+        </div>
+        <div class="pay-status-pill" id="th-status-pill"><i class="far fa-clock"></i> New</div>
+      </div>
+
+      <form id="therapist-form" class="pay-grid">
+        <section class="pay-main">
+          <!-- Details -->
+          <div class="panel">
+            <div class="panel__head"><h3><i class="fas fa-user-md" style="color:var(--c-copper); margin-right:10px;"></i>Therapist Details</h3></div>
+            <div class="form-grid">
+              <div class="field full">
+                <label for="th-name">Full Name *</label>
+                <div class="field__input-wrap"><i class="far fa-user"></i><input type="text" id="th-name" placeholder="e.g. Layla Hassan" required></div>
+              </div>
+              <div class="field">
+                <label for="th-role">Role / Title</label>
+                <div class="field__input-wrap"><i class="fas fa-id-badge"></i><input type="text" id="th-role" placeholder="Wellness Therapist"></div>
+              </div>
+              <div class="field">
+                <label for="th-status">Status</label>
+                <div class="field__input-wrap"><i class="fas fa-power-off"></i>
+                  <select id="th-status"><option value="active">Active</option><option value="off">Off</option></select>
+                </div>
+              </div>
+              <div class="field">
+                <label for="th-exp">Experience</label>
+                <div class="field__input-wrap"><i class="far fa-clock"></i><input type="text" id="th-exp" placeholder="e.g. 8 yrs"></div>
+              </div>
+              <div class="field">
+                <label for="th-phone">Phone</label>
+                <div class="field__input-wrap"><i class="fas fa-phone-alt"></i><input type="tel" id="th-phone" placeholder="+973 …"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Languages -->
+          <div class="panel">
+            <div class="panel__head"><h3><i class="fas fa-language" style="color:var(--c-copper); margin-right:10px;"></i>Languages</h3></div>
+            <div id="th-langs-chips" class="th-chips"></div>
+            <input type="text" id="th-langs-input" class="th-chip-input field__input-wrap" style="display:block; width:100%; padding:11px 14px; border:1px solid var(--c-line); border-radius:10px;" placeholder="Type a language, press Enter">
+            <div class="th-quick-label">Quick add</div>
+            <div id="th-langs-quick" class="th-quick"></div>
+          </div>
+
+          <!-- Treatments -->
+          <div class="panel">
+            <div class="panel__head"><h3><i class="fas fa-spa" style="color:var(--c-copper); margin-right:10px;"></i>Treatments / Specialties</h3></div>
+            <p style="color:var(--c-text-soft); font-size:0.84rem; margin-bottom:8px;">The treatments this therapist performs. Quick-add from your live services menu, or type any custom treatment.</p>
+            <div id="th-treat-chips" class="th-chips"></div>
+            <input type="text" id="th-treat-input" class="th-chip-input" style="display:block; width:100%; padding:11px 14px; border:1px solid var(--c-line); border-radius:10px;" placeholder="Type a treatment, press Enter">
+            <div class="th-quick-label">From your services menu</div>
+            <div id="th-treat-quick" class="th-quick"></div>
+          </div>
+        </section>
+
+        <!-- Preview -->
+        <aside class="pay-side">
+          <div class="panel__head" style="margin-bottom:14px;"><h3 style="font-size:1.1rem;"><i class="fas fa-eye" style="color:var(--c-copper); margin-right:10px;"></i>Card Preview</h3></div>
+          <div class="th-prev">
+            <div class="th-prev__head">
+              <div class="th-prev__av" id="prev-av">—</div>
+              <div><strong id="prev-name" style="display:block; color:var(--c-deep);">New Therapist</strong><small id="prev-role" style="color:var(--c-text-soft);">Therapist</small></div>
+              <span class="th-prev__status active" id="prev-status">Active</span>
+            </div>
+            <div class="th-prev__tags" id="prev-tags"></div>
+            <div class="th-prev__meta">
+              <div><i class="fas fa-language"></i><span id="prev-langs">EN</span></div>
+              <div><i class="fas fa-clock"></i><span id="prev-exp">—</span> experience</div>
+              <div><i class="fas fa-phone"></i><span id="prev-phone">—</span></div>
+            </div>
+          </div>
+        </aside>
+
+        <div class="pay-footer">
+          <a href="admin.html#sg-therapist" class="btn btn--outline"><i class="fas fa-times"></i> Cancel</a>
+          <button type="button" class="btn btn--outline" id="th-delete" hidden><i class="fas fa-trash"></i> Delete</button>
+          <div class="spacer" style="flex:1"></div>
+          <button type="submit" class="btn btn--gold pay-footer__primary"><i class="fas fa-check-circle"></i> <span id="th-save-label">Add Therapist</span></button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="assets/js/supabase-config.js?v=20260520n" defer></script>
+<script src="assets/js/admin-auth.js?v=20260520n" defer></script>
+<script src="assets/js/taj-data.js?v=20260612b" defer></script>
+<script src="assets/js/admin-shared.js" defer></script>
+<script src="assets/js/admin-therapist.js?v=20260612a" defer></script>
+</body>
+</html>
