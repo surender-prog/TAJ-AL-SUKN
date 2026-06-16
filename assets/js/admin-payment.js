@@ -135,9 +135,27 @@ function renderStatic() {
   setText('sum-receipt-no', receiptNo);
   setText('sum-invoice-no', invoiceNo);
   setText('sum-guest', booking.name || '—');
-  document.getElementById('sum-service').innerHTML =
-    `<strong>${escapeHTML(booking.service || 'Treatment')}</strong>` +
-    `<small>${booking.date || ''} · ${booking.time || ''} · ${booking.therapist || 'Therapist'}</small>`;
+  const sumServiceMeta =
+    `<small>${escapeHTML(booking.date || '')} · ${escapeHTML(booking.time || '')} · ${escapeHTML(booking.therapist || 'Therapist')}</small>`;
+  const invItems = booking.invoice?.items;
+  if (invItems && invItems.length) {
+    // Itemized display for multi-service bookings. Display-only — money totals
+    // still come from the existing single fields (price / invoice.total).
+    document.getElementById('sum-service').innerHTML =
+      invItems.map(it => {
+        const qty = parseFloat(it.qty) || 1;
+        const qtyLabel = qty > 1 ? ` × ${qty}` : '';
+        const lineAmt = it.comp ? 'Complimentary' : bhd(it.lineTotal);
+        const sub = it.dur ? escapeHTML(it.dur) : '';
+        return `<div class="sum-line-item"><strong>${escapeHTML(it.name || 'Treatment')}${qtyLabel}</strong>` +
+          `<span class="sum-line-amt">${lineAmt}</span>` +
+          (sub ? `<small>${sub}</small>` : '') + `</div>`;
+      }).join('') + sumServiceMeta;
+  } else {
+    document.getElementById('sum-service').innerHTML =
+      `<strong>${escapeHTML(booking.service || 'Treatment')}</strong>` +
+      sumServiceMeta;
+  }
 
   setText('sum-subtotal', bhd(amounts.basePrice));
   if (amounts.discount > 0) {

@@ -280,8 +280,20 @@ function render() {
     : '0';
 
   // Most-booked service
+  // For multi-service bookings, count each itemized service separately so a
+  // "A, B" / "A +2 more" booking doesn't mis-bucket as one combined string.
+  // Legacy/website bookings (no invoice.items) keep counting by b.service.
   const counts = {};
-  completedBookings.forEach(b => { counts[b.service] = (counts[b.service] || 0) + 1; });
+  completedBookings.forEach(b => {
+    if (b.invoice?.items?.length) {
+      b.invoice.items.forEach(it => {
+        const name = it.name || b.service;
+        counts[name] = (counts[name] || 0) + 1;
+      });
+    } else {
+      counts[b.service] = (counts[b.service] || 0) + 1;
+    }
+  });
   const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
   document.getElementById('ls-favorite').textContent = top
     ? `${top[0]} · ${top[1]} ${top[1] === 1 ? 'visit' : 'visits'}`

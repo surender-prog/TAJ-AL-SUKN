@@ -11,6 +11,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="assets/css/style.css?v=20260604h">
+<style>
+  /* Itemized receipt lines (multi-service bookings) */
+  #sum-service .sum-line-item{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:6px 14px;padding:6px 0;border-bottom:1px dashed var(--c-line)}
+  #sum-service .sum-line-item:last-of-type{border-bottom:0}
+  #sum-service .sum-line-item strong{color:var(--c-deep);font-weight:600}
+  #sum-service .sum-line-amt{justify-self:end;font-weight:600;color:var(--c-deep);white-space:nowrap}
+  #sum-service .sum-line-item small{grid-column:1 / -1;color:var(--c-muted);font-size:.78rem;margin-top:-2px}
+</style>
 </head>
 <body class="admin">
 

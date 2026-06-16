@@ -416,7 +416,22 @@ function renderInvoice(b) {
   document.getElementById('inv-guest-info').innerHTML = (b.phone || '—') + '<br>Booking ' + b.id + ' · ' + fmtFullDate(b.date) + ' · ' + b.time;
 
   // Line items
-  document.getElementById('inv-items').innerHTML = `
+  if (b.invoice?.items?.length) {
+    // Itemized: one row per structured line item
+    document.getElementById('inv-items').innerHTML = b.invoice.items.map(item => `
+    <tr>
+      <td>
+        <strong>${item.name}</strong>
+        <small>${item.comp ? 'Complimentary' : (b.tier ? b.tier + ' member rate applied' : 'Standard rate')}</small>
+      </td>
+      <td>${item.dur || ''}</td>
+      <td class="r">${item.qty}</td>
+      <td class="r">${item.comp ? fmtMoney(0) : fmtMoney(item.price)}</td>
+      <td class="r"><strong>${item.comp ? fmtMoney(0) : fmtMoney(item.lineTotal)}</strong></td>
+    </tr>
+  `).join('');
+  } else {
+    document.getElementById('inv-items').innerHTML = `
     <tr>
       <td>
         <strong>${b.service}</strong>
@@ -428,6 +443,7 @@ function renderInvoice(b) {
       <td class="r"><strong>${fmtMoney(subtotal)}</strong></td>
     </tr>
   `;
+  }
 
   // Totals
   document.getElementById('inv-subtotal').textContent = fmtMoney(subtotal);
@@ -465,7 +481,9 @@ function renderInvoice(b) {
   // WhatsApp / Email links
   const lines = [
     `*${isReceipt ? 'Receipt' : 'Invoice'}* — ${isReceipt ? b.invoice.number.replace('INV-', 'RCP-') : b.invoice.number}`,
-    `Service: ${b.service} (${getServiceDuration(b.service)})`,
+    ...(b.invoice?.items?.length
+      ? b.invoice.items.map(item => `Service: ${item.name} (${item.dur || ''})${item.comp ? ' — Complimentary' : ''}`)
+      : [`Service: ${b.service} (${getServiceDuration(b.service)})`]),
     `Date: ${fmtFullDate(b.date)} · ${b.time}`,
     '',
     `Subtotal: ${fmtMoney(subtotal)}`,
@@ -1666,8 +1684,21 @@ function renderTopServices(monthBks) {
   const counts = {};
   const revenues = {};
   monthBks.forEach(b => {
-    counts[b.service] = (counts[b.service] || 0) + 1;
-    revenues[b.service] = (revenues[b.service] || 0) + (b.total || 0);
+    if (b.invoice?.items?.length) {
+      // Itemized booking: attribute count + revenue to each line item's service
+      b.invoice.items.forEach(item => {
+        counts[item.name] = (counts[item.name] || 0) + 1;
+        revenues[item.name] = (revenues[item.name] || 0) + (item.lineTotal || 0);
+      });
+    } else {
+      // Legacy: split a comma-joined service string, but attribute revenue only once
+      const names = String(b.service || '').split(',').map(s => s.trim()).filter(Boolean);
+      const list = names.length ? names : [b.service];
+      list.forEach((name, idx) => {
+        counts[name] = (counts[name] || 0) + 1;
+        if (idx === 0) revenues[name] = (revenues[name] || 0) + (b.total || 0);
+      });
+    }
   });
   const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 5);
   if (sorted.length === 0) {

@@ -83,29 +83,38 @@ function render() {
   const isPaid = booking.paid;
   const isReceipt = isPaid;
 
-  // Service unit price (reverse from total which already has member disc).
-  // Guard against legacy/incomplete rows where booking.total is missing —
-  // otherwise every downstream calc cascades to NaN and the invoice
-  // displays "NaN BHD" everywhere.
-  const baseTotal = Number(booking.total) || 0;
+  // Amounts: prefer the authoritative roll-ups persisted on the booking
+  // (admin-created bookings carry subtotal/memberDisc/vat/total/compTotal +
+  // structured items). Fall back to reverse-deriving from booking.total for
+  // legacy/website rows that only have a single total.
+  const inv = booking.invoice || (booking.invoice = {});
+  const ed = inv.extraDiscount || { type: null, value: 0 };
   const memberDiscPct = tierDiscountPct(booking.tier);
-  const unitPrice = memberDiscPct > 0
-    ? +(baseTotal / (1 - memberDiscPct / 100)).toFixed(3)
-    : baseTotal;
-  const subtotal = unitPrice;
-  const memberDisc = memberDiscPct > 0 ? +(subtotal * memberDiscPct / 100).toFixed(3) : 0;
+  let subtotal, compTotal, memberDisc, extraDisc, tax, total;
 
-  const ed = booking.invoice.extraDiscount || { type: null, value: 0 };
-  let extraDisc = 0;
-  if (ed.type === 'percent' && ed.value > 0) {
-    extraDisc = +((subtotal - memberDisc) * ed.value / 100).toFixed(3);
-  } else if (ed.type === 'fixed' && ed.value > 0) {
-    extraDisc = +Math.min(ed.value, subtotal - memberDisc).toFixed(3);
+  if (inv.total != null) {
+    total      = +(+inv.total).toFixed(3);
+    tax        = +(+inv.vat || 0).toFixed(3);
+    memberDisc = +(+inv.memberDisc || 0).toFixed(3);
+    extraDisc  = +((ed && ed.amount) || 0).toFixed(3);
+    compTotal  = +(+inv.compTotal || 0).toFixed(3);
+    subtotal   = inv.subtotal != null
+      ? +(+inv.subtotal).toFixed(3)
+      : +(total - tax + compTotal + memberDisc + extraDisc).toFixed(3);   // reconstruct gross
+  } else {
+    // Legacy: reverse the gross from booking.total (already net of member disc).
+    const baseTotal = Number(booking.total) || 0;
+    const unitPrice = memberDiscPct > 0 ? +(baseTotal / (1 - memberDiscPct / 100)).toFixed(3) : baseTotal;
+    subtotal  = unitPrice;
+    compTotal = 0;
+    memberDisc = memberDiscPct > 0 ? +(subtotal * memberDiscPct / 100).toFixed(3) : 0;
+    if (ed.type === 'percent' && ed.value > 0) extraDisc = +((subtotal - memberDisc) * ed.value / 100).toFixed(3);
+    else if (ed.type === 'fixed' && ed.value > 0) extraDisc = +Math.min(ed.value, subtotal - memberDisc).toFixed(3);
+    else extraDisc = 0;
+    const beforeTax = subtotal - memberDisc - extraDisc;
+    tax = +(beforeTax * VAT_RATE).toFixed(3);
+    total = +(beforeTax + tax).toFixed(3);
   }
-
-  const beforeTax = subtotal - memberDisc - extraDisc;
-  const tax = +(beforeTax * VAT_RATE).toFixed(3);
-  const total = +(beforeTax + tax).toFixed(3);
 
   booking.invoice.total = total;
   persist();
@@ -131,7 +140,30 @@ function render() {
   document.getElementById('inv-guest-info').innerHTML = (booking.phone || '—') +
     '<br>Booking ' + booking.id + ' · ' + fmtFullDate(booking.date) + ' · ' + fmtTime(booking.time);
 
-  document.getElementById('inv-items').innerHTML = `
+  const invItems = booking.invoice?.items;
+  if (invItems && invItems.length) {
+    // Itemized display: one row per structured line item. Money cells use
+    // item.lineTotal/price — totals below still read invoice.total/price.
+    document.getElementById('inv-items').innerHTML = invItems.map(it => {
+      const qty = Number(it.qty) || 1;
+      const note = it.comp
+        ? '<small>Complimentary — member balance</small>'
+        : (booking.tier ? '<small>' + booking.tier + ' member rate applied</small>' : '<small>Standard rate</small>');
+      return `
+    <tr>
+      <td>
+        <strong>${it.name}</strong>
+        ${note}
+      </td>
+      <td>${it.dur || getServiceDuration(it.name)}</td>
+      <td class="r">${qty}</td>
+      <td class="r">${fmtMoney(it.price)}</td>
+      <td class="r"><strong>${fmtMoney(it.lineTotal)}</strong></td>
+    </tr>
+  `;
+    }).join('');
+  } else {
+    document.getElementById('inv-items').innerHTML = `
     <tr>
       <td>
         <strong>${booking.service}</strong>
@@ -139,12 +171,19 @@ function render() {
       </td>
       <td>${getServiceDuration(booking.service)}</td>
       <td class="r">1</td>
-      <td class="r">${fmtMoney(unitPrice)}</td>
+      <td class="r">${fmtMoney(subtotal)}</td>
       <td class="r"><strong>${fmtMoney(subtotal)}</strong></td>
     </tr>
   `;
+  }
 
   document.getElementById('inv-subtotal').textContent = fmtMoney(subtotal);
+
+  const compRow = document.getElementById('inv-comp-row');
+  if (compRow) {
+    if (compTotal > 0) { compRow.style.display = ''; document.getElementById('inv-comp').textContent = '−' + fmtMoney(compTotal); }
+    else compRow.style.display = 'none';
+  }
 
   const memberRow = document.getElementById('inv-member-disc-row');
   if (memberDisc > 0) {
@@ -191,11 +230,18 @@ function render() {
   // WhatsApp / Email links
   const lines = [
     `*${isReceipt ? 'Receipt' : 'Invoice'}* — ${docNo}`,
-    `Service: ${booking.service} (${getServiceDuration(booking.service)})`,
-    `Date: ${fmtFullDate(booking.date)} · ${fmtTime(booking.time)}`,
-    '',
-    `Subtotal: ${fmtMoney(subtotal)}`,
   ];
+  if (invItems && invItems.length) {
+    invItems.forEach(it => {
+      const qty = Number(it.qty) || 1;
+      lines.push(`Service: ${it.name} × ${qty} (${it.dur || getServiceDuration(it.name)})${it.comp ? ' — Complimentary' : ''}`);
+    });
+  } else {
+    lines.push(`Service: ${booking.service} (${getServiceDuration(booking.service)})`);
+  }
+  lines.push(`Date: ${fmtFullDate(booking.date)} · ${fmtTime(booking.time)}`);
+  lines.push('');
+  lines.push(`Subtotal: ${fmtMoney(subtotal)}`);
   if (memberDisc > 0) lines.push(`${booking.tier} Discount (${memberDiscPct}%): −${fmtMoney(memberDisc)}`);
   if (extraDisc > 0) lines.push(`${ed.reason || 'Discount'}: −${fmtMoney(extraDisc)}`);
   lines.push(`VAT (10%): ${fmtMoney(tax)}`);
@@ -221,7 +267,9 @@ function render() {
     const html = `
       <div style="font-family:Helvetica,Arial,sans-serif;max-width:540px;margin:0 auto;color:#2D1F14;">
         <h2 style="font-family:Georgia,serif;color:#3D2417;font-weight:500;">${isReceipt ? 'Payment Receipt' : 'Invoice'} — ${docNo}</h2>
-        <p style="color:#5A4636;font-size:14px;">Service: ${booking.service} (${getServiceDuration(booking.service)})<br>Date: ${fmtFullDate(booking.date)} · ${fmtTime(booking.time)}</p>
+        <p style="color:#5A4636;font-size:14px;">${(invItems && invItems.length)
+          ? invItems.map(it => { const qty = Number(it.qty) || 1; return `Service: ${it.name} × ${qty} (${it.dur || getServiceDuration(it.name)})${it.comp ? ' — Complimentary' : ''}`; }).join('<br>')
+          : `Service: ${booking.service} (${getServiceDuration(booking.service)})`}<br>Date: ${fmtFullDate(booking.date)} · ${fmtTime(booking.time)}</p>
         <table style="width:100%;border-collapse:collapse;font-size:14px;margin-top:8px;">
           <tr><td style="padding:6px 0;color:#8A7363;">Subtotal</td><td style="padding:6px 0;text-align:right;">${fmtMoney(subtotal)}</td></tr>
           ${memberDisc > 0 ? `<tr><td style="padding:6px 0;color:#8A7363;">${booking.tier} Discount (${memberDiscPct}%)</td><td style="padding:6px 0;text-align:right;">−${fmtMoney(memberDisc)}</td></tr>` : ''}
