@@ -226,7 +226,8 @@ function renderBookings() {
             <a class="icon-btn view-bk" title="View Details"><i class="fas fa-eye"></i></a>
             <a class="icon-btn invoice-bk" title="Invoice / Receipt" style="color: var(--c-copper);"><i class="fas fa-file-invoice"></i></a>
             <a class="icon-btn confirm-bk" title="Confirm"><i class="fas fa-check"></i></a>
-            <a class="icon-btn danger cancel-bk" title="Cancel"><i class="fas fa-times"></i></a>
+            <a class="icon-btn danger cancel-bk" title="Cancel booking"><i class="fas fa-times"></i></a>
+            <a class="icon-btn danger delete-bk" title="Delete permanently"><i class="fas fa-trash"></i></a>
           </td>
         </tr>
       `).join('');
@@ -284,6 +285,25 @@ function renderBookings() {
       }
       renderBookings();
     }
+  }));
+  tbody.querySelectorAll('.delete-bk').forEach(b => b.addEventListener('click', async e => {
+    const id = e.target.closest('tr').dataset.id;
+    const bk = bookings.find(x => x.id === id);
+    if (!confirm(`Permanently delete this booking${bk ? ' for ' + bk.name : ''}? This removes it for good and cannot be undone.`)) return;
+    const btn = e.target.closest('.delete-bk');
+    if (btn) { btn.style.pointerEvents = 'none'; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; }
+    // Remove from the data layer (Supabase + localStorage mirror), then from
+    // this view's in-memory list.
+    try { if (window.TajData && TajData.bookings && TajData.bookings.remove) await TajData.bookings.remove(id); }
+    catch (err) { console.warn('[booking delete]', err); }
+    const idx = bookings.findIndex(x => x.id === id);
+    if (idx >= 0) bookings.splice(idx, 1);
+    persist();
+    if (window.TajLog) {
+      TajLog.add({ type: 'cancel', title: `Booking deleted: ${bk ? bk.name : id}`, desc: bk ? `${bk.service} · ${TajFmt.date(bk.date)} ${TajFmt.time(bk.time)}` : '', ref: id, refType: 'booking' });
+      if (typeof renderBell === 'function') renderBell();
+    }
+    renderBookings();
   }));
 }
 
