@@ -11,6 +11,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="assets/css/style.css?v=20260604h">
+<style>
+  .svc-combo{position:relative}
+  .svc-combo__icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--c-copper);font-size:.9rem;pointer-events:none}
+  .svc-combo__chev{position:absolute;right:15px;top:50%;transform:translateY(-50%);color:var(--c-muted);font-size:.78rem;pointer-events:none}
+  .svc-combo__input{width:100%;padding:13px 40px;border:1px solid var(--c-line);border-radius:10px;font:inherit;color:var(--c-deep);background:#fff}
+  .svc-combo__input:focus{outline:none;border-color:var(--c-copper);box-shadow:0 0 0 3px rgba(176,120,73,.12)}
+  .svc-combo__list{position:absolute;z-index:60;left:0;right:0;top:calc(100% + 6px);max-height:340px;overflow:auto;background:#fff;border:1px solid var(--c-line);border-radius:12px;box-shadow:var(--shadow-md);padding:6px}
+  .svc-combo__item{padding:11px 14px;border-radius:8px;cursor:pointer;font-size:.92rem;display:flex;justify-content:space-between;gap:14px;align-items:baseline}
+  .svc-combo__item .nm{font-weight:500;color:var(--c-deep)}
+  .svc-combo__item small{color:var(--c-muted);font-size:.78rem;white-space:nowrap}
+  .svc-combo__item:hover,.svc-combo__item.is-active{background:var(--c-cream-2)}
+  .svc-combo__empty{padding:16px;text-align:center;color:var(--c-muted);font-size:.86rem}
+</style>
 </head>
 <body class="admin">
 
@@ -100,9 +113,13 @@
               <div class="builder-grid">
                 <div class="field full">
                   <label>Treatment <small style="color:var(--c-text-soft); font-weight:400; margin-left:8px;"><i class="fas fa-link"></i> driven by <a href="admin.html#sg-services" style="color:var(--c-copper);">Services master</a></small></label>
-                  <select name="service" id="bk-service" required data-dynamic>
-                    <!-- Filled at boot from taj-services -->
-                  </select>
+                  <div class="svc-combo" id="bk-service-combo">
+                    <i class="fas fa-search svc-combo__icon"></i>
+                    <input type="text" id="bk-service-search" class="svc-combo__input" placeholder="Search treatments…" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="bk-service-list">
+                    <i class="fas fa-chevron-down svc-combo__chev"></i>
+                    <input type="hidden" id="bk-service" name="service" required>
+                    <div class="svc-combo__list" id="bk-service-list" role="listbox" hidden></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -301,9 +318,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="assets/js/supabase-config.js?v=20260520n" defer></script>
 <script src="assets/js/admin-auth.js?v=20260520n" defer></script>
-<script src="assets/js/taj-data.js?v=20260612a" defer></script>
+<script src="assets/js/taj-data.js?v=20260612b" defer></script>
 <script src="assets/js/page-cms.js?v=20260604j" defer></script>
 <script src="assets/js/admin-shared.js" defer></script>
-<script src="assets/js/admin-new-booking.js" defer></script>
+<script src="assets/js/admin-new-booking.js?v=20260612a" defer></script>
 </body>
 </html>

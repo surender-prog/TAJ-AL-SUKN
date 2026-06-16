@@ -18,22 +18,69 @@ const discReason = document.getElementById('bk-disc-reason');
 const discValue = document.getElementById('bk-disc-value');
 const paidSel = document.getElementById('bk-paid');
 
-// Populate service dropdown from taj-services
+// Searchable treatment picker, driven by the services master. The chosen
+// service is stored in the hidden #bk-service as "name|price|duration" so the
+// existing pricing/save logic stays unchanged.
+let resetService = () => {};
 (function fillServices() {
   if (!serviceSel) return;
+  const searchIn = document.getElementById('bk-service-search');
+  const listEl = document.getElementById('bk-service-list');
+  if (!searchIn || !listEl) return;
+  const escH = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
+
   let list = [];
-  try { list = JSON.parse(localStorage.getItem('taj-services') || '[]') || []; }
-  catch (_) {}
-  const visible = list
+  try { list = JSON.parse(localStorage.getItem('taj-services') || '[]') || []; } catch (_) {}
+  const SVC = list
     .filter(s => s && s.status === 'active' && s.show_in_booking !== false)
-    .sort((a, b) => (a.sort || 0) - (b.sort || 0) || (a.name || '').localeCompare(b.name || ''));
-  if (!visible.length) return; // keep static fallback
-  serviceSel.innerHTML = visible.map((s, i) => {
-    // Use the starting price + first duration
-    const dur = (s.duration || '60 min').split('/')[0].trim();
-    const tag = s.tag ? ' · ' + s.tag : '';
-    return `<option value="${(s.name || '').replace(/"/g,'&quot;')}|${s.price}|${dur}"${i === 0 ? ' selected' : ''}>${(s.name || '')} — ${s.price} BHD (${dur}${tag})</option>`;
-  }).join('');
+    .sort((a, b) => (a.sort || 0) - (b.sort || 0) || (a.name || '').localeCompare(b.name || ''))
+    .map(s => {
+      const dur = (s.duration || '60 min').split('/')[0].trim();
+      const tag = s.tag ? ' · ' + s.tag : '';
+      return { name: s.name || '', price: s.price, dur, meta: `${s.price} BHD · ${dur}${tag}` };
+    });
+  if (!SVC.length) return;
+
+  let activeIdx = -1;
+  const valueOf = it => `${it.name}|${it.price}|${it.dur}`;
+  const open  = () => { listEl.hidden = false; searchIn.setAttribute('aria-expanded', 'true'); };
+  const close = () => { listEl.hidden = true; searchIn.setAttribute('aria-expanded', 'false'); activeIdx = -1; };
+
+  function select(it) {
+    serviceSel.value = valueOf(it);
+    searchIn.value = it.name;
+    close();
+    serviceSel.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  function renderList(q) {
+    const ql = (q || '').trim().toLowerCase();
+    const items = ql ? SVC.filter(s => s.name.toLowerCase().includes(ql)) : SVC;
+    activeIdx = -1;
+    listEl.innerHTML = items.length
+      ? items.map(s => `<div class="svc-combo__item" role="option" data-i="${SVC.indexOf(s)}"><span class="nm">${escH(s.name)}</span><small>${escH(s.meta)}</small></div>`).join('')
+      : '<div class="svc-combo__empty">No treatments match.</div>';
+    listEl.querySelectorAll('.svc-combo__item').forEach(el =>
+      el.addEventListener('mousedown', e => { e.preventDefault(); select(SVC[parseInt(el.dataset.i, 10)]); }));
+  }
+  function highlight() {
+    const items = [...listEl.querySelectorAll('.svc-combo__item')];
+    items.forEach((el, i) => el.classList.toggle('is-active', i === activeIdx));
+    if (items[activeIdx]) items[activeIdx].scrollIntoView({ block: 'nearest' });
+  }
+
+  searchIn.addEventListener('focus', () => { renderList(''); open(); });
+  searchIn.addEventListener('input', () => { renderList(searchIn.value); open(); });
+  searchIn.addEventListener('blur', () => setTimeout(close, 150));
+  searchIn.addEventListener('keydown', e => {
+    const items = [...listEl.querySelectorAll('.svc-combo__item')];
+    if (e.key === 'ArrowDown') { e.preventDefault(); if (listEl.hidden) { renderList(searchIn.value); open(); } activeIdx = Math.min(activeIdx + 1, items.length - 1); highlight(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); activeIdx = Math.max(activeIdx - 1, 0); highlight(); }
+    else if (e.key === 'Enter') { if (!listEl.hidden && items.length) { e.preventDefault(); const el = items[activeIdx] || items[0]; select(SVC[parseInt(el.dataset.i, 10)]); } }
+    else if (e.key === 'Escape') { close(); }
+  });
+
+  resetService = () => select(SVC[0]);
+  select(SVC[0]);          // default selection so pricing shows immediately
 })();
 
 // Set today as default date
@@ -260,7 +307,7 @@ document.getElementById('save-and-new')?.addEventListener('click', async () => {
   const b = await saveBooking();
   if (b) {
     form.reset();
-    serviceSel.selectedIndex = 0;
+    resetService();
     timeIn.value = '14:00';
     discType.value = '';
     discValue.value = '';
