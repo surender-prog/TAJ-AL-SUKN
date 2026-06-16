@@ -985,35 +985,22 @@
           <div class="panel__head">
             <h3><i class="fas fa-user-shield" style="color:var(--c-copper); margin-right:10px;"></i>Admin Users</h3>
             <div class="section-actions">
-              <button class="btn btn--primary"><i class="fas fa-plus"></i> Invite User</button>
+              <button class="btn btn--primary" id="invite-user-btn"><i class="fas fa-plus"></i> Invite User</button>
             </div>
           </div>
+          <p style="color:var(--c-text-soft); margin-bottom:14px;">Manage who can sign in and what they can access. A user's <strong>role</strong> decides which admin sections they see.</p>
+          <div class="role-legend" style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px; font-size:0.8rem;">
+            <span style="display:inline-flex; align-items:center; padding:5px 12px; border:1px solid var(--c-line); border-radius:999px;"><span class="badge-tier gold" style="margin-right:6px;">Owner</span> Full access</span>
+            <span style="display:inline-flex; align-items:center; padding:5px 12px; border:1px solid var(--c-line); border-radius:999px;"><span class="badge-tier silver" style="margin-right:6px;">Manager</span> Everything except Admin Users</span>
+            <span style="display:inline-flex; align-items:center; padding:5px 12px; border:1px solid var(--c-line); border-radius:999px;"><span class="badge-tier platinum" style="margin-right:6px;">Receptionist</span> Bookings, Members &amp; Calendar</span>
+          </div>
           <table class="dtable">
-            <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Last Active</th><th class="cell-actions">Actions</th></tr></thead>
-            <tbody>
-              <tr>
-                <td><div class="cell-name"><div class="av">A</div><div><strong>Admin</strong><small>Owner</small></div></div></td>
-                <td>admin@tasukunspa.com</td>
-                <td><span class="badge-tier gold">Owner</span></td>
-                <td>Just now</td>
-                <td class="cell-actions"><a class="icon-btn" title="Edit"><i class="fas fa-pen"></i></a></td>
-              </tr>
-              <tr>
-                <td><div class="cell-name"><div class="av">S</div><div><strong>Sofia</strong><small>Spa Director</small></div></div></td>
-                <td>sofia@tasukunspa.com</td>
-                <td><span class="badge-tier silver">Manager</span></td>
-                <td>2 hours ago</td>
-                <td class="cell-actions"><a class="icon-btn" title="Edit"><i class="fas fa-pen"></i></a></td>
-              </tr>
-              <tr>
-                <td><div class="cell-name"><div class="av">R</div><div><strong>Reception</strong><small>Front Desk</small></div></div></td>
-                <td>reception@tasukunspa.com</td>
-                <td><span class="badge-tier platinum">Receptionist</span></td>
-                <td>Yesterday</td>
-                <td class="cell-actions"><a class="icon-btn" title="Edit"><i class="fas fa-pen"></i></a></td>
-              </tr>
+            <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th class="cell-actions">Actions</th></tr></thead>
+            <tbody id="admins-tbody">
+              <tr><td colspan="5" style="text-align:center; color:var(--c-text-soft); padding:24px;">Loading users…</td></tr>
             </tbody>
           </table>
+          <p style="font-size:0.8rem; color:var(--c-text-soft); margin-top:16px;"><i class="fas fa-info-circle" style="color:var(--c-copper);"></i> New users sign in with the email you add here, using the login you create for them in Supabase. Their role applies automatically the moment they sign in.</p>
         </div>
 
       </section>
@@ -1223,6 +1210,7 @@
 <script src="assets/js/admin-shared.js" defer></script>
 <script src="assets/js/admin.js?v=20260612a" defer></script>
 <script src="assets/js/admin-smtp.js?v=20260612a" defer></script>
+<script src="assets/js/admin-users.js?v=20260612a" defer></script>
 <script src="assets/js/i18n-data.js?v=20260604h" defer></script>
 <script src="assets/js/admin-upload.js?v=20260520n" defer></script>
 <script src="assets/js/admin-pages.js?v=20260604j" defer></script>
