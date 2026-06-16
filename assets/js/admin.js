@@ -588,7 +588,8 @@ function renderMembers() {
   // Stats
   document.getElementById('stat-silver').textContent = members.filter(m => m.tier === 'Silver').length;
   document.getElementById('stat-gold').textContent = members.filter(m => m.tier === 'Gold').length;
-  document.getElementById('stat-platinum').textContent = members.filter(m => m.tier === 'Platinum').length;
+  const _sp = document.getElementById('stat-platinum');
+  if (_sp) _sp.textContent = members.filter(m => m.tier === 'Platinum').length;
 
   // Wire actions
   tbody.querySelectorAll('.view-mb').forEach(b => b.addEventListener('click', e => {

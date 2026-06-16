@@ -434,7 +434,7 @@
 
     /* ---- Tier cards: rendered from the CMS membership tier list (DB) ---- */
     const qpTier = new URLSearchParams(location.search).get('tier');
-    const TIER_DISCOUNT = { Silver: 10, Gold: 15, Platinum: 20 };
+    const TIER_DISCOUNT = { Silver: 10, Gold: 15 };
     let tierInputs = form.querySelectorAll('input[name="tier"]'); // reassigned after render
 
     const tierChoose = form.querySelector('.tier-choose');

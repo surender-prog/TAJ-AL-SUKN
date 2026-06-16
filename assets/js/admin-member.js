@@ -68,12 +68,13 @@ function statusLabel(s) {
 }
 function tierAnnualPrice(t) { return ({ Silver: 150, Gold: 350, Platinum: 750 })[t] || 0; }
 
+// Complimentary allowances per tier — kept in step with the Membership Tiers
+// editor (Free Massages / Free Hammams / Free Foot Rituals / Guest Passes).
 function tierAllowance(tier) {
   return ({
-    Silver:   { massages: 2,  hammams: 0,  foot: 1, hotstone: 0 },
-    Gold:     { massages: 6,  hammams: 1,  foot: 2, hotstone: 0 },
-    Platinum: { massages: 24, hammams: 12, foot: 24, hotstone: 4 } // unlimited approximated
-  })[tier] || { massages: 0, hammams: 0, foot: 0, hotstone: 0 };
+    Silver: { massages: 2, hammams: 0, foot: 1, guest: 0 },
+    Gold:   { massages: 6, hammams: 1, foot: 2, guest: 1 },
+  })[tier] || { massages: 0, hammams: 0, foot: 0, guest: 0 };
 }
 
 function tierPerks(tier) {
@@ -94,16 +95,6 @@ function tierPerks(tier) {
       'Priority booking — 48 hours ahead',
       '1 guest pass per year',
       'Birthday spa journey (90 min)'
-    ],
-    Platinum: [
-      'Unlimited signature massages (max 2/month)',
-      '12 Royal Hammams per year',
-      '4 Hot Stone sessions included',
-      '20% off additional treatments & products',
-      'Priority booking — anytime',
-      '4 guest passes per year',
-      'Personal therapist match',
-      'Annual gift box of premium products'
     ]
   })[tier] || [];
 }
@@ -213,23 +204,21 @@ function render() {
   const used = parseUsedFromBalance(member.balance, allowance);
 
   const balances = [
-    { name: 'Signature Massages', icon: 'fa-spa', total: allowance.massages, used: used.massages, isInfinite: member.tier === 'Platinum' },
+    { name: 'Signature Massages', icon: 'fa-spa', total: allowance.massages, used: used.massages },
     { name: 'Royal Hammam', icon: 'fa-hot-tub', total: allowance.hammams, used: used.hammams },
-    { name: 'Foot Rituals', icon: 'fa-shoe-prints', total: allowance.foot, used: used.foot, isInfinite: member.tier === 'Platinum' },
+    { name: 'Foot Rituals', icon: 'fa-shoe-prints', total: allowance.foot, used: used.foot },
+    { name: 'Guest Passes', icon: 'fa-user-friends', total: allowance.guest, used: used.guest || 0 },
   ];
-  if (allowance.hotstone > 0) balances.push({ name: 'Hot Stone Therapy', icon: 'fa-fire', total: allowance.hotstone, used: used.hotstone });
 
   document.getElementById('balance-list').innerHTML = balances.map(b => {
     if (b.total === 0) return '';
     const remaining = Math.max(0, b.total - b.used);
     const pct = b.total > 0 ? (b.used / b.total) * 100 : 0;
-    const display = b.isInfinite ? '∞' : remaining;
-    const sub = b.isInfinite ? 'unlimited' : `of ${b.total} left`;
     return `
       <li>
         <span class="name"><i class="fas ${b.icon}"></i>${b.name}</span>
         <div class="bar"><div class="bar__fill" style="width:${Math.min(100, pct)}%;"></div></div>
-        <span class="count">${display}<small> ${sub}</small></span>
+        <span class="count">${remaining}<small> of ${b.total} left</small></span>
       </li>
     `;
   }).join('');
@@ -372,8 +361,7 @@ document.getElementById('renew-btn')?.addEventListener('click', () => {
   // Reset balance based on tier
   const balanceMap = {
     Silver: '2 massages · 1 foot ritual',
-    Gold: '6 massages · 1 hammam · 2 foot rituals',
-    Platinum: '∞ massages · 12 hammams · 4 hot stone'
+    Gold: '6 massages · 1 hammam · 2 foot rituals'
   };
   member.balance = balanceMap[member.tier];
   persist();
@@ -384,14 +372,13 @@ document.getElementById('renew-btn')?.addEventListener('click', () => {
 
 document.getElementById('upgrade-btn')?.addEventListener('click', () => {
   const prev = member.tier;
-  const next = { Silver: 'Gold', Gold: 'Platinum', Platinum: null }[member.tier];
-  if (!next) { alert('Already at the highest tier (Platinum).'); return; }
+  const next = { Silver: 'Gold', Gold: null }[member.tier];
+  if (!next) { alert('Already at the highest tier (Gold).'); return; }
   if (!confirm(`Upgrade ${member.name} from ${member.tier} to ${next}?`)) return;
   member.tier = next;
   const balanceMap = {
     Silver: '2 massages · 1 foot ritual',
-    Gold: '6 massages · 1 hammam · 2 foot rituals',
-    Platinum: '∞ massages · 12 hammams · 4 hot stone'
+    Gold: '6 massages · 1 hammam · 2 foot rituals'
   };
   member.balance = balanceMap[next];
   persist();

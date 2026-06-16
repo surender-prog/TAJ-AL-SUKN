@@ -281,13 +281,6 @@
           price: '350', unit: 'BHD · per year', discount: '15', services: '14',
           perks: '**6 complimentary** 60-min signature massages\n**1 Royal Hammam** ritual included\n**2 complimentary** foot rituals\n**15% off** all additional treatments\nPriority booking — 48 hours ahead\n**1 guest pass** per year\nWelcome Hammam ritual on signup\nBirthday spa journey (90 min)\nMembers-only seasonal events',
           ctaLabel: 'Become Gold', icon: 'fas fa-crown', featured: true
-        },
-        {
-          tier: 'Platinum', name: 'The Royal Circle',
-          sub:  'Unlimited stillness — the highest tier of care, for the most devoted.',
-          price: '750', unit: 'BHD · per year', discount: '20', services: '30',
-          perks: '**Unlimited** signature massages (max 2/month)\n**12 Royal Hammams** per year\n**4 Hot Stone** sessions included\n**20% off** additional treatments & products\nPriority booking — anytime\n**4 guest passes** per year\nWelcome Sultan Suite ritual\nPersonal therapist match\nBirthday Day at the Spa (4 hours)\nAnnual gift box of premium products\nConcierge appointment scheduling',
-          ctaLabel: 'Become Platinum', icon: 'fas fa-star', featured: false
         }
       ] },
       hero: {
@@ -331,7 +324,7 @@
         eyebrow: 'How Membership Works',
         title:   'Simple, *transparent*, generous.',
         s1Title: 'Choose Your Tier',
-        s1Body:  'Silver, Gold, or Platinum — pick the package that matches your rhythm.',
+        s1Body:  'Silver or Gold — pick the package that matches your rhythm.',
         s2Title: 'Pay Annually',
         s2Body:  'One-time annual payment via bank transfer or in-spa. No monthly fees.',
         s3Title: 'Welcome Ritual',
@@ -347,14 +340,14 @@
         p2Title: 'Priority Booking',
         p2Body:  'Members get first access to evenings, weekends, and seasonal slots.',
         p3Title: 'Bring a Guest',
-        p3Body:  'Gold & Platinum members receive guest passes — share the stillness.',
+        p3Body:  'Gold members receive guest passes — share the stillness.',
         p4Title: 'Birthday Treat',
         p4Body:  'A complimentary celebration ritual on or around your birthday, every year.'
       },
       faq: {
         eyebrow: 'Frequently Asked',
         title:   'Questions, *answered*.',
-        items: "Q: How long is membership valid?\nA: 12 months from the date of activation. Reminders are sent 30 days before renewal.\n\nQ: Can I share my membership with family?\nA: Memberships are personal, but Gold and Platinum tiers include guest passes for sharing. Family memberships available — speak with our team.\n\nQ: What happens if I don't use all my included services?\nA: Unused services don't roll over, but you receive renewal incentives if you've used the majority of your benefits in your first year.\n\nQ: Can I upgrade from Silver to Gold mid-year?\nA: Yes. The pro-rated difference is applied and your benefits upgrade immediately.\n\nQ: How do I pay?\nA: Pay in person at the spa, by bank transfer, or via our secure online payment link sent over WhatsApp.\n\nQ: Are corporate or wellness packages available?\nA: Yes — we offer customized corporate wellness memberships for teams of 5 or more. Contact us for details."
+        items: "Q: How long is membership valid?\nA: 12 months from the date of activation. Reminders are sent 30 days before renewal.\n\nQ: Can I share my membership with family?\nA: Memberships are personal, but the Gold tier includes a guest pass for sharing. Family memberships available — speak with our team.\n\nQ: What happens if I don't use all my included services?\nA: Unused services don't roll over, but you receive renewal incentives if you've used the majority of your benefits in your first year.\n\nQ: Can I upgrade from Silver to Gold mid-year?\nA: Yes. The pro-rated difference is applied and your benefits upgrade immediately.\n\nQ: How do I pay?\nA: Pay in person at the spa, by bank transfer, or via our secure online payment link sent over WhatsApp.\n\nQ: Are corporate or wellness packages available?\nA: Yes — we offer customized corporate wellness memberships for teams of 5 or more. Contact us for details."
       },
       quote: {
         quote: '"Membership at Taj Al Sukun means *coming home* — to a team that knows your preferences, your pressure points, and your favorite tea."',
