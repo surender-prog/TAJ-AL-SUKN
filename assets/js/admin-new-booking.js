@@ -130,7 +130,7 @@ function recalc() {
   const tierOpt = tierSel.options[tierSel.selectedIndex];
   const mDiscPct = (isMember && tierOpt && tierOpt.dataset.discount)
     ? parseInt(tierOpt.dataset.discount, 10) : 0;
-  const mDisc = +(svcPrice * mDiscPct / 100).toFixed(3);
+  let mDisc = +(svcPrice * mDiscPct / 100).toFixed(3);
 
   // Extra discount
   const extraType = discType.value;
@@ -143,9 +143,17 @@ function recalc() {
     eDisc = +Math.min(extraValue, svcPrice - mDisc).toFixed(3);
   }
 
-  const beforeTax = svcPrice - mDisc - eDisc;
-  const tax = +(beforeTax * VAT_RATE).toFixed(3);
-  const total = +(beforeTax + tax).toFixed(3);
+  // Complimentary (prepaid) — the whole treatment is drawn from the member balance.
+  const prepaid = !!(typeof prepaidChk !== 'undefined' && prepaidChk && prepaidChk.checked && prepaidAvailable());
+  let compLabel = null, beforeTax, tax, total;
+  if (prepaid) {
+    mDisc = svcPrice; eDisc = 0; compLabel = 'Complimentary — member balance';
+    beforeTax = 0; tax = 0; total = 0;
+  } else {
+    beforeTax = svcPrice - mDisc - eDisc;
+    tax = +(beforeTax * VAT_RATE).toFixed(3);
+    total = +(beforeTax + tax).toFixed(3);
+  }
 
   // Update preview
   const isPaid = paidSel.value === '1';
@@ -164,7 +172,7 @@ function recalc() {
     <tr>
       <td>
         <strong>${svcName}</strong>
-        <small>${isMember && mDiscPct > 0 ? tierSel.value + ' member rate' : 'Standard rate'}</small>
+        <small>${prepaid ? compLabel : (isMember && mDiscPct > 0 ? tierSel.value + ' member rate' : 'Standard rate')}</small>
       </td>
       <td>${svcDuration}</td>
       <td class="r">1</td>
@@ -177,7 +185,7 @@ function recalc() {
   const mr = document.getElementById('pv-mdisc-row');
   if (mDisc > 0) {
     mr.style.display = '';
-    document.getElementById('pv-mdisc-label').textContent = `${tierSel.value} Discount (${mDiscPct}%)`;
+    document.getElementById('pv-mdisc-label').textContent = compLabel || `${tierSel.value} Discount (${mDiscPct}%)`;
     document.getElementById('pv-mdisc').textContent = '−' + fmt(mDisc);
   } else mr.style.display = 'none';
 
@@ -193,6 +201,88 @@ function recalc() {
   document.getElementById('pv-total').textContent = fmt(total);
 }
 
+/* ---------- Member lookup + complimentary (prepaid) balance ---------- */
+let loadedMember = null;
+const memSearch  = document.getElementById('bk-member-search');
+const memFindBtn = document.getElementById('bk-member-find');
+const memStatus  = document.getElementById('bk-member-status');
+const prepaidWrap = document.getElementById('bk-prepaid-wrap');
+const prepaidChk  = document.getElementById('bk-prepaid');
+const prepaidInfo = document.getElementById('bk-prepaid-info');
+
+// service name → category, to match a treatment to a complimentary bucket
+const svcCatByName = {};
+try { (JSON.parse(localStorage.getItem('taj-services') || '[]') || []).forEach(s => { if (s && s.name) svcCatByName[s.name] = s.category || ''; }); } catch (_) {}
+
+function parseBalance(str) {
+  const s = (str || '').toLowerCase();
+  const n = re => { const m = s.match(re); return m ? parseInt(m[1], 10) : 0; };
+  return { massages: n(/(\d+)\s*massage/), hammams: n(/(\d+)\s*hammam/), foot: n(/(\d+)\s*foot/) };
+}
+function formatBalance(b) {
+  const p = [];
+  if (b.massages) p.push(`${b.massages} massage${b.massages > 1 ? 's' : ''}`);
+  if (b.hammams)  p.push(`${b.hammams} hammam${b.hammams > 1 ? 's' : ''}`);
+  if (b.foot)     p.push(`${b.foot} foot ritual${b.foot > 1 ? 's' : ''}`);
+  return p.join(' · ') || 'no complimentary services left';
+}
+function svcBucket() {
+  const cat = (svcCatByName[serviceSel.value.split('|')[0]] || '').toLowerCase();
+  if (cat.indexOf('massage') >= 0) return 'massages';
+  if (cat.indexOf('hammam') >= 0)  return 'hammams';
+  if (cat.indexOf('foot') >= 0)    return 'foot';
+  return null;
+}
+function prepaidAvailable() {
+  if (!loadedMember) return null;
+  const bucket = svcBucket();
+  if (!bucket) return null;
+  return parseBalance(loadedMember.balance)[bucket] > 0 ? bucket : null;
+}
+function refreshPrepaid() {
+  if (!loadedMember) { prepaidWrap.hidden = true; prepaidChk.checked = false; return; }
+  prepaidWrap.hidden = false;
+  const bal = parseBalance(loadedMember.balance);
+  const bucket = prepaidAvailable();
+  if (bucket) {
+    prepaidInfo.textContent = `${loadedMember.name} has ${formatBalance(bal)}. Tick to apply one free ${serviceSel.value.split('|')[0]}.`;
+    prepaidChk.disabled = false;
+  } else {
+    prepaidInfo.textContent = `Remaining: ${formatBalance(bal)}. The selected treatment isn't covered by the remaining balance.`;
+    prepaidChk.checked = false; prepaidChk.disabled = true;
+  }
+}
+function loadMember(m) {
+  loadedMember = m;
+  form.elements.name.value  = m.name || '';
+  form.elements.phone.value = m.phone || '';
+  if (form.elements.email && !form.elements.email.value) form.elements.email.value = m.email || '';
+  if (m.tier) tierSel.value = m.tier;
+  midInput.value = m.id || '';
+  memberCard.classList.add('active');
+  memStatus.innerHTML = `<span style="color:#2a8a4a; font-weight:600;">✓ ${m.name} · ${m.tier || 'Member'} · ${m.id}</span> — details filled. Edit the guest name above to book for someone else.`;
+  refreshPrepaid();
+  recalc();
+}
+async function findMember() {
+  const q = (memSearch.value || '').trim();
+  if (!q) { memStatus.textContent = 'Enter a phone, email, or member ID.'; return; }
+  memStatus.textContent = 'Searching…';
+  let all = [];
+  try { if (window.TajData && TajData.members) all = await TajData.members.list(); } catch (_) {}
+  const ql = q.toLowerCase();
+  const digits = q.replace(/\D/g, '').replace(/^973/, '');
+  const m = (all || []).find(x =>
+    (x.id || '').toLowerCase() === ql ||
+    (x.email || '').toLowerCase() === ql ||
+    (digits.length >= 6 && (x.phone || '').replace(/\D/g, '').replace(/^973/, '') === digits));
+  if (!m) { memStatus.innerHTML = `<span style="color:#c0392b;">No member found for "${q}".</span> Enter the details above to book as a guest.`; return; }
+  loadMember(m);
+}
+memFindBtn && memFindBtn.addEventListener('click', findMember);
+memSearch  && memSearch.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); findMember(); } });
+prepaidChk && prepaidChk.addEventListener('change', recalc);
+serviceSel.addEventListener('change', refreshPrepaid);
 recalc();
 
 /* ---------- Save booking + invoice ---------- */
@@ -204,7 +294,7 @@ async function saveBooking() {
   const isMember = memberCard.classList.contains('active');
   const tierOpt = tierSel.options[tierSel.selectedIndex];
   const mDiscPct = (isMember && tierOpt && tierOpt.dataset.discount) ? parseInt(tierOpt.dataset.discount, 10) : 0;
-  const mDisc = +(svcPrice * mDiscPct / 100).toFixed(3);
+  let mDisc = +(svcPrice * mDiscPct / 100).toFixed(3);
 
   const extraType = discType.value;
   const extraValue = parseFloat(discValue.value || 0);
@@ -212,9 +302,11 @@ async function saveBooking() {
   if (extraType === 'percent' && extraValue > 0) eDisc = +((svcPrice - mDisc) * extraValue / 100).toFixed(3);
   else if (extraType === 'fixed' && extraValue > 0) eDisc = +Math.min(extraValue, svcPrice - mDisc).toFixed(3);
 
-  const beforeTax = svcPrice - mDisc - eDisc;
-  const tax = +(beforeTax * VAT_RATE).toFixed(3);
-  const total = +(beforeTax + tax).toFixed(3);
+  const prepaid = !!(prepaidChk && prepaidChk.checked && prepaidAvailable());
+  const prepaidBucket = prepaid ? prepaidAvailable() : null;
+  let beforeTax, tax, total;
+  if (prepaid) { mDisc = svcPrice; eDisc = 0; beforeTax = 0; tax = 0; total = 0; }
+  else { beforeTax = svcPrice - mDisc - eDisc; tax = +(beforeTax * VAT_RATE).toFixed(3); total = +(beforeTax + tax).toFixed(3); }
 
   const bookings = JSON.parse(localStorage.getItem('taj-bookings') || '[]');
   const yr = new Date().getFullYear();
@@ -234,7 +326,7 @@ async function saveBooking() {
     time: timeIn.value,
     duration: parseInt((serviceSel.value.split('|')[2] || '60').match(/\d+/)?.[0] || '60', 10),
     therapist: form.elements.therapist.value,
-    notes: form.elements.notes.value,
+    notes: [form.elements.notes.value, prepaid ? 'Complimentary — redeemed from member balance' : ''].filter(Boolean).join(' · '),
     paymentMethod: form.elements.payment_method.value,
     price: +(svcPrice - mDisc).toFixed(3),
     status: isPaid ? 'confirmed' : 'pending',
@@ -250,6 +342,17 @@ async function saveBooking() {
       extraDiscount: extraValue > 0 ? { type: extraType, value: extraValue, reason: discReason.value, amount: eDisc } : { type: null, value: 0 }
     }
   };
+
+  // If a complimentary service was redeemed, deduct it from the member's balance.
+  if (prepaid && prepaidBucket && loadedMember && window.TajData && TajData.members) {
+    try {
+      const bal = parseBalance(loadedMember.balance);
+      bal[prepaidBucket] = Math.max(0, (bal[prepaidBucket] || 0) - 1);
+      loadedMember.balance = formatBalance(bal);
+      loadedMember.servicesUsed = (parseInt(loadedMember.servicesUsed ?? loadedMember.services_used, 10) || 0) + 1;
+      await TajData.members.upsert(loadedMember);
+    } catch (err) { console.warn('[booking] balance deduct failed:', err); }
+  }
 
   // Persist via data layer (Supabase + localStorage mirror), fall back to LS-only
   try {
@@ -313,6 +416,10 @@ document.getElementById('save-and-new')?.addEventListener('click', async () => {
     discValue.value = '';
     paidSel.value = '0';
     memberCard.classList.remove('active');
+    loadedMember = null;
+    if (prepaidWrap) prepaidWrap.hidden = true;
+    if (prepaidChk) prepaidChk.checked = false;
+    if (memStatus) memStatus.textContent = 'Booking for someone else? Find the member for the rate, then edit the guest name above.';
     setTimeout(recalc, 100);
   }
 });

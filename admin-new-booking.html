@@ -153,6 +153,14 @@
                   <span class="switch"></span>
                 </div>
                 <div class="member-card__body">
+                  <div class="field full">
+                    <label>Find member <small style="color:var(--c-text-soft); font-weight:400;">by phone, email, or ID — pre-fills their details</small></label>
+                    <div style="display:flex; gap:8px;">
+                      <input type="text" id="bk-member-search" placeholder="+973 … / email / TAS-…" autocomplete="off" style="flex:1;">
+                      <button type="button" class="btn btn--outline" id="bk-member-find" style="padding:11px 18px; white-space:nowrap;"><i class="fas fa-search"></i> Find</button>
+                    </div>
+                    <p id="bk-member-status" style="font-size:.82rem; margin-top:8px; min-height:18px; color:var(--c-text-soft);">Booking for someone else? Find the member for the rate, then edit the guest name above.</p>
+                  </div>
                   <div class="field">
                     <label>Tier</label>
                     <select id="bk-tier" name="tier">
@@ -165,6 +173,10 @@
                     <label>Member ID</label>
                     <input type="text" id="bk-mid" name="member_id" placeholder="TAS-2025-XXXX">
                   </div>
+                  <label class="field full" id="bk-prepaid-wrap" hidden style="display:flex; align-items:flex-start; gap:10px; padding:12px 14px; border:1px solid var(--c-line); border-radius:10px; margin-top:4px; cursor:pointer;">
+                    <input type="checkbox" id="bk-prepaid" style="margin-top:3px; width:18px; height:18px; accent-color:var(--c-copper);">
+                    <span><strong style="color:var(--c-deep);">Use a complimentary service from balance</strong><br><small id="bk-prepaid-info" style="color:var(--c-text-soft);"></small></span>
+                  </label>
                 </div>
               </div>
             </div>
@@ -320,6 +332,6 @@
 <script src="assets/js/taj-data.js?v=20260612b" defer></script>
 <script src="assets/js/page-cms.js?v=20260612d" defer></script>
 <script src="assets/js/admin-shared.js" defer></script>
-<script src="assets/js/admin-new-booking.js?v=20260612a" defer></script>
+<script src="assets/js/admin-new-booking.js?v=20260612b" defer></script>
 </body>
 </html>
