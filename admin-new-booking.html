@@ -47,6 +47,26 @@
   .mbr-prepaid small{color:var(--c-text-soft)}
   .mbr-change{margin-top:14px;font-size:.8rem;font-weight:600;color:var(--c-copper);background:none;border:0;padding:0;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
   .mbr-change:hover{text-decoration:underline}
+  .mbr-balance{display:flex;align-items:center;gap:9px;padding:11px 14px;border:1px solid var(--c-line);border-radius:10px;margin-top:12px;background:#fff;font-size:.84rem;color:var(--c-text-soft)}
+  .mbr-balance[hidden]{display:none}
+  .mbr-balance i{color:var(--c-copper)}
+  .mbr-balance b{color:var(--c-deep);font-weight:600}
+  /* Chosen services (multi-service) */
+  .svc-chosen{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+  .svc-chosen__item{display:flex;align-items:center;gap:12px;padding:10px 14px;border:1px solid var(--c-line);border-radius:10px;background:var(--c-cream)}
+  .svc-chosen__info{min-width:0}
+  .svc-chosen__nm{font-weight:500;color:var(--c-deep);display:block}
+  .svc-chosen__meta{font-size:.78rem;color:var(--c-muted)}
+  .svc-chosen__comp{font-size:.74rem;color:var(--c-copper);display:flex;align-items:center;gap:5px;margin-left:auto;white-space:nowrap;cursor:pointer;font-weight:600}
+  .svc-chosen__comp input{width:15px;height:15px;accent-color:var(--c-copper);margin:0}
+  .svc-chosen__qty{display:flex;align-items:center;gap:6px;margin-left:auto}
+  .svc-chosen__comp + .svc-chosen__qty{margin-left:14px}
+  .svc-qty__btn{width:26px;height:26px;border:1px solid var(--c-line);border-radius:6px;background:#fff;color:var(--c-deep);cursor:pointer;font-size:1rem;line-height:1;display:flex;align-items:center;justify-content:center}
+  .svc-qty__btn:hover{border-color:var(--c-copper);color:var(--c-copper)}
+  .svc-qty__n{min-width:18px;text-align:center;font-weight:500;color:var(--c-deep)}
+  .svc-chosen__remove{border:none;background:none;color:var(--c-muted);font-size:1.25rem;line-height:1;cursor:pointer;padding:0 2px}
+  .svc-chosen__remove:hover{color:#c0392b}
+  .svc-chosen__empty{font-size:.84rem;color:var(--c-muted);margin:10px 0 0}
 </style>
 </head>
 <body class="admin">
@@ -167,10 +187,9 @@
                     </div>
                   </div>
 
-                  <label class="mbr-prepaid" id="bk-prepaid-wrap" hidden>
-                    <input type="checkbox" id="bk-prepaid" style="margin-top:3px; width:18px; height:18px; accent-color:var(--c-copper);">
-                    <span><strong>Use a complimentary service from balance</strong><br><small id="bk-prepaid-info"></small></span>
-                  </label>
+                  <div class="mbr-balance" id="bk-prepaid-wrap" hidden>
+                    <i class="fas fa-gift"></i> <span id="bk-prepaid-info"></span>
+                  </div>
 
                   <button type="button" class="mbr-change" id="mbr-change"><i class="fas fa-rotate-left"></i> Use a different member / walk-in</button>
                 </div>
@@ -191,17 +210,20 @@
             <!-- 3. Service -->
             <div class="builder-section">
               <h4><span class="step-badge">3</span>Treatment Selection</h4>
-              <p class="help">Choose the service — pricing updates live.</p>
+              <p class="help">Add one or more treatments — pricing updates live. Use the quantity controls for repeats.</p>
               <div class="builder-grid">
                 <div class="field full">
-                  <label>Treatment <small style="color:var(--c-text-soft); font-weight:400; margin-left:8px;"><i class="fas fa-link"></i> driven by <a href="admin.html#sg-services" style="color:var(--c-copper);">Services master</a></small></label>
+                  <label>Add treatment <small style="color:var(--c-text-soft); font-weight:400; margin-left:8px;"><i class="fas fa-link"></i> driven by <a href="admin.html#sg-services" style="color:var(--c-copper);">Services master</a></small></label>
                   <div class="svc-combo" id="bk-service-combo">
                     <i class="fas fa-search svc-combo__icon"></i>
-                    <input type="text" id="bk-service-search" class="svc-combo__input" placeholder="Search treatments…" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="bk-service-list">
+                    <input type="text" id="bk-service-search" class="svc-combo__input" placeholder="Search treatments to add…" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="bk-service-list">
                     <i class="fas fa-chevron-down svc-combo__chev"></i>
                     <input type="hidden" id="bk-service" name="service" required>
+                    <input type="hidden" id="bk-services-json" name="services">
                     <div class="svc-combo__list" id="bk-service-list" role="listbox" hidden></div>
                   </div>
+                  <ul id="bk-service-chosen" class="svc-chosen"></ul>
+                  <p id="bk-service-empty" class="svc-chosen__empty" hidden>Add at least one treatment.</p>
                 </div>
               </div>
             </div>
@@ -342,6 +364,7 @@
             <div class="inv-totals">
               <div class="inv-totals__inner">
                 <div class="row subtotal"><span>Subtotal</span><strong id="pv-subtotal">0.000 BHD</strong></div>
+                <div class="row discount" id="pv-comp-row" style="display:none;"><span>Complimentary — member balance</span><strong id="pv-comp">−0.000 BHD</strong></div>
                 <div class="row discount" id="pv-mdisc-row" style="display:none;"><span id="pv-mdisc-label">Member Discount</span><strong id="pv-mdisc">−0.000 BHD</strong></div>
                 <div class="row discount" id="pv-edisc-row" style="display:none;"><span id="pv-edisc-label">Discount</span><strong id="pv-edisc">−0.000 BHD</strong></div>
                 <div class="row tax"><span>VAT (10%)</span><strong id="pv-tax">0.000 BHD</strong></div>
@@ -376,6 +399,6 @@
 <script src="assets/js/taj-data.js?v=20260612e" defer></script>
 <script src="assets/js/page-cms.js?v=20260612d" defer></script>
 <script src="assets/js/admin-shared.js" defer></script>
-<script src="assets/js/admin-new-booking.js?v=20260617b" defer></script>
+<script src="assets/js/admin-new-booking.js?v=20260617c" defer></script>
 </body>
 </html>

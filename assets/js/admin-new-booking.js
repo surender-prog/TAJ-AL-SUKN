@@ -18,6 +18,10 @@ const discValue = document.getElementById('bk-disc-value');
 const paidSel = document.getElementById('bk-paid');
 let loadedMember = null;          // the member whose rate applies (null = walk-in)
 let bookingMode = 'self';         // 'self' = for the member · 'other' = for someone else
+let chosen = [];                  // selected treatments: [{name,price,dur,durMin,qty,comp,bucket}]
+// service name → category, to match a treatment to a complimentary bucket
+const svcCatByName = {};
+try { (JSON.parse(localStorage.getItem('taj-services') || '[]') || []).forEach(s => { if (s && s.name) svcCatByName[s.name] = s.category || ''; }); } catch (_) {}
 
 // Searchable treatment picker, driven by the services master. The chosen
 // service is stored in the hidden #bk-service as "name|price|duration" so the
@@ -48,10 +52,9 @@ let resetService = () => {};
   const close = () => { listEl.hidden = true; searchIn.setAttribute('aria-expanded', 'false'); activeIdx = -1; };
 
   function select(it) {
-    serviceSel.value = valueOf(it);
-    searchIn.value = it.name;
+    addService(it);          // append to the chosen list (or bump qty)
+    searchIn.value = '';
     close();
-    serviceSel.dispatchEvent(new Event('change', { bubbles: true }));
   }
   function renderList(q) {
     const ql = (q || '').trim().toLowerCase();
@@ -80,8 +83,9 @@ let resetService = () => {};
     else if (e.key === 'Escape') { close(); }
   });
 
-  resetService = () => select(SVC[0]);
-  select(SVC[0]);          // default selection so pricing shows immediately
+  resetService = () => { chosen = [makeLine(SVC[0])]; renderChosen(); };
+  chosen = [makeLine(SVC[0])];   // seed one line so pricing shows immediately
+  renderChosen();
 })();
 
 // Set today as default date
@@ -107,6 +111,117 @@ function fmtTime(t) {
   const display = hh % 12 || 12;
   return `${display}:${m} ${ampm}`;
 }
+function escH(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c])); }
+
+/* ---------- Multi-service line items ---------- */
+function durToMin(dur) { const m = String(dur || '').match(/\d+/); return m ? parseInt(m[0], 10) : 60; }
+function svcBucketFor(name) {
+  const cat = (svcCatByName[name] || '').toLowerCase();
+  if (cat.indexOf('massage') >= 0) return 'massages';
+  if (cat.indexOf('hammam') >= 0)  return 'hammams';
+  if (cat.indexOf('foot') >= 0)    return 'foot';
+  return null;
+}
+function valueOfLine(l) { return `${l.name}|${l.price}|${l.dur}`; }
+function makeLine(svc) {
+  return { name: svc.name || '', price: +svc.price || 0, dur: svc.dur || '60 min', durMin: durToMin(svc.dur), qty: 1, comp: false, bucket: svcBucketFor(svc.name) };
+}
+// Append a treatment to the chosen list, or bump its quantity if already present.
+function addService(svc) {
+  const existing = chosen.find(l => l.name === (svc.name || ''));
+  if (existing) existing.qty += 1;
+  else chosen.push(makeLine(svc));
+  renderChosen();
+}
+function compRemaining() {
+  return loadedMember ? remaining(loadedMember) : { massages: 0, hammams: 0, foot: 0 };
+}
+// Keep complimentary flags valid: only member-eligible lines, and never redeem
+// more of a bucket than the member's remaining balance (qty-aware, greedy).
+function reconcileComp() {
+  const avail = compRemaining();
+  const used = { massages: 0, hammams: 0, foot: 0 };
+  chosen.forEach(l => {
+    if (!loadedMember || !l.bucket) { l.comp = false; return; }
+    if (!l.comp) return;
+    if (used[l.bucket] + l.qty <= (avail[l.bucket] || 0)) used[l.bucket] += l.qty;
+    else l.comp = false;
+  });
+}
+// Paint the chosen list, sync the legacy/structured hidden inputs, recalc.
+function renderChosen() {
+  const listEl = document.getElementById('bk-service-chosen');
+  const emptyEl = document.getElementById('bk-service-empty');
+  if (!listEl) return;
+  reconcileComp();
+  listEl.innerHTML = chosen.map((l, i) => {
+    const lineTotal = +((+l.price || 0) * l.qty).toFixed(3);
+    const compCtrl = (loadedMember && l.bucket)
+      ? `<label class="svc-chosen__comp"><input type="checkbox" data-act="comp" data-i="${i}"${l.comp ? ' checked' : ''}> Complimentary</label>`
+      : '';
+    return `<li class="svc-chosen__item" data-i="${i}">
+      <div class="svc-chosen__info">
+        <span class="svc-chosen__nm">${escH(l.name)}</span>
+        <span class="svc-chosen__meta">${fmt(lineTotal)} · ${escH(l.dur)}</span>
+      </div>
+      ${compCtrl}
+      <div class="svc-chosen__qty">
+        <button type="button" class="svc-qty__btn" data-act="dec" data-i="${i}" aria-label="Decrease quantity">−</button>
+        <span class="svc-qty__n">${l.qty}</span>
+        <button type="button" class="svc-qty__btn" data-act="inc" data-i="${i}" aria-label="Increase quantity">+</button>
+      </div>
+      <button type="button" class="svc-chosen__remove" data-act="remove" data-i="${i}" aria-label="Remove ${escH(l.name)}">×</button>
+    </li>`;
+  }).join('');
+  if (emptyEl) emptyEl.hidden = chosen.length > 0;
+  if (serviceSel) serviceSel.value = chosen.length ? valueOfLine(chosen[0]) : '';
+  const sj = document.getElementById('bk-services-json');
+  if (sj) sj.value = JSON.stringify(chosen);
+  refreshBalance();
+  recalc();
+}
+// Member's remaining complimentary balance summary (informational).
+function refreshBalance() {
+  const wrap = document.getElementById('bk-prepaid-wrap');
+  const info = document.getElementById('bk-prepaid-info');
+  if (!wrap || !info) return;
+  if (!loadedMember) { wrap.hidden = true; return; }
+  const bal = remaining(loadedMember);
+  const guest = (loadedMember.comp_balance && typeof loadedMember.comp_balance === 'object') ? (parseInt(loadedMember.comp_balance.guest, 10) || 0) : 0;
+  const parts = [];
+  if (bal.massages) parts.push(`${bal.massages} massage${bal.massages > 1 ? 's' : ''}`);
+  if (bal.hammams)  parts.push(`${bal.hammams} hammam${bal.hammams > 1 ? 's' : ''}`);
+  if (bal.foot)     parts.push(`${bal.foot} foot ritual${bal.foot > 1 ? 's' : ''}`);
+  if (guest)        parts.push(`${guest} guest pass${guest > 1 ? 'es' : ''}`);
+  info.innerHTML = parts.length
+    ? `<b>${escH(loadedMember.tier || 'Member')} balance:</b> ${parts.join(' · ')}. Tick “Complimentary” on an eligible treatment to redeem.`
+    : `<b>${escH(loadedMember.tier || 'Member')} balance:</b> no complimentary services left this year.`;
+  wrap.hidden = false;
+}
+// Delegated controls for the chosen list (qty, remove, complimentary toggle).
+(function bindChosen() {
+  const listEl = document.getElementById('bk-service-chosen');
+  if (!listEl) return;
+  listEl.addEventListener('click', e => {
+    const btn = e.target.closest('[data-act]');
+    if (!btn) return;
+    const act = btn.dataset.act;
+    const i = parseInt(btn.dataset.i, 10);
+    if (isNaN(i) || !chosen[i]) return;
+    if (act === 'inc') chosen[i].qty += 1;
+    else if (act === 'dec') { if (chosen[i].qty <= 1) chosen.splice(i, 1); else chosen[i].qty -= 1; }
+    else if (act === 'remove') chosen.splice(i, 1);
+    else return;
+    renderChosen();
+  });
+  listEl.addEventListener('change', e => {
+    const cb = e.target.closest('[data-act="comp"]');
+    if (!cb) return;
+    const i = parseInt(cb.dataset.i, 10);
+    if (chosen[i]) chosen[i].comp = cb.checked;
+    renderChosen();   // reconcileComp may revert an over-budget toggle
+  });
+})();
 
 [tierSel, midInput].forEach(el => el && el.addEventListener('input', recalc));
 
@@ -116,43 +231,40 @@ form.querySelectorAll('input, select, textarea').forEach(el => {
   el.addEventListener('change', recalc);
 });
 
-function recalc() {
-  // Service
-  const [svcName, svcPriceStr, svcDuration] = serviceSel.value.split('|');
-  const svcPrice = parseFloat(svcPriceStr);
+// Shared pricing math — used by both the live preview and saveBooking() so the
+// previewed total always equals the saved total (identical rounding order).
+function computeTotals() {
+  let subtotal = 0, compTotal = 0;
+  chosen.forEach(l => {
+    const lineTotal = +((+l.price || 0) * l.qty).toFixed(3);
+    subtotal += lineTotal;
+    if (l.comp) compTotal += lineTotal;
+  });
+  subtotal = +subtotal.toFixed(3);
+  compTotal = +compTotal.toFixed(3);
+  const taxableSubtotal = +(subtotal - compTotal).toFixed(3);
 
-  // Member discount — applies whenever a member is loaded (incl. booking for
-  // someone else on the member's rate).
   const isMember = !!loadedMember;
   const tierOpt = tierSel.options[tierSel.selectedIndex];
-  const mDiscPct = (isMember && tierOpt && tierOpt.dataset.discount)
-    ? parseInt(tierOpt.dataset.discount, 10) : 0;
-  let mDisc = +(svcPrice * mDiscPct / 100).toFixed(3);
+  const mDiscPct = (isMember && tierOpt && tierOpt.dataset.discount) ? parseInt(tierOpt.dataset.discount, 10) : 0;
+  const mDisc = +(taxableSubtotal * mDiscPct / 100).toFixed(3);
 
-  // Extra discount
   const extraType = discType.value;
   const extraValue = parseFloat(discValue.value || 0);
-  const extraReason = discReason.value;
   let eDisc = 0;
-  if (extraType === 'percent' && extraValue > 0) {
-    eDisc = +((svcPrice - mDisc) * extraValue / 100).toFixed(3);
-  } else if (extraType === 'fixed' && extraValue > 0) {
-    eDisc = +Math.min(extraValue, svcPrice - mDisc).toFixed(3);
-  }
+  if (extraType === 'percent' && extraValue > 0) eDisc = +((taxableSubtotal - mDisc) * extraValue / 100).toFixed(3);
+  else if (extraType === 'fixed' && extraValue > 0) eDisc = +Math.min(extraValue, taxableSubtotal - mDisc).toFixed(3);
 
-  // Complimentary (prepaid) — the whole treatment is drawn from the member balance.
-  const prepaid = !!(typeof prepaidChk !== 'undefined' && prepaidChk && prepaidChk.checked && prepaidAvailable());
-  let compLabel = null, beforeTax, tax, total;
-  if (prepaid) {
-    mDisc = svcPrice; eDisc = 0; compLabel = 'Complimentary — member balance';
-    beforeTax = 0; tax = 0; total = 0;
-  } else {
-    beforeTax = svcPrice - mDisc - eDisc;
-    tax = +(beforeTax * VAT_RATE).toFixed(3);
-    total = +(beforeTax + tax).toFixed(3);
-  }
+  const beforeTax = +(taxableSubtotal - mDisc - eDisc).toFixed(3);
+  const tax = +(beforeTax * VAT_RATE).toFixed(3);
+  const total = +(beforeTax + tax).toFixed(3);
+  return { subtotal, compTotal, taxableSubtotal, isMember, mDiscPct, mDisc, extraType, extraValue, eDisc, beforeTax, tax, total };
+}
 
-  // Update preview
+function recalc() {
+  const t = computeTotals();
+
+  // Preview header
   const isPaid = paidSel.value === '1';
   document.getElementById('pv-type').textContent = isPaid ? 'Receipt' : 'Invoice';
   document.getElementById('pv-status').className = 'inv-status ' + (isPaid ? 'paid' : 'draft');
@@ -165,37 +277,39 @@ function recalc() {
   document.getElementById('pv-name').textContent = name;
   document.getElementById('pv-info').innerHTML = (phone === '—' ? 'Enter guest details to begin' : `${phone}<br>${fmtDate(dateIn.value)} · ${fmtTime(timeIn.value)}`);
 
-  document.getElementById('pv-items').innerHTML = `
-    <tr>
-      <td>
-        <strong>${svcName}</strong>
-        <small>${prepaid ? compLabel : (isMember && mDiscPct > 0 ? tierSel.value + ' member rate' : 'Standard rate')}</small>
-      </td>
-      <td>${svcDuration}</td>
-      <td class="r">1</td>
-      <td class="r"><strong>${fmt(svcPrice)}</strong></td>
-    </tr>
-  `;
+  // Line items — one row per chosen treatment
+  document.getElementById('pv-items').innerHTML = chosen.length
+    ? chosen.map(l => {
+        const lineTotal = +((+l.price || 0) * l.qty).toFixed(3);
+        const label = l.comp ? 'Complimentary — member balance'
+          : (t.isMember && t.mDiscPct > 0 ? tierSel.value + ' member rate' : 'Standard rate');
+        return `<tr><td><strong>${escH(l.name)}</strong><small>${label}</small></td><td>${escH(l.dur)}</td><td class="r">${l.qty}</td><td class="r"><strong>${fmt(lineTotal)}</strong></td></tr>`;
+      }).join('')
+    : `<tr><td colspan="4" style="text-align:center;color:var(--c-muted);padding:18px;">No treatments added yet</td></tr>`;
 
-  document.getElementById('pv-subtotal').textContent = fmt(svcPrice);
+  document.getElementById('pv-subtotal').textContent = fmt(t.subtotal);
+
+  const compRow = document.getElementById('pv-comp-row');
+  if (t.compTotal > 0) { compRow.style.display = ''; document.getElementById('pv-comp').textContent = '−' + fmt(t.compTotal); }
+  else compRow.style.display = 'none';
 
   const mr = document.getElementById('pv-mdisc-row');
-  if (mDisc > 0) {
+  if (t.mDisc > 0) {
     mr.style.display = '';
-    document.getElementById('pv-mdisc-label').textContent = compLabel || `${tierSel.value} Discount (${mDiscPct}%)`;
-    document.getElementById('pv-mdisc').textContent = '−' + fmt(mDisc);
+    document.getElementById('pv-mdisc-label').textContent = `${tierSel.value} Discount (${t.mDiscPct}%)`;
+    document.getElementById('pv-mdisc').textContent = '−' + fmt(t.mDisc);
   } else mr.style.display = 'none';
 
   const er = document.getElementById('pv-edisc-row');
-  if (eDisc > 0) {
+  if (t.eDisc > 0) {
     er.style.display = '';
-    const detail = extraType === 'percent' ? ' (' + extraValue + '%)' : '';
-    document.getElementById('pv-edisc-label').textContent = extraReason + detail;
-    document.getElementById('pv-edisc').textContent = '−' + fmt(eDisc);
+    const detail = t.extraType === 'percent' ? ' (' + t.extraValue + '%)' : '';
+    document.getElementById('pv-edisc-label').textContent = discReason.value + detail;
+    document.getElementById('pv-edisc').textContent = '−' + fmt(t.eDisc);
   } else er.style.display = 'none';
 
-  document.getElementById('pv-tax').textContent = fmt(tax);
-  document.getElementById('pv-total').textContent = fmt(total);
+  document.getElementById('pv-tax').textContent = fmt(t.tax);
+  document.getElementById('pv-total').textContent = fmt(t.total);
 }
 
 /* ---------- Member lookup + tabs + complimentary (prepaid) balance ---------- */
@@ -212,8 +326,6 @@ const mbrPill    = document.getElementById('mbr-disc-pill');
 const mbrNote    = document.getElementById('mbr-note');
 const mbrChange  = document.getElementById('mbr-change');
 const prepaidWrap = document.getElementById('bk-prepaid-wrap');
-const prepaidChk  = document.getElementById('bk-prepaid');
-const prepaidInfo = document.getElementById('bk-prepaid-info');
 
 // The discount % carried by the currently selected tier (data-discount on the
 // <option>). This is what auto-maps the member discount to the tier.
@@ -221,10 +333,6 @@ function tierDiscount() {
   const o = tierSel.options[tierSel.selectedIndex];
   return (o && o.dataset.discount) ? parseInt(o.dataset.discount, 10) : 0;
 }
-
-// service name → category, to match a treatment to a complimentary bucket
-const svcCatByName = {};
-try { (JSON.parse(localStorage.getItem('taj-services') || '[]') || []).forEach(s => { if (s && s.name) svcCatByName[s.name] = s.category || ''; }); } catch (_) {}
 
 function parseBalance(str) {
   const s = (str || '').toLowerCase();
@@ -243,32 +351,6 @@ function remaining(m) {
   const cb = m && m.comp_balance;
   if (cb && typeof cb === 'object') return { massages: parseInt(cb.massages, 10) || 0, hammams: parseInt(cb.hammams, 10) || 0, foot: parseInt(cb.foot, 10) || 0 };
   return parseBalance(m ? m.balance : '');
-}
-function svcBucket() {
-  const cat = (svcCatByName[serviceSel.value.split('|')[0]] || '').toLowerCase();
-  if (cat.indexOf('massage') >= 0) return 'massages';
-  if (cat.indexOf('hammam') >= 0)  return 'hammams';
-  if (cat.indexOf('foot') >= 0)    return 'foot';
-  return null;
-}
-function prepaidAvailable() {
-  if (!loadedMember) return null;
-  const bucket = svcBucket();
-  if (!bucket) return null;
-  return remaining(loadedMember)[bucket] > 0 ? bucket : null;
-}
-function refreshPrepaid() {
-  if (!loadedMember) { prepaidWrap.hidden = true; prepaidChk.checked = false; return; }
-  prepaidWrap.hidden = false;
-  const bal = remaining(loadedMember);
-  const bucket = prepaidAvailable();
-  if (bucket) {
-    prepaidInfo.textContent = `${loadedMember.name} has ${formatBalance(bal)}. Tick to apply one free ${serviceSel.value.split('|')[0]}.`;
-    prepaidChk.disabled = false;
-  } else {
-    prepaidInfo.textContent = `Remaining: ${formatBalance(bal)}. The selected treatment isn't covered by the remaining balance.`;
-    prepaidChk.checked = false; prepaidChk.disabled = true;
-  }
 }
 // Switch between "this member" and "book for someone else". The member's tier
 // rate/discount stays applied in both modes — only the guest identity differs.
@@ -308,8 +390,8 @@ function loadMember(m) {
   if (mbrPill) mbrPill.textContent = pct ? `${pct}% off` : 'Member';
   if (findBox)   findBox.hidden = true;
   if (loadedBox) loadedBox.hidden = false;
-  refreshPrepaid();
   setMode('self');                             // fills guest fields, note, recalc
+  renderChosen();                              // repaint comp toggles + balance now a member is loaded
 }
 
 // Clear the member and return to the find / walk-in state.
@@ -324,8 +406,8 @@ function resetMember() {
   form.elements.phone.value = '';
   if (form.elements.email) form.elements.email.value = '';
   if (prepaidWrap) prepaidWrap.hidden = true;
-  if (prepaidChk) prepaidChk.checked = false;
-  recalc();
+  chosen.forEach(l => { l.comp = false; });   // no member → drop complimentary flags
+  renderChosen();
 }
 mbrChange && mbrChange.addEventListener('click', resetMember);
 async function findMember() {
@@ -345,8 +427,6 @@ async function findMember() {
 }
 memFindBtn && memFindBtn.addEventListener('click', findMember);
 memSearch  && memSearch.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); findMember(); } });
-prepaidChk && prepaidChk.addEventListener('change', recalc);
-serviceSel.addEventListener('change', refreshPrepaid);
 
 // Arriving from a member's profile (admin-new-booking.html?member=ID) →
 // auto-fill that member's details and map their tier discount.
@@ -367,25 +447,16 @@ recalc();
 /* ---------- Save booking + invoice ---------- */
 async function saveBooking() {
   if (!form.checkValidity()) { form.reportValidity(); return null; }
+  if (!chosen.length) {
+    const emptyEl = document.getElementById('bk-service-empty');
+    if (emptyEl) emptyEl.hidden = false;
+    return null;
+  }
 
-  const [svcName, svcPriceStr] = serviceSel.value.split('|');
-  const svcPrice = parseFloat(svcPriceStr);
-  const isMember = !!loadedMember;
-  const tierOpt = tierSel.options[tierSel.selectedIndex];
-  const mDiscPct = (isMember && tierOpt && tierOpt.dataset.discount) ? parseInt(tierOpt.dataset.discount, 10) : 0;
-  let mDisc = +(svcPrice * mDiscPct / 100).toFixed(3);
-
-  const extraType = discType.value;
-  const extraValue = parseFloat(discValue.value || 0);
-  let eDisc = 0;
-  if (extraType === 'percent' && extraValue > 0) eDisc = +((svcPrice - mDisc) * extraValue / 100).toFixed(3);
-  else if (extraType === 'fixed' && extraValue > 0) eDisc = +Math.min(extraValue, svcPrice - mDisc).toFixed(3);
-
-  const prepaid = !!(prepaidChk && prepaidChk.checked && prepaidAvailable());
-  const prepaidBucket = prepaid ? prepaidAvailable() : null;
-  let beforeTax, tax, total;
-  if (prepaid) { mDisc = svcPrice; eDisc = 0; beforeTax = 0; tax = 0; total = 0; }
-  else { beforeTax = svcPrice - mDisc - eDisc; tax = +(beforeTax * VAT_RATE).toFixed(3); total = +(beforeTax + tax).toFixed(3); }
+  // Same math as the live preview (computeTotals) so saved === previewed.
+  const tot = computeTotals();
+  const { subtotal, compTotal, taxableSubtotal, isMember, mDiscPct, mDisc, extraType, extraValue, eDisc, tax, total } = tot;
+  const hasComp = compTotal > 0;
 
   const bookings = JSON.parse(localStorage.getItem('taj-bookings') || '[]');
   const yr = new Date().getFullYear();
@@ -393,21 +464,33 @@ async function saveBooking() {
   const id = 'BK-' + yr + '-' + seq;
   const isPaid = paidSel.value === '1';
 
+  // Legacy scalar fields — kept populated for every existing reader.
+  const serviceLabel = chosen.length <= 2
+    ? chosen.map(l => l.name).join(', ')
+    : (chosen[0].name + ' +' + (chosen.length - 1) + ' more');
+  const durationSum = chosen.reduce((s, l) => s + (l.durMin || 0) * l.qty, 0) || 60;
+  // Structured line items — nested in the already-allowlisted `invoice` jsonb.
+  const items = chosen.map(l => ({
+    name: l.name, price: +l.price || 0, dur: l.dur, durMin: l.durMin || 0,
+    qty: l.qty, comp: !!l.comp, bucket: l.bucket || null,
+    lineTotal: +((+l.price || 0) * l.qty).toFixed(3)
+  }));
+
   const booking = {
     id,
     name: form.elements.name.value,
     phone: form.elements.phone.value,
     email: form.elements.email.value,
-    service: svcName,
+    service: serviceLabel,
     tier: isMember ? tierSel.value : null,
     memberId: isMember ? midInput.value : null,
     date: dateIn.value,
     time: timeIn.value,
-    duration: parseInt((serviceSel.value.split('|')[2] || '60').match(/\d+/)?.[0] || '60', 10),
+    duration: durationSum,
     therapist: form.elements.therapist.value,
-    notes: [form.elements.notes.value, prepaid ? 'Complimentary — redeemed from member balance' : ''].filter(Boolean).join(' · '),
+    notes: [form.elements.notes.value, hasComp ? 'Complimentary — redeemed from member balance' : ''].filter(Boolean).join(' · '),
     paymentMethod: form.elements.payment_method.value,
-    price: +(svcPrice - mDisc).toFixed(3),
+    price: +(taxableSubtotal - mDisc).toFixed(3),   // net of member discount (legacy semantic)
     status: isPaid ? 'confirmed' : 'pending',
     source: 'admin',
     paid: isPaid,
@@ -415,24 +498,34 @@ async function saveBooking() {
     invoice: {
       number: 'INV-' + yr + '-' + seq,
       issued: new Date().toISOString().split('T')[0],
-      total,
-      vat: tax,
+      items,
+      subtotal,
+      compTotal,
       memberDisc: mDisc,
-      extraDiscount: extraValue > 0 ? { type: extraType, value: extraValue, reason: discReason.value, amount: eDisc } : { type: null, value: 0 }
+      extraDiscount: extraValue > 0 ? { type: extraType, value: extraValue, reason: discReason.value, amount: eDisc } : { type: null, value: 0 },
+      vat: tax,
+      total
     }
   };
 
-  // If a complimentary service was redeemed, deduct it from the member's balance.
-  if (prepaid && prepaidBucket && loadedMember && window.TajData && TajData.members) {
+  // Deduct complimentary redemptions from the member's balance — aggregate per
+  // bucket across all comp lines (qty-aware), single upsert, preserve guest passes.
+  if (hasComp && loadedMember && window.TajData && TajData.members) {
     try {
       const cb = remaining(loadedMember);
-      cb[prepaidBucket] = Math.max(0, (cb[prepaidBucket] || 0) - 1);
-      // Preserve the guest field (Guest Passes) that `remaining` doesn't track.
+      const dec = { massages: 0, hammams: 0, foot: 0 };
+      let units = 0;
+      chosen.forEach(l => { if (l.comp && l.bucket && dec[l.bucket] !== undefined) { dec[l.bucket] += l.qty; units += l.qty; } });
       const prevGuest = (loadedMember.comp_balance && typeof loadedMember.comp_balance === 'object')
         ? (parseInt(loadedMember.comp_balance.guest, 10) || 0) : 0;
-      loadedMember.comp_balance = { massages: cb.massages, hammams: cb.hammams, foot: cb.foot, guest: prevGuest };
-      loadedMember.balance = formatBalance(cb);   // keep the legacy text in step
-      loadedMember.servicesUsed = (parseInt(loadedMember.servicesUsed ?? loadedMember.services_used, 10) || 0) + 1;
+      loadedMember.comp_balance = {
+        massages: Math.max(0, (cb.massages || 0) - dec.massages),
+        hammams:  Math.max(0, (cb.hammams || 0)  - dec.hammams),
+        foot:     Math.max(0, (cb.foot || 0)     - dec.foot),
+        guest: prevGuest
+      };
+      loadedMember.balance = formatBalance(loadedMember.comp_balance);   // keep legacy text in step
+      loadedMember.servicesUsed = (parseInt(loadedMember.servicesUsed ?? loadedMember.services_used, 10) || 0) + units;
       await TajData.members.upsert(loadedMember);
     } catch (err) { console.warn('[booking] balance deduct failed:', err); }
   }
@@ -493,17 +586,12 @@ document.getElementById('save-and-new')?.addEventListener('click', async () => {
   const b = await saveBooking();
   if (b) {
     form.reset();
-    resetService();
     timeIn.value = '14:00';
     discType.value = '';
     discValue.value = '';
     paidSel.value = '0';
-    memberCard.classList.remove('active');
-    loadedMember = null;
-    if (prepaidWrap) prepaidWrap.hidden = true;
-    if (prepaidChk) prepaidChk.checked = false;
-    if (memStatus) memStatus.textContent = 'Booking for someone else? Find the member for the rate, then edit the guest name above.';
-    setTimeout(recalc, 100);
+    resetMember();        // clears the member, hides balance, drops comp flags
+    resetService();       // resets the chosen list to one default line + renderChosen
   }
 });
 
