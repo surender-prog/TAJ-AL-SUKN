@@ -293,8 +293,9 @@ function render() {
   // Notes
   document.getElementById('notes').value = member.notes || '';
 
-  // Quick action: create booking (passes member id)
-  document.getElementById('qa-book').href = 'admin-new-booking.html';
+  // Quick action: create booking (passes member id so the new-booking page
+  // auto-fills this member's details + maps the tier discount)
+  document.getElementById('qa-book').href = 'admin-new-booking.html?member=' + encodeURIComponent(member.id || '');
 
   // Communication
   const phone = (member.phone || '').replace(/\D/g, '');

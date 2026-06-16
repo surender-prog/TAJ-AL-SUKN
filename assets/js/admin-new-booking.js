@@ -209,6 +209,15 @@ const memStatus  = document.getElementById('bk-member-status');
 const prepaidWrap = document.getElementById('bk-prepaid-wrap');
 const prepaidChk  = document.getElementById('bk-prepaid');
 const prepaidInfo = document.getElementById('bk-prepaid-info');
+const elseWrap   = document.getElementById('bk-else-wrap');
+const elseChk    = document.getElementById('bk-someone-else');
+
+// The discount % carried by the currently selected tier (data-discount on the
+// <option>). This is what auto-maps the member discount to the tier.
+function tierDiscount() {
+  const o = tierSel.options[tierSel.selectedIndex];
+  return (o && o.dataset.discount) ? parseInt(o.dataset.discount, 10) : 0;
+}
 
 // service name → category, to match a treatment to a complimentary bucket
 const svcCatByName = {};
@@ -260,16 +269,37 @@ function refreshPrepaid() {
 }
 function loadMember(m) {
   loadedMember = m;
+  if (elseChk) elseChk.checked = false;
   form.elements.name.value  = m.name || '';
   form.elements.phone.value = m.phone || '';
-  if (form.elements.email && !form.elements.email.value) form.elements.email.value = m.email || '';
-  if (m.tier) tierSel.value = m.tier;
+  if (form.elements.email) form.elements.email.value = m.email || '';
+  if (m.tier) tierSel.value = m.tier;          // → maps the discount to the tier
   midInput.value = m.id || '';
   memberCard.classList.add('active');
-  memStatus.innerHTML = `<span style="color:#2a8a4a; font-weight:600;">✓ ${m.name} · ${m.tier || 'Member'} · ${m.id}</span> — details filled. Edit the guest name above to book for someone else.`;
+  if (elseWrap) elseWrap.hidden = false;
+  const pct = tierDiscount();
+  memStatus.innerHTML = `<span style="color:#2a8a4a; font-weight:600;">✓ ${m.name} · ${m.tier || 'Member'} · ${m.id}</span> — details filled${pct ? `, ${pct}% ${m.tier || 'member'} discount applied` : ''}.`;
   refreshPrepaid();
   recalc();
 }
+// "Booking for someone else": clear the personal fields for the guest's details
+// but keep the member's tier rate / discount + member link. Unticking restores
+// the member's own details.
+function applySomeoneElse() {
+  if (!elseChk) return;
+  if (elseChk.checked) {
+    form.elements.name.value = '';
+    form.elements.phone.value = '';
+    if (form.elements.email) form.elements.email.value = '';
+    const pct = tierDiscount();
+    memStatus.innerHTML = `<span style="color:var(--c-copper); font-weight:600;">Guest booking on ${loadedMember ? loadedMember.name + "’s" : 'the'} membership</span> — enter the guest’s name &amp; phone above${loadedMember && pct ? `; ${pct}% ${loadedMember.tier || 'member'} rate kept` : ''}.`;
+    form.elements.name.focus();
+  } else if (loadedMember) {
+    loadMember(loadedMember);
+  }
+  recalc();
+}
+elseChk && elseChk.addEventListener('change', applySomeoneElse);
 async function findMember() {
   const q = (memSearch.value || '').trim();
   if (!q) { memStatus.textContent = 'Enter a phone, email, or member ID.'; return; }
@@ -289,6 +319,21 @@ memFindBtn && memFindBtn.addEventListener('click', findMember);
 memSearch  && memSearch.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); findMember(); } });
 prepaidChk && prepaidChk.addEventListener('change', recalc);
 serviceSel.addEventListener('change', refreshPrepaid);
+
+// Arriving from a member's profile (admin-new-booking.html?member=ID) →
+// auto-fill that member's details and map their tier discount.
+(async function preloadMemberFromUrl() {
+  let id = '';
+  try { id = new URLSearchParams(location.search).get('member') || ''; } catch (_) {}
+  if (!id) return;
+  memStatus.textContent = 'Loading member…';
+  let all = [];
+  try { if (window.TajData && TajData.members) all = await TajData.members.list(); } catch (_) {}
+  const m = (all || []).find(x => (x.id || '').toLowerCase() === id.toLowerCase());
+  if (m) { if (memSearch) memSearch.value = m.id || ''; loadMember(m); }
+  else { memStatus.textContent = ''; }
+})();
+
 recalc();
 
 /* ---------- Save booking + invoice ---------- */
