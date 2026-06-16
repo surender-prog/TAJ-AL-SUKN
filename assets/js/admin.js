@@ -887,48 +887,95 @@ const SEED_THERAPISTS = [
   { id: 'TH-05', name: 'Lina Nakamura',   role: 'Foot Therapist',     specialties: ['Reflexology', 'Foot Relaxing'], langs: ['EN','JP'],      phone: '+973 37885544', status: 'off',    exp: '4 yrs' },
 ];
 
-let therapists = JSON.parse(localStorage.getItem('taj-therapists') || 'null') || SEED_THERAPISTS;
+const escTh = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
 
-function persistTherapists() {
-  localStorage.setItem('taj-therapists', JSON.stringify(therapists));
+// DB row (specialty: comma text, langs: array) ↔ UI shape (specialties: array)
+function thFromDb(t) {
+  const specialties = Array.isArray(t.specialties) ? t.specialties
+    : (typeof t.specialty === 'string' && t.specialty ? t.specialty.split(/\s*,\s*/).filter(Boolean) : []);
+  const langs = Array.isArray(t.langs) ? t.langs
+    : (typeof t.langs === 'string' && t.langs ? t.langs.split(/\s*,\s*/).filter(Boolean) : ['EN']);
+  return Object.assign({}, t, {
+    role: t.role || 'Therapist', exp: t.exp || '—', phone: t.phone || '—',
+    status: t.status === 'off' ? 'off' : 'active', specialties, langs,
+  });
+}
+function thToDb(t) {
+  return {
+    id: t.id, name: t.name, role: t.role || 'Therapist',
+    specialty: (t.specialties || []).join(', '),
+    langs: (t.langs && t.langs.length) ? t.langs : ['EN'],
+    exp: t.exp || '', phone: t.phone || '', status: t.status === 'off' ? 'off' : 'active',
+  };
+}
+
+let therapists = (JSON.parse(localStorage.getItem('taj-therapists') || 'null') || SEED_THERAPISTS).map(thFromDb);
+
+function mirrorTherapists() { try { localStorage.setItem('taj-therapists', JSON.stringify(therapists.map(thToDb))); } catch (_) {} }
+function nextThId() {
+  const nums = therapists.map(t => parseInt(String(t.id).replace(/\D/g, ''), 10) || 0);
+  return 'T-' + String((nums.length ? Math.max(...nums) : 0) + 1).padStart(2, '0');
+}
+
+async function loadTherapists() {
+  if (window.TajData && TajData.therapists && TajData.therapists.list) {
+    try {
+      const rows = await TajData.therapists.list();
+      if (Array.isArray(rows) && rows.length) therapists = rows.map(thFromDb);
+    } catch (e) { console.warn('[therapists] load', e); }
+  }
+  renderTherapists();
+}
+
+async function saveTherapist(rec) {
+  const row = thToDb(rec);
+  if (window.TajData && TajData.therapists && TajData.therapists.upsert) {
+    try { await TajData.therapists.upsert(row); } catch (e) { console.warn('[therapist save]', e); }
+  }
+  const norm = thFromDb(row);
+  const idx = therapists.findIndex(x => x.id === rec.id);
+  const isNew = idx < 0;
+  if (isNew) therapists.unshift(norm); else therapists[idx] = norm;
+  mirrorTherapists();
+  renderTherapists();
+  if (window.TajLog) TajLog.add({ type: 'note', title: (isNew ? 'Therapist added: ' : 'Therapist updated: ') + rec.name, desc: rec.role, ref: rec.id, refType: 'therapist' });
+}
+async function removeTherapist(id) {
+  const t = therapists.find(x => x.id === id);
+  if (!confirm(`Remove ${t ? t.name : 'this therapist'} from the team? This cannot be undone.`)) return;
+  if (window.TajData && TajData.therapists && TajData.therapists.remove) {
+    try { await TajData.therapists.remove(id); } catch (e) { console.warn('[therapist remove]', e); }
+  }
+  therapists = therapists.filter(x => x.id !== id);
+  mirrorTherapists();
+  renderTherapists();
+}
+async function toggleTherapist(id) {
+  const t = therapists.find(x => x.id === id);
+  if (!t) return;
+  await saveTherapist(Object.assign({}, t, { status: t.status === 'active' ? 'off' : 'active' }));
 }
 
 function renderTherapists() {
   const grid = document.getElementById('therapist-grid');
   if (!grid) return;
-  // Tolerate older shapes: `specialty` (string) and `languages` (string) variants.
-  const norm = t => {
-    let specialties = t.specialties;
-    if (!Array.isArray(specialties)) {
-      specialties = typeof t.specialty === 'string'
-        ? t.specialty.split(/\s*(?:&|,|\/|·)\s*/).filter(Boolean)
-        : (specialties ? [String(specialties)] : ['General']);
-    }
-    let langs = t.langs;
-    if (!Array.isArray(langs)) {
-      langs = typeof t.languages === 'string'
-        ? t.languages.split(/\s*(?:\/|·|,)\s*/).filter(Boolean)
-        : (langs ? [String(langs)] : ['EN']);
-    }
-    return Object.assign({ role: t.role || 'Therapist', exp: t.exp || '—', phone: t.phone || '—' }, t, { specialties, langs });
-  };
-  grid.innerHTML = therapists.map(norm).map(t => `
-    <article class="therapist-card" data-id="${t.id}">
+  grid.innerHTML = therapists.map(t => `
+    <article class="therapist-card" data-id="${escTh(t.id)}">
       <div class="therapist-card__head">
         <div class="therapist-card__avatar">${initials(t.name)}</div>
         <div class="therapist-card__info">
-          <strong>${t.name}</strong>
-          <small>${t.role}</small>
+          <strong>${escTh(t.name)}</strong>
+          <small>${escTh(t.role)}</small>
         </div>
         <span class="therapist-card__status ${t.status}">${t.status === 'active' ? 'Active' : 'Off'}</span>
       </div>
       <div class="therapist-card__tags">
-        ${t.specialties.map(s => `<span class="therapist-card__tag">${s}</span>`).join('')}
+        ${(t.specialties.length ? t.specialties : ['—']).map(s => `<span class="therapist-card__tag">${escTh(s)}</span>`).join('')}
       </div>
       <div class="therapist-card__meta">
-        <div><i class="fas fa-language"></i>${t.langs.join(' · ')}</div>
-        <div><i class="fas fa-clock"></i>${t.exp} experience</div>
-        <div><i class="fas fa-phone"></i>${t.phone}</div>
+        <div><i class="fas fa-language"></i>${t.langs.map(escTh).join(' · ')}</div>
+        <div><i class="fas fa-clock"></i>${escTh(t.exp)} experience</div>
+        <div><i class="fas fa-phone"></i>${escTh(t.phone)}</div>
       </div>
       <div class="therapist-card__actions">
         <a class="icon-btn" data-edit-th title="Edit"><i class="fas fa-pen"></i> Edit</a>
@@ -938,45 +985,125 @@ function renderTherapists() {
     </article>
   `).join('');
 
-  // Wire actions
-  grid.querySelectorAll('[data-toggle-th]').forEach(b => b.addEventListener('click', e => {
-    const id = e.target.closest('[data-id]').dataset.id;
-    const th = therapists.find(x => x.id === id);
-    if (th) { th.status = th.status === 'active' ? 'off' : 'active'; persistTherapists(); renderTherapists(); }
-  }));
-  grid.querySelectorAll('[data-rm-th]').forEach(b => b.addEventListener('click', e => {
-    if (!confirm('Remove this therapist from the team?')) return;
-    const id = e.target.closest('[data-id]').dataset.id;
-    therapists = therapists.filter(x => x.id !== id);
-    persistTherapists();
-    renderTherapists();
-  }));
+  grid.querySelectorAll('[data-toggle-th]').forEach(b => b.addEventListener('click', e => toggleTherapist(e.target.closest('[data-id]').dataset.id)));
+  grid.querySelectorAll('[data-rm-th]').forEach(b => b.addEventListener('click', e => removeTherapist(e.target.closest('[data-id]').dataset.id)));
   grid.querySelectorAll('[data-edit-th]').forEach(b => b.addEventListener('click', e => {
     const id = e.target.closest('[data-id]').dataset.id;
-    const th = therapists.find(x => x.id === id);
-    if (!th) return;
-    const newName = prompt('Therapist name:', th.name);
-    if (!newName) return;
-    th.name = newName;
-    persistTherapists();
-    renderTherapists();
+    openTherapistModal(therapists.find(x => x.id === id) || null);
   }));
 }
 
-document.getElementById('add-therapist')?.addEventListener('click', () => {
-  const name = prompt('Therapist name:');
-  if (!name) return;
-  const role = prompt('Role / title:', 'Wellness Therapist') || 'Wellness Therapist';
-  const specialties = (prompt('Specialties (comma-separated):', 'Swedish, Aromatherapy') || '').split(',').map(s => s.trim()).filter(Boolean);
-  const phone = prompt('Phone:', '+973 ');
-  therapists.unshift({
-    id: 'TH-' + String(therapists.length + 10).padStart(2, '0'),
-    name, role, specialties: specialties.length ? specialties : ['General'],
-    langs: ['EN','AR'], phone: phone || '+973 ', status: 'active', exp: 'New'
+/* ---- Add / Edit modal (with chip inputs for languages & treatments) ---- */
+function ensureThStyles() {
+  if (document.getElementById('th-modal-styles')) return;
+  const s = document.createElement('style');
+  s.id = 'th-modal-styles';
+  s.textContent = '.th-chips{display:flex;flex-wrap:wrap;gap:6px;min-height:26px;margin:4px 0 8px}.th-chip{display:inline-flex;align-items:center;gap:6px;background:var(--c-cream-2);color:var(--c-deep);border-radius:999px;padding:5px 11px;font-size:.82rem}.th-chip button{background:none;border:0;color:var(--c-muted);cursor:pointer;font-size:1.05rem;line-height:1;padding:0}.th-chip-input{width:100%;padding:9px 12px;border:1px solid var(--c-line);border-radius:8px}.th-quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.th-quick-btn{background:#fff;border:1px solid var(--c-line);border-radius:999px;padding:4px 11px;font-size:.76rem;color:var(--c-text-soft);cursor:pointer;transition:all .15s ease}.th-quick-btn:hover{border-color:var(--c-copper);color:var(--c-deep)}';
+  document.head.appendChild(s);
+}
+
+function openTherapistModal(t) {
+  ensureThStyles();
+  const editing = !!t;
+  const mLangs = (t && t.langs ? t.langs.slice() : ['EN']);
+  const mTreat = (t && t.specialties ? t.specialties.slice() : []);
+  let svcNames = [];
+  try { svcNames = [...new Set((JSON.parse(localStorage.getItem('taj-services') || '[]') || []).filter(s => s && s.status === 'active').map(s => s.name))]; } catch (_) {}
+  const langQuick = ['EN', 'AR', 'FR', 'TH', 'ID', 'JP', 'HI', 'UR', 'TL', 'RU'];
+
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(36,19,8,.55);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;overflow:auto;';
+  ov.innerHTML = `<div style="background:#fff;border-radius:18px;max-width:560px;width:100%;padding:28px 26px;box-shadow:0 30px 80px rgba(0,0,0,.3);max-height:92vh;overflow:auto;">
+    <h3 style="font-family:var(--f-display);font-weight:500;color:var(--c-deep);margin-bottom:4px;">${editing ? 'Edit Therapist' : 'Add Therapist'}</h3>
+    <p style="color:var(--c-text-soft);font-size:.86rem;margin-bottom:18px;">Saved to the live database — also available when assigning a therapist to a booking.</p>
+    <div class="form-grid">
+      <div class="field full"><label>Full Name *</label><input type="text" id="th-name" value="${escTh(t ? t.name : '')}" placeholder="e.g. Layla Hassan"></div>
+      <div class="field"><label>Role / Title</label><input type="text" id="th-role" value="${escTh(t ? t.role : 'Wellness Therapist')}" placeholder="Therapist"></div>
+      <div class="field"><label>Status</label><select id="th-status"><option value="active"${!t || t.status !== 'off' ? ' selected' : ''}>Active</option><option value="off"${t && t.status === 'off' ? ' selected' : ''}>Off</option></select></div>
+      <div class="field"><label>Experience</label><input type="text" id="th-exp" value="${escTh(t ? (t.exp === '—' ? '' : t.exp) : '')}" placeholder="e.g. 8 yrs"></div>
+      <div class="field"><label>Phone</label><input type="tel" id="th-phone" value="${escTh(t ? (t.phone === '—' ? '' : t.phone) : '+973 ')}" placeholder="+973 …"></div>
+    </div>
+    <div class="field full" style="margin-top:14px;"><label>Languages</label>
+      <div id="th-langs-chips" class="th-chips"></div>
+      <input type="text" id="th-langs-input" class="th-chip-input" placeholder="type a language, press Enter">
+      <div id="th-langs-quick" class="th-quick"></div>
+    </div>
+    <div class="field full" style="margin-top:14px;"><label>Treatments / Specialties</label>
+      <div id="th-treat-chips" class="th-chips"></div>
+      <input type="text" id="th-treat-input" class="th-chip-input" placeholder="type a treatment, press Enter">
+      <div id="th-treat-quick" class="th-quick"></div>
+    </div>
+    <p id="th-err" style="color:#c0392b;font-size:.82rem;min-height:18px;margin:8px 0;"></p>
+    <div style="display:flex;gap:12px;justify-content:flex-end;">
+      <button class="btn btn--outline" id="th-cancel" style="padding:11px 20px;">Cancel</button>
+      <button class="btn btn--primary" id="th-save" style="padding:11px 22px;"><i class="fas fa-save"></i> ${editing ? 'Save' : 'Add Therapist'}</button>
+    </div>
+  </div>`;
+  document.body.appendChild(ov);
+
+  function drawChips(id, arr, onRemove) {
+    const c = ov.querySelector('#' + id);
+    c.innerHTML = arr.length ? arr.map(v => `<span class="th-chip">${escTh(v)}<button type="button" data-x="${escTh(v)}">&times;</button></span>`).join('')
+      : '<span style="color:var(--c-muted);font-size:.8rem;">none yet</span>';
+    c.querySelectorAll('[data-x]').forEach(b => b.addEventListener('click', () => onRemove(b.dataset.x)));
+  }
+  function drawQuick(id, list, current, onAdd) {
+    const c = ov.querySelector('#' + id);
+    c.innerHTML = list.filter(q => !current.includes(q)).slice(0, 14).map(q => `<button type="button" class="th-quick-btn" data-q="${escTh(q)}">+ ${escTh(q)}</button>`).join('');
+    c.querySelectorAll('[data-q]').forEach(b => b.addEventListener('click', () => onAdd(b.dataset.q)));
+  }
+  function refreshLangs() {
+    drawChips('th-langs-chips', mLangs, v => { mLangs.splice(mLangs.indexOf(v), 1); refreshLangs(); });
+    drawQuick('th-langs-quick', langQuick, mLangs, v => { if (!mLangs.includes(v)) { mLangs.push(v); refreshLangs(); } });
+  }
+  function refreshTreat() {
+    drawChips('th-treat-chips', mTreat, v => { mTreat.splice(mTreat.indexOf(v), 1); refreshTreat(); });
+    drawQuick('th-treat-quick', svcNames, mTreat, v => { if (!mTreat.includes(v)) { mTreat.push(v); refreshTreat(); } });
+  }
+  refreshLangs(); refreshTreat();
+  const wireInput = (id, arr, refresh) => {
+    const inp = ov.querySelector('#' + id);
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        const v = inp.value.trim().replace(/,+$/, '').trim();
+        if (v && !arr.includes(v)) { arr.push(v); refresh(); }
+        inp.value = '';
+      }
+    });
+  };
+  wireInput('th-langs-input', mLangs, refreshLangs);
+  wireInput('th-treat-input', mTreat, refreshTreat);
+
+  const close = () => ov.remove();
+  ov.addEventListener('click', e => { if (e.target === ov) close(); });
+  ov.querySelector('#th-cancel').addEventListener('click', close);
+  ov.querySelector('#th-save').addEventListener('click', async () => {
+    const name = ov.querySelector('#th-name').value.trim();
+    if (!name) { ov.querySelector('#th-err').textContent = 'Name is required.'; return; }
+    // capture any text still in the chip inputs
+    ['th-langs-input', 'th-treat-input'].forEach(id => {
+      const inp = ov.querySelector('#' + id); const v = inp.value.trim().replace(/,+$/, '').trim();
+      if (v) { (id === 'th-langs-input' ? mLangs : mTreat).push(v); inp.value = ''; }
+    });
+    const rec = {
+      id: t ? t.id : nextThId(),
+      name,
+      role: ov.querySelector('#th-role').value.trim() || 'Therapist',
+      exp: ov.querySelector('#th-exp').value.trim() || '—',
+      phone: ov.querySelector('#th-phone').value.trim() || '—',
+      status: ov.querySelector('#th-status').value,
+      langs: mLangs.length ? mLangs : ['EN'],
+      specialties: mTreat,
+    };
+    const btn = ov.querySelector('#th-save'); btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving…';
+    await saveTherapist(rec);
+    close();
   });
-  persistTherapists();
-  renderTherapists();
-});
+}
+
+document.getElementById('add-therapist')?.addEventListener('click', () => openTherapistModal(null));
+loadTherapists();
 
 /* ============================================================
    Services master  (single source of truth for taj-services)

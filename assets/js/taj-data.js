@@ -457,6 +457,11 @@
       if (idx >= 0) all[idx] = final; else all.unshift(final);
       LS.set(K.therapists, all);
       return final;
+    },
+    async remove(id) {
+      if (sb) await sbDelete('therapists', id);
+      const all = (LS.get(K.therapists, []) || []).filter(t => t.id !== id);
+      LS.set(K.therapists, all);
     }
   };
 
