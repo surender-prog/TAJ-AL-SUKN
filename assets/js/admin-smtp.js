@@ -60,12 +60,19 @@
     } catch (e) { console.warn('[smtp] load failed', e); }
   }
 
-  async function save() {
+  async function save(silent) {
     const c = sb();
-    if (!c) { flash('Not connected.', false); return; }
+    if (!c) { if (!silent) flash('Not connected.', false); return false; }
+    // Guard the two fields the server needs to send at all.
+    if (F.enabled().checked && (!F.host().value.trim() || !F.fromEmail().value.trim())) {
+      const miss = !F.host().value.trim() ? F.host() : F.fromEmail();
+      flash('Enter the SMTP Host and From Email before enabling.', false);
+      miss.focus();
+      return false;
+    }
     const btn = $('smtp-save');
     const old = btn ? btn.innerHTML : '';
-    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving…'; }
+    if (btn && !silent) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving…'; }
     const obj = {
       enabled:           !!F.enabled().checked,
       from_name:         F.fromName().value.trim(),
@@ -89,11 +96,13 @@
       const { error } = await c.from('email_settings').update(obj).eq('id', 1);
       if (error) throw error;
       F.password().value = '';
-      flash('SMTP settings saved.', true);
+      if (!silent) flash('SMTP settings saved.', true);
+      return true;
     } catch (e) {
       flash('Save failed: ' + (e.message || e), false);
+      return false;
     } finally {
-      if (btn) { btn.disabled = false; btn.innerHTML = old; }
+      if (btn && !silent) { btn.disabled = false; btn.innerHTML = old; }
     }
   }
 
@@ -101,11 +110,22 @@
     const c = sb();
     const to = ($('smtp-test-to').value || '').trim();
     if (!to) { flash('Enter an address to test.', false); return; }
+    // The server test uses the SAVED settings, so make sure the essentials are
+    // present and persist the current form first — this is what prevents the
+    // "SMTP host / sender not set" error from an unsaved or blank host.
+    if (!F.host().value.trim() || !F.fromEmail().value.trim()) {
+      const miss = !F.host().value.trim() ? F.host() : F.fromEmail();
+      flash('Enter the SMTP Host and From Email first.', false);
+      miss.focus();
+      return;
+    }
+    if (!F.enabled().checked) { flash('Turn on “Enable email sending” first.', false); F.enabled().focus(); return; }
     const btn = $('smtp-test');
     const old = btn ? btn.innerHTML : '';
-    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending…'; }
-    flash('Sending test… (save first if you just changed settings)', true);
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving &amp; sending…'; }
     try {
+      const saved = await save(true);          // persist the current form before testing
+      if (!saved) { return; }
       const { data, error } = await c.functions.invoke('send-email', { body: { type: 'test', to } });
       if (error) throw error;
       if (data && data.ok) flash('Test email sent to ' + to + ' ✓', true);
@@ -119,7 +139,7 @@
 
   function init() {
     if (!$('sg-smtp')) return;
-    $('smtp-save') && $('smtp-save').addEventListener('click', save);
+    $('smtp-save') && $('smtp-save').addEventListener('click', () => save(false));
     $('smtp-test') && $('smtp-test').addEventListener('click', sendTest);
     // Load once the admin client is ready (auth session may resolve async).
     let tries = 0;
