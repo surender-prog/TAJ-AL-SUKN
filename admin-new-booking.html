@@ -23,6 +23,30 @@
   .svc-combo__item small{color:var(--c-muted);font-size:.78rem;white-space:nowrap}
   .svc-combo__item:hover,.svc-combo__item.is-active{background:var(--c-cream-2)}
   .svc-combo__empty{padding:16px;text-align:center;color:var(--c-muted);font-size:.86rem}
+  /* Membership picker (legible light panel) */
+  .mbr-box{background:var(--c-cream);border:1px solid var(--c-line);border-radius:14px;padding:18px 20px}
+  .mbr-find__label{display:block;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--c-text-soft);margin-bottom:8px}
+  .mbr-find__label small{letter-spacing:0;text-transform:none;font-weight:400;color:var(--c-muted);margin-left:6px}
+  .mbr-find__row{display:flex;gap:8px}
+  .mbr-find__row input{flex:1;padding:12px 14px;border:1px solid var(--c-line);border-radius:10px;font:inherit;color:var(--c-deep);background:#fff}
+  .mbr-find__row input:focus{outline:none;border-color:var(--c-copper);box-shadow:0 0 0 3px rgba(176,120,73,.12)}
+  .mbr-hint{font-size:.84rem;margin-top:10px;color:var(--c-text-soft);line-height:1.5}
+  .mbr-tabs{display:flex;gap:6px;background:#fff;border:1px solid var(--c-line);border-radius:12px;padding:5px;margin-bottom:16px}
+  .mbr-tab{flex:1;padding:11px 14px;border-radius:8px;font-size:.86rem;font-weight:600;color:var(--c-text-soft);background:transparent;transition:all .2s ease;display:flex;align-items:center;justify-content:center;gap:8px}
+  .mbr-tab i{font-size:.82rem}
+  .mbr-tab.is-active{background:linear-gradient(170deg,var(--c-deep),var(--c-coffee));color:#fff7ea;box-shadow:var(--shadow-sm)}
+  .mbr-summary{display:flex;align-items:center;justify-content:space-between;gap:14px;background:#fff;border:1px solid var(--c-line);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+  .mbr-summary__name{display:block;font-family:var(--f-display);font-size:1.28rem;font-weight:500;color:var(--c-deep);line-height:1.15}
+  .mbr-summary__meta{display:block;font-size:.82rem;color:var(--c-muted);margin-top:3px;letter-spacing:.02em}
+  .mbr-summary__pill{white-space:nowrap;font-size:.8rem;font-weight:700;color:#2a8a4a;background:rgba(42,138,74,.1);border:1px solid rgba(42,138,74,.25);padding:7px 13px;border-radius:999px}
+  .mbr-note{font-size:.86rem;color:var(--c-text-soft);margin-bottom:14px;line-height:1.55}
+  .mbr-note b{color:var(--c-copper);font-weight:600}
+  .mbr-prepaid{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid var(--c-line);border-radius:10px;margin-top:12px;cursor:pointer;background:#fff}
+  .mbr-prepaid[hidden]{display:none}
+  .mbr-prepaid strong{color:var(--c-deep)}
+  .mbr-prepaid small{color:var(--c-text-soft)}
+  .mbr-change{margin-top:14px;font-size:.8rem;font-weight:600;color:var(--c-copper);background:none;border:0;padding:0;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .mbr-change:hover{text-decoration:underline}
 </style>
 </head>
 <body class="admin">
@@ -95,9 +119,67 @@
         <form id="builder-form" class="builder-form">
           <div class="panel">
 
-            <!-- 1. Guest Info -->
+            <!-- 1. Membership (top) -->
             <div class="builder-section">
-              <h4><span class="step-badge">1</span>Guest Information</h4>
+              <h4><span class="step-badge">1</span>Membership</h4>
+              <p class="help">Member details &amp; tier discount are applied automatically.</p>
+              <div class="mbr-box" id="member-card">
+
+                <!-- Find a member (shown when none is loaded) -->
+                <div class="mbr-find" id="mbr-find">
+                  <label class="mbr-find__label">Find member <small>by phone, email, or ID</small></label>
+                  <div class="mbr-find__row">
+                    <input type="text" id="bk-member-search" placeholder="+973 … / email / MBR-…" autocomplete="off">
+                    <button type="button" class="btn btn--outline" id="bk-member-find" style="padding:11px 18px; white-space:nowrap;"><i class="fas fa-search"></i> Find</button>
+                  </div>
+                  <p class="mbr-hint" id="bk-member-status">Find a member to apply their rate, or continue below as a walk-in guest.</p>
+                </div>
+
+                <!-- Member loaded (tabs + summary) -->
+                <div class="mbr-loaded" id="mbr-loaded" hidden>
+                  <div class="mbr-tabs" role="tablist">
+                    <button type="button" class="mbr-tab is-active" id="tab-self" role="tab" aria-selected="true"><i class="fas fa-crown"></i> This member</button>
+                    <button type="button" class="mbr-tab" id="tab-other" role="tab" aria-selected="false"><i class="fas fa-user-plus"></i> Book for someone else</button>
+                  </div>
+
+                  <div class="mbr-summary">
+                    <div>
+                      <span class="mbr-summary__name" id="mbr-name">—</span>
+                      <span class="mbr-summary__meta" id="mbr-meta">—</span>
+                    </div>
+                    <span class="mbr-summary__pill" id="mbr-disc-pill">—</span>
+                  </div>
+
+                  <p class="mbr-note" id="mbr-note"></p>
+
+                  <div class="builder-grid">
+                    <div class="field">
+                      <label>Tier</label>
+                      <select id="bk-tier" name="tier">
+                        <option value="">Select tier…</option>
+                        <option value="Silver" data-discount="10">Silver — 10% off</option>
+                        <option value="Gold" data-discount="15" selected>Gold — 15% off</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>Member ID</label>
+                      <input type="text" id="bk-mid" name="member_id" placeholder="MBR-XXXXXX">
+                    </div>
+                  </div>
+
+                  <label class="mbr-prepaid" id="bk-prepaid-wrap" hidden>
+                    <input type="checkbox" id="bk-prepaid" style="margin-top:3px; width:18px; height:18px; accent-color:var(--c-copper);">
+                    <span><strong>Use a complimentary service from balance</strong><br><small id="bk-prepaid-info"></small></span>
+                  </label>
+
+                  <button type="button" class="mbr-change" id="mbr-change"><i class="fas fa-rotate-left"></i> Use a different member / walk-in</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Guest Info -->
+            <div class="builder-section">
+              <h4><span class="step-badge">2</span>Guest Information</h4>
               <p class="help">Who is this booking for?</p>
               <div class="builder-grid">
                 <div class="field"><label>Full Name *</label><input type="text" name="name" required placeholder="e.g. Fatima Ali"></div>
@@ -106,9 +188,9 @@
               </div>
             </div>
 
-            <!-- 2. Service -->
+            <!-- 3. Service -->
             <div class="builder-section">
-              <h4><span class="step-badge">2</span>Treatment Selection</h4>
+              <h4><span class="step-badge">3</span>Treatment Selection</h4>
               <p class="help">Choose the service — pricing updates live.</p>
               <div class="builder-grid">
                 <div class="field full">
@@ -124,9 +206,9 @@
               </div>
             </div>
 
-            <!-- 3. Date & Time -->
+            <!-- 4. Date & Time -->
             <div class="builder-section">
-              <h4><span class="step-badge">3</span>Date, Time &amp; Therapist</h4>
+              <h4><span class="step-badge">4</span>Date, Time &amp; Therapist</h4>
               <div class="builder-grid">
                 <div class="field"><label>Date *</label><input type="date" name="date" id="bk-date" required></div>
                 <div class="field"><label>Time *</label><input type="time" name="time" id="bk-time" required value="14:00"></div>
@@ -139,48 +221,6 @@
                     <option>Maya</option>
                     <option>Rahma</option>
                   </select>
-                </div>
-              </div>
-            </div>
-
-            <!-- 4. Membership -->
-            <div class="builder-section">
-              <h4><span class="step-badge">4</span>Membership Status</h4>
-              <p class="help">Apply member tier discount automatically.</p>
-              <div class="member-card" id="member-card">
-                <div class="member-card__head" id="member-card-head">
-                  <span class="lbl"><i class="fas fa-crown"></i> Is this guest a member?</span>
-                  <span class="switch"></span>
-                </div>
-                <div class="member-card__body">
-                  <div class="field full">
-                    <label>Find member <small style="color:var(--c-text-soft); font-weight:400;">by phone, email, or ID — pre-fills their details</small></label>
-                    <div style="display:flex; gap:8px;">
-                      <input type="text" id="bk-member-search" placeholder="+973 … / email / TAS-…" autocomplete="off" style="flex:1;">
-                      <button type="button" class="btn btn--outline" id="bk-member-find" style="padding:11px 18px; white-space:nowrap;"><i class="fas fa-search"></i> Find</button>
-                    </div>
-                    <p id="bk-member-status" style="font-size:.82rem; margin-top:8px; min-height:18px; color:var(--c-text-soft);">Booking for someone else? Find the member for the rate, then edit the guest name above.</p>
-                    <label id="bk-else-wrap" hidden style="display:flex; align-items:center; gap:9px; margin-top:10px; font-size:.82rem; cursor:pointer; color:var(--c-deep); font-weight:600;">
-                      <input type="checkbox" id="bk-someone-else" style="width:16px; height:16px; accent-color:var(--c-copper);">
-                      Booking for someone else (keep the member's tier rate)
-                    </label>
-                  </div>
-                  <div class="field">
-                    <label>Tier</label>
-                    <select id="bk-tier" name="tier">
-                      <option value="">Select tier…</option>
-                      <option value="Silver" data-discount="10">Silver — 10% off</option>
-                      <option value="Gold" data-discount="15" selected>Gold — 15% off</option>
-                    </select>
-                  </div>
-                  <div class="field">
-                    <label>Member ID</label>
-                    <input type="text" id="bk-mid" name="member_id" placeholder="TAS-2025-XXXX">
-                  </div>
-                  <label class="field full" id="bk-prepaid-wrap" hidden style="display:flex; align-items:flex-start; gap:10px; padding:12px 14px; border:1px solid var(--c-line); border-radius:10px; margin-top:4px; cursor:pointer;">
-                    <input type="checkbox" id="bk-prepaid" style="margin-top:3px; width:18px; height:18px; accent-color:var(--c-copper);">
-                    <span><strong style="color:var(--c-deep);">Use a complimentary service from balance</strong><br><small id="bk-prepaid-info" style="color:var(--c-text-soft);"></small></span>
-                  </label>
                 </div>
               </div>
             </div>
@@ -336,6 +376,6 @@
 <script src="assets/js/taj-data.js?v=20260612e" defer></script>
 <script src="assets/js/page-cms.js?v=20260612d" defer></script>
 <script src="assets/js/admin-shared.js" defer></script>
-<script src="assets/js/admin-new-booking.js?v=20260617a" defer></script>
+<script src="assets/js/admin-new-booking.js?v=20260617b" defer></script>
 </body>
 </html>

@@ -7,7 +7,6 @@ if (sessionStorage.getItem('taj-admin-auth') !== '1') {
 const VAT_RATE = 0.10;
 const form = document.getElementById('builder-form');
 const memberCard = document.getElementById('member-card');
-const memberHead = document.getElementById('member-card-head');
 const tierSel = document.getElementById('bk-tier');
 const midInput = document.getElementById('bk-mid');
 const serviceSel = document.getElementById('bk-service');
@@ -17,6 +16,8 @@ const discType = document.getElementById('bk-disc-type');
 const discReason = document.getElementById('bk-disc-reason');
 const discValue = document.getElementById('bk-disc-value');
 const paidSel = document.getElementById('bk-paid');
+let loadedMember = null;          // the member whose rate applies (null = walk-in)
+let bookingMode = 'self';         // 'self' = for the member · 'other' = for someone else
 
 // Searchable treatment picker, driven by the services master. The chosen
 // service is stored in the hidden #bk-service as "name|price|duration" so the
@@ -107,11 +108,6 @@ function fmtTime(t) {
   return `${display}:${m} ${ampm}`;
 }
 
-// Member toggle
-memberHead.addEventListener('click', () => {
-  memberCard.classList.toggle('active');
-  recalc();
-});
 [tierSel, midInput].forEach(el => el && el.addEventListener('input', recalc));
 
 // All inputs
@@ -125,8 +121,9 @@ function recalc() {
   const [svcName, svcPriceStr, svcDuration] = serviceSel.value.split('|');
   const svcPrice = parseFloat(svcPriceStr);
 
-  // Member discount
-  const isMember = memberCard.classList.contains('active');
+  // Member discount — applies whenever a member is loaded (incl. booking for
+  // someone else on the member's rate).
+  const isMember = !!loadedMember;
   const tierOpt = tierSel.options[tierSel.selectedIndex];
   const mDiscPct = (isMember && tierOpt && tierOpt.dataset.discount)
     ? parseInt(tierOpt.dataset.discount, 10) : 0;
@@ -201,16 +198,22 @@ function recalc() {
   document.getElementById('pv-total').textContent = fmt(total);
 }
 
-/* ---------- Member lookup + complimentary (prepaid) balance ---------- */
-let loadedMember = null;
+/* ---------- Member lookup + tabs + complimentary (prepaid) balance ---------- */
 const memSearch  = document.getElementById('bk-member-search');
 const memFindBtn = document.getElementById('bk-member-find');
 const memStatus  = document.getElementById('bk-member-status');
+const findBox    = document.getElementById('mbr-find');
+const loadedBox  = document.getElementById('mbr-loaded');
+const tabSelf    = document.getElementById('tab-self');
+const tabOther   = document.getElementById('tab-other');
+const mbrName    = document.getElementById('mbr-name');
+const mbrMeta    = document.getElementById('mbr-meta');
+const mbrPill    = document.getElementById('mbr-disc-pill');
+const mbrNote    = document.getElementById('mbr-note');
+const mbrChange  = document.getElementById('mbr-change');
 const prepaidWrap = document.getElementById('bk-prepaid-wrap');
 const prepaidChk  = document.getElementById('bk-prepaid');
 const prepaidInfo = document.getElementById('bk-prepaid-info');
-const elseWrap   = document.getElementById('bk-else-wrap');
-const elseChk    = document.getElementById('bk-someone-else');
 
 // The discount % carried by the currently selected tier (data-discount on the
 // <option>). This is what auto-maps the member discount to the tier.
@@ -267,39 +270,64 @@ function refreshPrepaid() {
     prepaidChk.checked = false; prepaidChk.disabled = true;
   }
 }
-function loadMember(m) {
-  loadedMember = m;
-  if (elseChk) elseChk.checked = false;
-  form.elements.name.value  = m.name || '';
-  form.elements.phone.value = m.phone || '';
-  if (form.elements.email) form.elements.email.value = m.email || '';
-  if (m.tier) tierSel.value = m.tier;          // → maps the discount to the tier
-  midInput.value = m.id || '';
-  memberCard.classList.add('active');
-  if (elseWrap) elseWrap.hidden = false;
+// Switch between "this member" and "book for someone else". The member's tier
+// rate/discount stays applied in both modes — only the guest identity differs.
+function setMode(mode) {
+  bookingMode = mode === 'other' ? 'other' : 'self';
+  const other = bookingMode === 'other';
+  if (tabSelf)  { tabSelf.classList.toggle('is-active', !other);  tabSelf.setAttribute('aria-selected', String(!other)); }
+  if (tabOther) { tabOther.classList.toggle('is-active', other);  tabOther.setAttribute('aria-selected', String(other)); }
+  if (!loadedMember) return;
   const pct = tierDiscount();
-  memStatus.innerHTML = `<span style="color:#2a8a4a; font-weight:600;">✓ ${m.name} · ${m.tier || 'Member'} · ${m.id}</span> — details filled${pct ? `, ${pct}% ${m.tier || 'member'} discount applied` : ''}.`;
-  refreshPrepaid();
-  recalc();
-}
-// "Booking for someone else": clear the personal fields for the guest's details
-// but keep the member's tier rate / discount + member link. Unticking restores
-// the member's own details.
-function applySomeoneElse() {
-  if (!elseChk) return;
-  if (elseChk.checked) {
+  if (other) {
+    // Booking for a different guest — clear identity, keep the member's rate.
     form.elements.name.value = '';
     form.elements.phone.value = '';
     if (form.elements.email) form.elements.email.value = '';
-    const pct = tierDiscount();
-    memStatus.innerHTML = `<span style="color:var(--c-copper); font-weight:600;">Guest booking on ${loadedMember ? loadedMember.name + "’s" : 'the'} membership</span> — enter the guest’s name &amp; phone above${loadedMember && pct ? `; ${pct}% ${loadedMember.tier || 'member'} rate kept` : ''}.`;
+    if (mbrNote) mbrNote.innerHTML = `Enter the guest’s details below — <b>${loadedMember.name}</b>’s ${pct}% ${loadedMember.tier || 'member'} rate still applies.`;
     form.elements.name.focus();
-  } else if (loadedMember) {
-    loadMember(loadedMember);
+  } else {
+    // Booking for the member — fill their own details.
+    form.elements.name.value  = loadedMember.name || '';
+    form.elements.phone.value = loadedMember.phone || '';
+    if (form.elements.email) form.elements.email.value = loadedMember.email || '';
+    if (mbrNote) mbrNote.innerHTML = `Booking for <b>${loadedMember.name}</b> — ${pct}% ${loadedMember.tier || 'member'} discount applied.`;
   }
   recalc();
 }
-elseChk && elseChk.addEventListener('change', applySomeoneElse);
+tabSelf  && tabSelf.addEventListener('click', () => setMode('self'));
+tabOther && tabOther.addEventListener('click', () => setMode('other'));
+
+function loadMember(m) {
+  loadedMember = m;
+  if (m.tier) tierSel.value = m.tier;          // → maps the discount to the tier
+  midInput.value = m.id || '';
+  const pct = tierDiscount();
+  if (mbrName) mbrName.textContent = m.name || 'Member';
+  if (mbrMeta) mbrMeta.textContent = `${m.tier || 'Member'} · ${m.id || ''}`;
+  if (mbrPill) mbrPill.textContent = pct ? `${pct}% off` : 'Member';
+  if (findBox)   findBox.hidden = true;
+  if (loadedBox) loadedBox.hidden = false;
+  refreshPrepaid();
+  setMode('self');                             // fills guest fields, note, recalc
+}
+
+// Clear the member and return to the find / walk-in state.
+function resetMember() {
+  loadedMember = null;
+  if (findBox)   findBox.hidden = false;
+  if (loadedBox) loadedBox.hidden = true;
+  if (memSearch) memSearch.value = '';
+  if (memStatus) memStatus.textContent = 'Find a member to apply their rate, or continue below as a walk-in guest.';
+  midInput.value = '';
+  form.elements.name.value = '';
+  form.elements.phone.value = '';
+  if (form.elements.email) form.elements.email.value = '';
+  if (prepaidWrap) prepaidWrap.hidden = true;
+  if (prepaidChk) prepaidChk.checked = false;
+  recalc();
+}
+mbrChange && mbrChange.addEventListener('click', resetMember);
 async function findMember() {
   const q = (memSearch.value || '').trim();
   if (!q) { memStatus.textContent = 'Enter a phone, email, or member ID.'; return; }
@@ -312,7 +340,7 @@ async function findMember() {
     (x.id || '').toLowerCase() === ql ||
     (x.email || '').toLowerCase() === ql ||
     (digits.length >= 6 && (x.phone || '').replace(/\D/g, '').replace(/^973/, '') === digits));
-  if (!m) { memStatus.innerHTML = `<span style="color:#c0392b;">No member found for "${q}".</span> Enter the details above to book as a guest.`; return; }
+  if (!m) { memStatus.innerHTML = `<span style="color:#c0392b;">No member found for "${q}".</span> Continue below as a walk-in guest.`; return; }
   loadMember(m);
 }
 memFindBtn && memFindBtn.addEventListener('click', findMember);
@@ -342,7 +370,7 @@ async function saveBooking() {
 
   const [svcName, svcPriceStr] = serviceSel.value.split('|');
   const svcPrice = parseFloat(svcPriceStr);
-  const isMember = memberCard.classList.contains('active');
+  const isMember = !!loadedMember;
   const tierOpt = tierSel.options[tierSel.selectedIndex];
   const mDiscPct = (isMember && tierOpt && tierOpt.dataset.discount) ? parseInt(tierOpt.dataset.discount, 10) : 0;
   let mDisc = +(svcPrice * mDiscPct / 100).toFixed(3);
