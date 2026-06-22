@@ -50,10 +50,46 @@
     const c = sb();
     if (!c) return [];
     try {
-      const { data, error } = await c.from('admins').select('id,name,email,role,status,created_at').order('created_at', { ascending: true });
+      // select('*') so profile columns (phone/title/notes/user_id) come through
+      // when migration 008 is applied, and we degrade gracefully before it.
+      const { data, error } = await c.from('admins').select('*').order('created_at', { ascending: true });
       if (error) { console.warn('[admins] load', error.message); return []; }
       return data || [];
     } catch (e) { console.warn('[admins] load failed', e); return []; }
+  }
+
+  // Call the owner-gated admin-users Edge Function; normalise its error body.
+  async function callFn(body) {
+    const c = sb();
+    if (!c || !c.functions) return { ok: false, error: 'Not connected to Supabase.' };
+    try {
+      const { data, error } = await c.functions.invoke('admin-users', { body });
+      if (error) {
+        let msg = error.message || 'Request failed.';
+        try { const j = await error.context.json(); if (j && j.error) msg = j.error; } catch (_) {}
+        if (/Failed to (fetch|send)|FunctionsFetch|not found|404|does not exist/i.test(msg)) {
+          msg = 'The admin-users function isn’t deployed yet — deploy it to enable creating logins and resetting passwords.';
+        }
+        return { ok: false, error: msg };
+      }
+      return data || { ok: true };
+    } catch (e) { return { ok: false, error: (e && e.message) || String(e) }; }
+  }
+
+  // Update a profile row, dropping columns the schema doesn't have yet (so edits
+  // still save before migration 008 adds phone/title/notes).
+  async function updateProfile(id, fields) {
+    const c = sb();
+    const ext = ['phone', 'title', 'notes', 'user_id'];
+    const payload = Object.assign({}, fields);
+    for (let i = 0; i < 6; i++) {
+      const { error } = await c.from('admins').update(payload).eq('id', id);
+      if (!error) return;
+      const m = (error.message || '').toLowerCase();
+      const bad = ext.find(k => (k in payload) && (m.includes("'" + k + "'") || m.includes('"' + k + '"') || (m.includes(k) && (m.includes('does not exist') || m.includes('schema cache')))));
+      if (bad) { delete payload[bad]; continue; }
+      throw error;
+    }
   }
 
   // ---- Role-based menu gating -------------------------------------------------
@@ -98,6 +134,7 @@
         <td><span class="badge-tier ${ROLE_BADGE[role]}">${ROLE_LABEL[role]}</span></td>
         <td><span class="badge-status ${isActive ? 'ok' : 'cancel'}">${isActive ? 'Active' : 'Disabled'}</span></td>
         <td class="cell-actions">
+          <a class="icon-btn pw-admin" title="${isSelf ? 'Change my password' : 'Reset password'}"><i class="fas fa-key"></i></a>
           <a class="icon-btn edit-admin" title="Edit"><i class="fas fa-pen"></i></a>
           <a class="icon-btn danger del-admin" title="Remove"${isSelf ? ' style="opacity:.35; pointer-events:none;" title="You can\'t remove yourself"' : ''}><i class="fas fa-trash"></i></a>
         </td>
@@ -111,6 +148,10 @@
       const id = e.target.closest('tr').dataset.id;
       removeAdmin(ADMINS.find(u => String(u.id) === String(id)) || null);
     }));
+    tbody.querySelectorAll('.pw-admin').forEach(b => b.addEventListener('click', e => {
+      const id = e.target.closest('tr').dataset.id;
+      resetPassword(ADMINS.find(u => String(u.id) === String(id)) || null);
+    }));
   }
 
   // ---- Create / edit modal ----------------------------------------------------
@@ -119,22 +160,35 @@
     const ov = document.createElement('div');
     ov.className = 'au-modal-ov';
     ov.style.cssText = 'position:fixed; inset:0; background:rgba(36,19,8,.55); display:flex; align-items:center; justify-content:center; z-index:9999; padding:20px;';
+    const half = 'display:grid; grid-template-columns:1fr 1fr; gap:12px;';
     ov.innerHTML = `
-      <div style="background:#fff; border-radius:18px; max-width:460px; width:100%; padding:30px 28px; box-shadow:0 30px 80px rgba(0,0,0,.3);">
-        <h3 style="font-family:var(--f-display); font-weight:500; color:var(--c-deep); margin-bottom:6px;">${editing ? 'Edit User' : 'Invite User'}</h3>
-        <p style="color:var(--c-text-soft); font-size:0.86rem; margin-bottom:20px;">${editing ? 'Update this person\'s details and role.' : 'Add someone to the team. Create their matching login in Supabase with the same email.'}</p>
+      <div style="background:#fff; border-radius:18px; max-width:480px; width:100%; max-height:92vh; overflow:auto; padding:30px 28px; box-shadow:0 30px 80px rgba(0,0,0,.3);">
+        <h3 style="font-family:var(--f-display); font-weight:500; color:var(--c-deep); margin-bottom:6px;">${editing ? 'Edit User' : 'Create User'}</h3>
+        <p style="color:var(--c-text-soft); font-size:0.86rem; margin-bottom:20px;">${editing ? 'Update this person\'s profile and role.' : 'Creates their login and profile in one step. They sign in with this email and password.'}</p>
         <div class="field" style="margin-bottom:14px;"><label>Full Name</label><input type="text" id="au-name" placeholder="e.g. Sofia Marini" value="${esc(user ? (user.name || '') : '')}"></div>
         <div class="field" style="margin-bottom:14px;"><label>Email</label><input type="email" id="au-email" placeholder="name@tasukunspa.com" value="${esc(user ? (user.email || '') : '')}" ${editing ? 'readonly style="opacity:.7;"' : ''}></div>
-        <div class="field" style="margin-bottom:14px;"><label>Role</label>
-          <select id="au-role">${ROLES.map(r => `<option value="${r}"${user && user.role === r ? ' selected' : (!user && r === 'receptionist' ? ' selected' : '')}>${ROLE_LABEL[r]}</option>`).join('')}</select>
+        ${editing ? '' : `
+        <div style="${half} margin-bottom:14px;">
+          <div class="field"><label>Password</label><input type="password" id="au-pass" autocomplete="new-password" placeholder="Min 8 characters"></div>
+          <div class="field"><label>Confirm</label><input type="password" id="au-pass2" autocomplete="new-password" placeholder="Re-enter"></div>
+        </div>`}
+        <div style="${half} margin-bottom:14px;">
+          <div class="field"><label>Role</label>
+            <select id="au-role">${ROLES.map(r => `<option value="${r}"${user && user.role === r ? ' selected' : (!user && r === 'receptionist' ? ' selected' : '')}>${ROLE_LABEL[r]}</option>`).join('')}</select>
+          </div>
+          <div class="field"><label>Status</label>
+            <select id="au-status"><option value="active"${!user || user.status !== 'disabled' ? ' selected' : ''}>Active</option><option value="disabled"${user && user.status === 'disabled' ? ' selected' : ''}>Disabled</option></select>
+          </div>
         </div>
-        <div class="field" style="margin-bottom:8px;"><label>Status</label>
-          <select id="au-status"><option value="active"${!user || user.status !== 'disabled' ? ' selected' : ''}>Active</option><option value="disabled"${user && user.status === 'disabled' ? ' selected' : ''}>Disabled</option></select>
+        <div style="${half} margin-bottom:14px;">
+          <div class="field"><label>Phone</label><input type="tel" id="au-phone" placeholder="+973 …" value="${esc(user ? (user.phone || '') : '')}"></div>
+          <div class="field"><label>Job title</label><input type="text" id="au-title" placeholder="e.g. Spa Director" value="${esc(user ? (user.title || '') : '')}"></div>
         </div>
+        <div class="field" style="margin-bottom:8px;"><label>Notes</label><textarea id="au-notes" rows="2" placeholder="Internal notes (optional)" style="width:100%; resize:vertical;">${esc(user ? (user.notes || '') : '')}</textarea></div>
         <p id="au-err" style="color:#c0392b; font-size:0.82rem; min-height:18px; margin:6px 0;"></p>
         <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:10px;">
           <button class="btn btn--outline" id="au-cancel" style="padding:11px 20px;">Cancel</button>
-          <button class="btn btn--primary" id="au-save" style="padding:11px 22px;"><i class="fas fa-save"></i> ${editing ? 'Save' : 'Add User'}</button>
+          <button class="btn btn--primary" id="au-save" style="padding:11px 22px;"><i class="fas fa-save"></i> ${editing ? 'Save' : 'Create User'}</button>
         </div>
       </div>`;
     document.body.appendChild(ov);
@@ -151,20 +205,31 @@
     const email = ov.querySelector('#au-email').value.trim().toLowerCase();
     const role = ov.querySelector('#au-role').value;
     const status = ov.querySelector('#au-status').value;
+    const phone = (ov.querySelector('#au-phone').value || '').trim();
+    const title = (ov.querySelector('#au-title').value || '').trim();
+    const notes = (ov.querySelector('#au-notes').value || '').trim();
     if (!name || !email) { errEl.textContent = 'Name and email are required.'; return; }
     if (!/.+@.+\..+/.test(email)) { errEl.textContent = 'Enter a valid email.'; return; }
     if (!user && ADMINS.some(u => (u.email || '').toLowerCase() === email)) { errEl.textContent = 'That email is already an admin.'; return; }
     if (!c) { errEl.textContent = 'Not connected.'; return; }
+
+    let password = '';
+    if (!user) {
+      password = ov.querySelector('#au-pass').value;
+      const confirm = ov.querySelector('#au-pass2').value;
+      if (password.length < 8) { errEl.textContent = 'Password must be at least 8 characters.'; return; }
+      if (password !== confirm) { errEl.textContent = 'Passwords do not match.'; return; }
+    }
+
     const btn = ov.querySelector('#au-save');
     const old = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving…';
     try {
       if (user) {
-        const { error } = await c.from('admins').update({ name, role, status }).eq('id', user.id);
-        if (error) throw error;
+        await updateProfile(user.id, { name, role, status, phone: phone || null, title: title || null, notes: notes || null });
       } else {
-        const id = 'ADM-' + Date.now().toString().slice(-6);
-        const { error } = await c.from('admins').insert({ id, name, email, role, status });
-        if (error) throw error;
+        // Provision the Auth login + profile atomically via the owner-gated function.
+        const res = await callFn({ action: 'create', email, password, name, role, status, phone, title, notes });
+        if (!res.ok) { btn.disabled = false; btn.innerHTML = old; errEl.textContent = res.error || 'Create failed.'; return; }
       }
       close();
       await refresh();
@@ -174,15 +239,41 @@
     }
   }
 
+  // Reset a user's password. Own account → Supabase Auth updateUser; others →
+  // the owner-gated function.
+  function resetPassword(user) {
+    if (!user) return;
+    const isSelf = CURRENT_EMAIL && (user.email || '').toLowerCase() === CURRENT_EMAIL;
+    if (isSelf) {
+      if (window.TajAdmin && TajAdmin.changePassword) return TajAdmin.changePassword();
+      return alert('Use the key icon by your name (bottom-left) to change your own password.');
+    }
+    if (!CAN_MANAGE_USERS[CURRENT_ROLE]) { alert('Only an Owner can reset other users\' passwords.'); return; }
+    if (!(window.TajAdmin && TajAdmin.passwordModal)) { alert('Password tools unavailable.'); return; }
+    TajAdmin.passwordModal({
+      title: 'Reset password',
+      subtitle: 'Set a new password for ' + (user.name || user.email) + '. They\'ll use it next time they sign in.',
+      cta: 'Set Password',
+      doneMsg: 'Password updated for ' + (user.name || user.email) + '.',
+      onSubmit: async (pw) => callFn({ action: 'set_password', user_id: user.user_id || null, email: user.email, password: pw }),
+    });
+  }
+
   async function removeAdmin(user) {
     if (!user) return;
     if (CURRENT_EMAIL && (user.email || '').toLowerCase() === CURRENT_EMAIL) { alert("You can't remove your own account."); return; }
     const owners = ADMINS.filter(u => u.role === 'owner');
     if (user.role === 'owner' && owners.length <= 1) { alert('You can\'t remove the last Owner.'); return; }
-    if (!confirm(`Remove ${user.name || user.email}? They will lose admin access (their Supabase login, if any, should be removed separately).`)) return;
-    const c = sb();
-    try { if (c) { const { error } = await c.from('admins').delete().eq('id', user.id); if (error) throw error; } }
-    catch (e) { alert('Remove failed: ' + (e.message || e)); return; }
+    if (!confirm(`Remove ${user.name || user.email}? This deletes both their admin access and their login.`)) return;
+    // Prefer the function so the Supabase Auth login is removed too.
+    const res = await callFn({ action: 'delete', admin_id: user.id, email: user.email, user_id: user.user_id || null });
+    if (!res.ok) {
+      // Fallback: remove the profile row directly; the login must be removed in Supabase.
+      const c = sb();
+      try { if (c) { const { error } = await c.from('admins').delete().eq('id', user.id); if (error) throw error; } }
+      catch (e) { alert('Remove failed: ' + (e.message || e)); return; }
+      if (window.TajAdmin && TajAdmin.toast) TajAdmin.toast('Profile removed. Note: ' + res.error);
+    }
     await refresh();
   }
 

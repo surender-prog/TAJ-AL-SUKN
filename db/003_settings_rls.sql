@@ -27,6 +27,11 @@ drop policy if exists "public write payment_methods" on public.payment_methods;
 create policy "public write payment_methods" on public.payment_methods
   for all to public using (true) with check (true);
 
+-- admins: intentionally NOT granted public (anon) write. Granting `public`
+-- ALL on admins was a security footgun (anyone with the publishable/anon key
+-- could write the admins table at the 003..004 migration level). Only the
+-- defensive drop is kept, so a replay or partial apply still removes any stale
+-- copy of the bad policy. The admins table stays authenticated-only via
+-- "auth all admins" (001, re-created in 005); owner-only write is enforced by
+-- the admin-users hardening migration.
 drop policy if exists "public write admins" on public.admins;
-create policy "public write admins" on public.admins
-  for all to public using (true) with check (true);
