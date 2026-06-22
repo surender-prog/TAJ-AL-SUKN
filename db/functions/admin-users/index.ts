@@ -5,7 +5,8 @@
 // OWNER (looked up in the `admins` table by the JWT's email) before touching
 // Supabase Auth. Actions:
 //   create        → create the Auth login + the admins profile row (atomic)
-//   set_password  → set another user's password (reset)
+//   set_password  → set a user's password; creates their login if they have a
+//                   profile but no Auth login yet (legacy/manually-added rows)
 //   delete        → delete the Auth login + the admins profile row
 // Self password changes do NOT use this function — the signed-in user updates
 // their own password client-side via supabase.auth.updateUser({ password }).
@@ -118,18 +119,33 @@ Deno.serve(async (req) => {
       return json({ ok: true, id, user_id: uid });
     }
 
-    // ---- set_password: reset another user's password -----------------------
+    // ---- set_password: set a user's password; create the login if they have
+    //      a profile but no Auth login yet (legacy/manually-added admins). -----
     if (action === "set_password") {
       const password = String(body.password || "");
       if (password.length < 8) return json({ ok: false, error: "Password must be at least 8 characters." }, 400);
       let uid = body.user_id ? String(body.user_id) : "";
       const email = String(body.email || "").trim().toLowerCase();
       if (!uid && email) uid = (await findAuthIdByEmail(admin, email)) || "";
-      if (!uid) return json({ ok: false, error: "No matching login found for that user. They may need a login created first." }, 404);
-      const { error: upErr } = await admin.auth.admin.updateUserById(uid, { password });
-      if (upErr) return json({ ok: false, error: upErr.message }, 400);
-      log("password set", { email: email || uid, by: callerEmail });
-      return json({ ok: true });
+      let createdLogin = false;
+      if (uid) {
+        const { error: upErr } = await admin.auth.admin.updateUserById(uid, { password });
+        if (upErr) return json({ ok: false, error: upErr.message }, 400);
+      } else {
+        // No login yet → provision one for this email so they can sign in.
+        if (!isEmail(email)) return json({ ok: false, error: "This user has no login and no valid email to create one." }, 400);
+        const { data: created, error: cErr } = await admin.auth.admin.createUser({ email, password, email_confirm: true });
+        if (cErr || !created?.user) {
+          const m = String(cErr?.message || "Could not create the login.");
+          return json({ ok: false, error: /already.*registered|exists/i.test(m) ? "A login with that email already exists but couldn't be matched — try again." : m }, 400);
+        }
+        uid = created.user.id;
+        createdLogin = true;
+      }
+      // Link the Auth uid back onto the profile row for next time (best-effort).
+      if (email && uid) { try { await admin.from("admins").update({ user_id: uid }).ilike("email", email); } catch (_) { /* ignore */ } }
+      log(createdLogin ? "login created + password set" : "password set", { email: email || uid, by: callerEmail });
+      return json({ ok: true, created: createdLogin });
     }
 
     // ---- delete: remove the Auth login + the admins profile ----------------
