@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opening Soon — Taj Al Sukun · Spa &amp; Wellness, Manama</title>
+<meta name="description" content="Taj Al Sukun — a modern wellness sanctuary in Manama, Bahrain. Opening soon.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="assets/images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- Flag check: once an owner turns coming-soon OFF, forward visitors to the live site. -->
+<script>
+(function () {
+  var SB_URL = 'https://vrljiousxfvjvkhkftwt.supabase.co';
+  var SB_KEY = 'sb_publishable_u6kMuxYz8psWu1sA_DDQgg_ylMOC_Uj';
+  var doc = document.documentElement;
+  function reveal() { doc.style.visibility = ''; }
+  function toSite() { location.replace('index.html'); }
+  try { if (/[?&]live=1\b/.test(location.search) || localStorage.getItem('taj-cs-bypass') === '1') { toSite(); return; } } catch (e) {}
+  doc.style.visibility = 'hidden';
+  var done = false, fs = setTimeout(function () { if (!done) { done = true; reveal(); } }, 2500);
+  function decide(on) {
+    if (done) return; done = true; clearTimeout(fs);
+    try { localStorage.setItem('taj-cs', JSON.stringify({ on: !!on, t: Date.now() })); } catch (e) {}
+    if (on) reveal(); else toSite();
+  }
+  try {
+    fetch(SB_URL + '/rest/v1/settings?key=eq.coming_soon&select=value', { headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (rows) { var v = rows && rows[0] && rows[0].value; decide(v === true || (v && v.enabled === true)); })
+      .catch(function () { reveal(); });
+  } catch (e) { reveal(); }
+})();
+</script>
+<style>
+  :root{
+    --ink:#1F1109; --deep:#2A1810; --coffee:#3D2417; --copper:#B07849;
+    --gold:#D4B896; --gold-2:#E8D7C0; --cream:#F5EDE0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Jost',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    color:var(--gold-2);
+    background:radial-gradient(1200px 700px at 50% -10%, #4a2c1a 0%, var(--deep) 45%, var(--ink) 100%);
+    min-height:100vh;display:flex;align-items:center;justify-content:center;
+    padding:40px 22px;-webkit-font-smoothing:antialiased;text-align:center;position:relative;overflow:hidden;
+  }
+  /* soft ornamental glows */
+  body::before,body::after{content:'';position:absolute;border-radius:50%;filter:blur(80px);opacity:.35;pointer-events:none}
+  body::before{width:420px;height:420px;background:rgba(176,120,73,.45);top:-120px;left:-120px}
+  body::after{width:360px;height:360px;background:rgba(212,184,150,.25);bottom:-120px;right:-100px}
+  .cs{position:relative;max-width:600px;width:100%}
+  .cs__logo{width:104px;height:104px;border-radius:50%;margin:0 auto 26px;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(160deg, rgba(212,184,150,.16), rgba(176,120,73,.10));border:1px solid rgba(212,184,150,.28);
+    box-shadow:0 24px 60px rgba(0,0,0,.45)}
+  .cs__logo img{width:66px;height:66px;object-fit:contain;display:block}
+  .cs__brand{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.9rem;font-weight:500;color:#fff;letter-spacing:.01em}
+  .cs__brand small{display:block;font-family:'Jost',sans-serif;font-size:.66rem;letter-spacing:.42em;text-transform:uppercase;color:var(--copper);margin-top:8px;font-weight:600}
+  .cs__eyebrow{margin:30px 0 6px;font-size:.7rem;letter-spacing:.4em;text-transform:uppercase;color:rgba(212,184,150,.7);font-weight:600}
+  .cs__title{font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;color:#fff;font-size:clamp(3rem,9vw,5rem);line-height:1.04;letter-spacing:-.01em}
+  .cs__title em{font-style:italic;color:var(--gold)}
+  .cs__rule{width:64px;height:1px;background:linear-gradient(90deg,transparent,var(--copper),transparent);margin:26px auto}
+  .cs__lede{font-size:1.02rem;line-height:1.75;color:rgba(232,215,192,.82);max-width:460px;margin:0 auto;font-weight:300}
+  .cs__contact{display:flex;align-items:center;justify-content:center;gap:14px;margin:34px 0 6px;flex-wrap:wrap}
+  .cs__contact a{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    border:1px solid rgba(212,184,150,.3);color:var(--gold-2);font-size:1.05rem;transition:all .28s ease;background:rgba(255,255,255,.02)}
+  .cs__contact a:hover{background:var(--copper);border-color:var(--copper);color:#fff;transform:translateY(-3px)}
+  .cs__where{margin-top:26px;font-size:.78rem;letter-spacing:.06em;color:rgba(212,184,150,.6)}
+  .cs__foot{margin-top:14px;font-size:.7rem;letter-spacing:.05em;color:rgba(212,184,150,.4)}
+  .cs__foot a{color:rgba(212,184,150,.6);text-decoration:none}
+  .cs__foot a:hover{color:var(--gold)}
+</style>
+</head>
+<body>
+  <main class="cs">
+    <div class="cs__logo"><img src="assets/images/logo.png" alt="Taj Al Sukun"></div>
+    <div class="cs__brand">Taj Al Sukun<small>Spa &amp; Wellness</small></div>
+
+    <p class="cs__eyebrow">Manama · Kingdom of Bahrain</p>
+    <h1 class="cs__title">Opening <em>Soon</em></h1>
+    <div class="cs__rule"></div>
+    <p class="cs__lede">A modern wellness sanctuary — authentic hammams, signature massages, and curated rituals. We are preparing every detail. The crown of stillness awaits.</p>
+
+    <div class="cs__contact">
+      <a href="https://instagram.com/tajalsukunspa2026" target="_blank" rel="noopener" title="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://wa.me/97335194422" target="_blank" rel="noopener" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+      <a href="mailto:hello@tasukunspa.com" title="Email"><i class="far fa-envelope"></i></a>
+    </div>
+
+    <p class="cs__where">Al Fateh, Manama · +973 3519 4422</p>
+    <p class="cs__foot">Technology powered by <a href="https://equalpixels.ae" target="_blank" rel="noopener">equalpixels.ae</a></p>
+  </main>
+</body>
+</html>

@@ -618,6 +618,7 @@
         <!-- Sub-navigation (sticky) -->
         <nav class="settings-nav">
           <a href="#sg-general"   class="settings-nav__chip active"><i class="fas fa-info-circle"></i> General</a>
+          <a href="#sg-website"   class="settings-nav__chip"><i class="fas fa-globe"></i> Website</a>
           <a href="#sg-notify"    class="settings-nav__chip"><i class="far fa-bell"></i> Notifications</a>
           <a href="#sg-smtp"      class="settings-nav__chip"><i class="far fa-envelope"></i> Email (SMTP)</a>
           <a href="#sg-therapist" class="settings-nav__chip"><i class="fas fa-user-md"></i> Therapists</a>
@@ -653,6 +654,24 @@
         </div>
 
         <!-- 2. Notifications -->
+        <div class="panel settings-section" id="sg-website">
+          <div class="panel__head"><h3><i class="fas fa-globe" style="color:var(--c-copper); margin-right:10px;"></i>Website Status</h3></div>
+          <p style="color: var(--c-text-soft); margin-bottom: 22px;">Control what the public sees. While <strong>Coming Soon</strong> is on, visitors to the website are shown a branded “Opening Soon” page instead of the site. Turn it off to go live. The admin panel is never affected.</p>
+          <div class="notify-row" style="display:flex; gap:16px; align-items:flex-start; padding:18px 20px; border:1px solid var(--c-line); border-radius:var(--r-md);">
+            <input type="checkbox" id="cs-toggle" style="width:20px; height:20px; accent-color:var(--c-copper); margin-top:4px;">
+            <div style="flex:1;">
+              <strong style="display:block; color:var(--c-deep); margin-bottom:4px;">Coming Soon mode</strong>
+              <span style="display:block; color:var(--c-text-soft); font-size:0.86rem;">When on, the public website redirects visitors to the Opening Soon page.</span>
+              <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+                <a href="coming-soon.html" target="_blank" class="btn btn--outline" style="padding:8px 16px; font-size:0.74rem;"><i class="fas fa-eye"></i> View Coming Soon page</a>
+                <a href="index.html?live=1" target="_blank" class="btn btn--outline" style="padding:8px 16px; font-size:0.74rem;"><i class="fas fa-external-link-alt"></i> Preview live site</a>
+              </div>
+            </div>
+            <span class="badge-status" id="cs-badge">—</span>
+          </div>
+          <p id="cs-note" style="color:var(--c-text-soft); font-size:0.8rem; margin-top:14px;"><i class="fas fa-info-circle" style="color:var(--c-copper);"></i> Changes apply to visitors within ~1 minute. Use “Preview live site” to check everything before turning Coming Soon off.</p>
+        </div>
+
         <div class="panel settings-section" id="sg-notify">
           <div class="panel__head"><h3><i class="far fa-bell" style="color:var(--c-copper); margin-right:10px;"></i>Notification Settings</h3></div>
           <p style="color: var(--c-text-soft); margin-bottom: 22px;">Choose how you receive copies of new guest bookings and member signups. Changes save automatically.</p>
@@ -1192,6 +1211,7 @@
 <script src="assets/js/admin.js?v=20260617c" defer></script>
 <script src="assets/js/admin-smtp.js?v=20260612b" defer></script>
 <script src="assets/js/admin-users.js?v=20260617c" defer></script>
+<script src="assets/js/admin-coming-soon.js?v=20260618a" defer></script>
 <script src="assets/js/i18n-data.js?v=20260604h" defer></script>
 <script src="assets/js/admin-upload.js?v=20260520n" defer></script>
 <script src="assets/js/admin-pages.js?v=20260604j" defer></script>
