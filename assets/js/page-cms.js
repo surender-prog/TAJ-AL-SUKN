@@ -433,8 +433,12 @@
   }
 
   function applyValue(el, value) {
-    if (value == null || value === '') return;
+    if (value == null) return;
     const prop = el.getAttribute('data-cms-prop') || 'text';
+    // An explicit empty string clears text/html (so the owner can blank a
+    // field and have it disappear); for asset/link/placeholder props an empty
+    // value means "keep the built-in default" — never blank an image or link.
+    if (value === '' && prop !== 'text' && prop !== 'html') return;
     switch (prop) {
       case 'bg':
         el.style.backgroundImage = "url('" + String(value).replace(/'/g, "\\'") + "')";

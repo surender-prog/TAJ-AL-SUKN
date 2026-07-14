@@ -38,7 +38,7 @@
       if (prop === 'bg' || prop === 'src') return;
       var key = el.getAttribute('data-i18n') || el.getAttribute('data-cms');
       if (toArabic) {
-        if (CMS[key] == null) return;            // no Arabic → leave English
+        if (CMS[key] == null || CMS[key] === '') return;  // no Arabic → leave English
         // Capture the CURRENT English each time (it may have just been (re)set
         // by page-cms after its async Supabase fetch), so EN-restore is accurate
         // and a late CMS overwrite doesn't strand us in English.
@@ -226,7 +226,10 @@
             const v = val[k];
             const newKey = prefix + '.' + k;
             if (v && typeof v === 'object' && !Array.isArray(v)) walk(v, newKey);
-            else if (typeof v === 'string' && v.trim()) CMS[newKey] = v;
+            // A present string (incl. an explicit "") overrides the built-in
+            // Arabic default — so clearing a field in admin removes it in both
+            // languages (empty then falls back to English via translateContent).
+            else if (typeof v === 'string') CMS[newKey] = v;
           });
         })(row.value, pageKey);
       });

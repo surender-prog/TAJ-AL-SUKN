@@ -448,15 +448,10 @@
   // ----------------------------- renderer ---------------------------
   function renderField(block, field) {
     const path = block.id + '.' + field.key;
-    // Show the shipped default when a field is blank (incl. saved-as-"") so the
-    // editor reflects what the live page actually renders, instead of an empty
-    // box the owner mistakes for lost data.
-    let val = get(workingContent, path);
-    if (val === '' || val == null) {
-      const d = get(defaultsFor(currentKey), path);
-      if (d != null && d !== '') val = d;
-    }
-    val = val || '';
+    // Absent fields fall back to the shipped default (via deepMerge in
+    // loadPage); a field saved as "" stays empty so the owner can blank it and
+    // have it disappear from the live page.
+    const val   = get(workingContent,   path) || '';
     const arVal = get(workingContentAR, path) || '';
     const id    = 'cms-f-'    + block.id + '-' + field.key;
     const arId  = 'cms-f-ar-' + block.id + '-' + field.key;
