@@ -490,6 +490,8 @@
       const dot = addr.indexOf('.');
       if (dot > 0) needed.add(addr.slice(0, dot));
     });
+    // Membership tier cards read their live numbers from Settings → Tiers.
+    if (document.querySelector('.mtier-grid')) needed.add('membership_tiers');
 
     // Resolve content for each needed key.
     //
@@ -685,6 +687,25 @@
     const esc = s => String(s == null ? '' : s).replace(/[&<>]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[c]);
     const fmtPerk = line => esc(line).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
 
+    // Live numbers from Settings → Tiers (membership_tiers). When present these
+    // override the CMS copy so admin edits (price / discount / allowances)
+    // appear on this page. Perks are regenerated from the allowances.
+    const mtCfg = got['membership_tiers'] || null;
+    const mtByTier = {};
+    if (mtCfg && Array.isArray(mtCfg.tiers)) mtCfg.tiers.forEach(x => { mtByTier[String(x.tier || x.id || '').toLowerCase()] = x; });
+    const perksFromAllowance = (t) => {
+      const n = k => parseInt(t[k], 10) || 0;
+      const m = n('massages'), h = n('hammams'), f = n('foot'), g = n('guest'), d = n('discount'), p = n('priority');
+      const L = [];
+      if (m) L.push(`**${m} complimentary** 60-min signature massage${m > 1 ? 's' : ''}`);
+      if (h) L.push(`**${h} Royal Hammam** ritual${h > 1 ? 's' : ''} included`);
+      if (f) L.push(`**${f} complimentary** foot ritual${f > 1 ? 's' : ''}`);
+      if (d) L.push(`**${d}% off** all additional treatments`);
+      if (g) L.push(`**${g} guest pass${g > 1 ? 'es' : ''}** per year`);
+      if (p) L.push(`Priority booking — ${p} hours ahead`);
+      return L;
+    };
+
     // Resolve tiers: prefer new array shape (cfg.tierList.tiers), fall
     // back to legacy silver/gold/platinum keys for old saved data.
     let tiers = (cfg.tierList && Array.isArray(cfg.tierList.tiers)) ? cfg.tierList.tiers : null;
@@ -720,11 +741,14 @@
         .filter(Boolean).join(' ');
       const iconCls = tRaw.icon || 'fas fa-gem';
       const badge = tRaw.featured ? `<span class="mtier__badge">${esc(badgeText)}</span>` : '';
-      const priceNum = (tRaw.price != null && tRaw.price !== '') ? esc(String(tRaw.price)) : '';
+      // Overlay live numbers from Settings → Tiers when saved.
+      const ov = mtByTier[String(tRaw.tier || slug || '').toLowerCase()];
+      const priceVal = (ov && ov.price != null && ov.price !== '') ? ov.price : tRaw.price;
+      const priceNum = (priceVal != null && priceVal !== '') ? esc(String(priceVal)) : '';
       const priceUnit = (t.unit != null && t.unit !== '') ? `<small>${esc(t.unit)}</small>` : '';
-      const perksHtml = (typeof t.perks === 'string') ? t.perks.split(/\r?\n/)
-        .map(l => l.replace(/\s+$/, '')).filter(l => l.length)
-        .map(line => `<li>${fmtPerk(line)}</li>`).join('') : '';
+      const perkLines = ov ? perksFromAllowance(ov)
+        : ((typeof t.perks === 'string') ? t.perks.split(/\r?\n/).map(l => l.replace(/\s+$/, '')).filter(l => l.length) : []);
+      const perksHtml = perkLines.map(line => `<li>${fmtPerk(line)}</li>`).join('');
       // Build CTA href + class — gold/featured uses gold button, others outline
       const ctaSlug = (tRaw.tier || `Tier${i+1}`).replace(/[^A-Za-z0-9]+/g, '');
       const ctaHref = `member-signup.html?tier=${encodeURIComponent(ctaSlug)}`;

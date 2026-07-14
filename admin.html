@@ -916,35 +916,36 @@
           <div class="panel__head">
             <h3><i class="fas fa-crown" style="color:var(--c-copper); margin-right:10px;"></i>Membership Tiers</h3>
             <div class="section-actions">
-              <a href="membership.html" target="_blank" class="btn btn--outline"><i class="fas fa-external-link-alt"></i> Public Page</a>
-              <button class="btn btn--primary" data-save-settings><i class="fas fa-save"></i> Save Changes</button>
+              <a href="membership.html?live=1" target="_blank" class="btn btn--outline"><i class="fas fa-external-link-alt"></i> Public Page</a>
+              <button class="btn btn--primary" id="save-tiers"><i class="fas fa-save"></i> Save Changes</button>
             </div>
           </div>
-          <p style="color: var(--c-text-soft); margin-bottom: 22px;">Update annual fees, allowances, and discount percentages for each tier.</p>
+          <p style="color: var(--c-text-soft); margin-bottom: 22px;">Update annual fees, allowances, and discount percentages for each tier. Changes appear on the public <a href="membership.html?live=1" target="_blank" style="color:var(--c-copper);">Membership page</a> after you save.</p>
           <div class="tier-editor">
-            <div class="tier-editor__card">
+            <div class="tier-editor__card" data-tier="silver">
               <h5>Silver</h5>
               <div class="name">The Companion</div>
-              <div class="tier-editor__row"><label>Annual Fee (BHD)</label><input type="number" value="150" min="0"></div>
-              <div class="tier-editor__row"><label>Member Discount %</label><input type="number" value="10" min="0" max="100"></div>
-              <div class="tier-editor__row"><label>Free Massages / yr</label><input type="number" value="2" min="0"></div>
-              <div class="tier-editor__row"><label>Free Hammams / yr</label><input type="number" value="0" min="0"></div>
-              <div class="tier-editor__row"><label>Free Foot Rituals / yr</label><input type="number" value="1" min="0"></div>
-              <div class="tier-editor__row"><label>Guest Passes / yr</label><input type="number" value="0" min="0"></div>
-              <div class="tier-editor__row"><label>Priority (hours ahead)</label><input type="number" value="24" min="0"></div>
+              <div class="tier-editor__row"><label>Annual Fee (BHD)</label><input type="number" data-tf="price" value="150" min="0"></div>
+              <div class="tier-editor__row"><label>Member Discount %</label><input type="number" data-tf="discount" value="10" min="0" max="100"></div>
+              <div class="tier-editor__row"><label>Free Massages / yr</label><input type="number" data-tf="massages" value="2" min="0"></div>
+              <div class="tier-editor__row"><label>Free Hammams / yr</label><input type="number" data-tf="hammams" value="0" min="0"></div>
+              <div class="tier-editor__row"><label>Free Foot Rituals / yr</label><input type="number" data-tf="foot" value="1" min="0"></div>
+              <div class="tier-editor__row"><label>Guest Passes / yr</label><input type="number" data-tf="guest" value="0" min="0"></div>
+              <div class="tier-editor__row"><label>Priority (hours ahead)</label><input type="number" data-tf="priority" value="24" min="0"></div>
             </div>
-            <div class="tier-editor__card gold">
+            <div class="tier-editor__card gold" data-tier="gold">
               <h5 style="color: var(--c-copper);">Gold (Most Popular)</h5>
               <div class="name">The Sanctuary</div>
-              <div class="tier-editor__row"><label>Annual Fee (BHD)</label><input type="number" value="350" min="0"></div>
-              <div class="tier-editor__row"><label>Member Discount %</label><input type="number" value="15" min="0" max="100"></div>
-              <div class="tier-editor__row"><label>Free Massages / yr</label><input type="number" value="6" min="0"></div>
-              <div class="tier-editor__row"><label>Free Hammams / yr</label><input type="number" value="1" min="0"></div>
-              <div class="tier-editor__row"><label>Free Foot Rituals / yr</label><input type="number" value="2" min="0"></div>
-              <div class="tier-editor__row"><label>Guest Passes / yr</label><input type="number" value="1" min="0"></div>
-              <div class="tier-editor__row"><label>Priority (hours ahead)</label><input type="number" value="48" min="0"></div>
+              <div class="tier-editor__row"><label>Annual Fee (BHD)</label><input type="number" data-tf="price" value="350" min="0"></div>
+              <div class="tier-editor__row"><label>Member Discount %</label><input type="number" data-tf="discount" value="15" min="0" max="100"></div>
+              <div class="tier-editor__row"><label>Free Massages / yr</label><input type="number" data-tf="massages" value="6" min="0"></div>
+              <div class="tier-editor__row"><label>Free Hammams / yr</label><input type="number" data-tf="hammams" value="1" min="0"></div>
+              <div class="tier-editor__row"><label>Free Foot Rituals / yr</label><input type="number" data-tf="foot" value="2" min="0"></div>
+              <div class="tier-editor__row"><label>Guest Passes / yr</label><input type="number" data-tf="guest" value="1" min="0"></div>
+              <div class="tier-editor__row"><label>Priority (hours ahead)</label><input type="number" data-tf="priority" value="48" min="0"></div>
             </div>
           </div>
+          <p id="tiers-saved-flash" style="display:none; color:#2a8a4a; font-size:0.84rem; margin-top:14px;"><i class="fas fa-check-circle"></i> Saved — the Membership page now shows these values.</p>
         </div>
 
         <!-- 9. Cancellation Policy -->
@@ -1206,12 +1207,13 @@
 <script src="assets/js/supabase-config.js?v=20260520n" defer></script>
 <script src="assets/js/admin-auth.js?v=20260617c" defer></script>
 <script src="assets/js/taj-data.js?v=20260612e" defer></script>
-<script src="assets/js/page-cms.js?v=20260612d" defer></script>
+<script src="assets/js/page-cms.js?v=20260618a" defer></script>
 <script src="assets/js/admin-shared.js" defer></script>
 <script src="assets/js/admin.js?v=20260617c" defer></script>
 <script src="assets/js/admin-smtp.js?v=20260612b" defer></script>
 <script src="assets/js/admin-users.js?v=20260617c" defer></script>
 <script src="assets/js/admin-coming-soon.js?v=20260618a" defer></script>
+<script src="assets/js/admin-tiers.js?v=20260618a" defer></script>
 <script src="assets/js/i18n-data.js?v=20260604h" defer></script>
 <script src="assets/js/admin-upload.js?v=20260520n" defer></script>
 <script src="assets/js/admin-pages.js?v=20260604j" defer></script>
