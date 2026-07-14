@@ -157,12 +157,12 @@
             { key:'name',  label:'Name',                           type:'text' },
             { key:'role',  label:'Role / title',                   type:'text' },
             { key:'years', label:'Experience (e.g., "14 yrs")',    type:'text' },
-            { key:'b1', label:'Highlight 1', type:'text' },
-            { key:'b2', label:'Highlight 2', type:'text' },
-            { key:'b3', label:'Highlight 3', type:'text' },
-            { key:'b4', label:'Highlight 4', type:'text' },
-            { key:'b5', label:'Highlight 5', type:'text' },
-            { key:'b6', label:'Highlight 6', type:'text' },
+            { key:'b1', label:'Intro paragraph — shown below the name (no bullet)', type:'textarea', rows:5 },
+            { key:'b2', label:'Highlight 1', type:'text' },
+            { key:'b3', label:'Highlight 2', type:'text' },
+            { key:'b4', label:'Highlight 3', type:'text' },
+            { key:'b5', label:'Highlight 4', type:'text' },
+            { key:'b6', label:'Highlight 5', type:'text' },
             { key:'ig', label:'Instagram URL', type:'text' },
             { key:'fb', label:'Facebook URL',  type:'text' },
             { key:'li', label:'LinkedIn URL',  type:'text' },
@@ -453,7 +453,15 @@
   // ----------------------------- renderer ---------------------------
   function renderField(block, field) {
     const path = block.id + '.' + field.key;
-    const val   = get(workingContent,   path) || '';
+    // Show the shipped default when a field is blank (incl. saved-as-"") so the
+    // editor reflects what the live page actually renders, instead of an empty
+    // box the owner mistakes for lost data.
+    let val = get(workingContent, path);
+    if (val === '' || val == null) {
+      const d = get(defaultsFor(currentKey), path);
+      if (d != null && d !== '') val = d;
+    }
+    val = val || '';
     const arVal = get(workingContentAR, path) || '';
     const id    = 'cms-f-'    + block.id + '-' + field.key;
     const arId  = 'cms-f-ar-' + block.id + '-' + field.key;

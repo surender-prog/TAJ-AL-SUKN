@@ -132,7 +132,8 @@
 /* About — leadership / manager profile card */
 .leader-profile .editorial__copy{display:flex;flex-direction:column;justify-content:center}
 .leader-role{font-size:0.8rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--c-copper);font-weight:600;margin-bottom:10px}
-.leader-name{font-size:2.6rem;line-height:1.05;margin:0 0 22px}
+.leader-name{font-size:2.6rem;line-height:1.05;margin:0 0 18px}
+.leader-bio{margin:0 0 26px;font-size:1.04rem;line-height:1.78;color:var(--c-text-soft);max-width:60ch;white-space:pre-line}
 .leader-points{list-style:none;padding:0;margin:0 0 26px;display:flex;flex-direction:column;gap:14px}
 .leader-points li{display:flex;align-items:flex-start;gap:14px;font-size:1rem;line-height:1.45;color:var(--c-text)}
 .leader-points .dot{flex:0 0 auto;width:8px;height:8px;margin-top:8px;border-radius:50%;background:var(--c-copper)}
