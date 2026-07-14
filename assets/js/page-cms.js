@@ -708,8 +708,8 @@
 
     // Resolve tiers: prefer new array shape (cfg.tierList.tiers), fall
     // back to legacy silver/gold/platinum keys for old saved data.
-    let tiers = (cfg.tierList && Array.isArray(cfg.tierList.tiers)) ? cfg.tierList.tiers : null;
-    if (!tiers || !tiers.length) {
+    let tiers = (cfg.tierList && Array.isArray(cfg.tierList.tiers) && cfg.tierList.tiers.length) ? cfg.tierList.tiers : null;
+    if (!tiers) {
       tiers = [];
       ['silver','gold','platinum'].forEach((k) => {
         const t = cfg[k];
@@ -718,6 +718,13 @@
           icon: ({ silver:'fas fa-gem', gold:'fas fa-crown', platinum:'fas fa-star' })[k]
         }, t));
       });
+    }
+    // If the saved page-membership has no usable tier list (e.g. an empty
+    // tierList), fall back to the shipped DEFAULTS so the cards still render —
+    // and so the membership_tiers overlay (price/allowances) can apply.
+    if (!tiers.length) {
+      const dtl = ((DEFAULTS['page-membership'] || {}).tierList || {}).tiers;
+      if (Array.isArray(dtl) && dtl.length) tiers = dtl;
     }
     if (!tiers.length) return;
 
