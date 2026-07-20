@@ -100,6 +100,8 @@ if (isEdit) {
 /* ---- Field references ---- */
 const F = {
   name:       document.getElementById('sv-name'),
+  nameAr:     document.getElementById('sv-name-ar'),
+  descAr:     document.getElementById('sv-description-ar'),
   category:   document.getElementById('sv-category'),
   audience:   document.getElementById('sv-audience'),
   tag:        document.getElementById('sv-tag'),
@@ -164,6 +166,30 @@ let audienceMap = {};
     }
     if (isEdit && current && F.audience && audienceMap[current.id]) {
       F.audience.value = audienceMap[current.id];
+    }
+  } catch (_) {}
+})();
+
+/* ---- Arabic translations are stored in a settings map (service-i18n:
+   { [englishName]: { name, desc } }) because the services DB table has no
+   Arabic columns. Keyed by English name so the public i18n layer can match
+   the rendered cards. Load + prefill on edit. ---- */
+let i18nMap = {};
+(async function loadServiceI18n() {
+  try {
+    if (window.TajData?.settings?.get) {
+      const saved = await TajData.settings.get('service-i18n');
+      if (saved && typeof saved === 'object') i18nMap = saved;
+    }
+    if (!Object.keys(i18nMap).length) {
+      try { i18nMap = JSON.parse(localStorage.getItem('taj-service-i18n') || '{}') || {}; } catch (_) {}
+    }
+    if (isEdit && current) {
+      const tr = i18nMap[current.name];
+      if (tr) {
+        if (F.nameAr && tr.name) F.nameAr.value = tr.name;
+        if (F.descAr && tr.desc) F.descAr.value = tr.desc;
+      }
     }
   } catch (_) {}
 })();
@@ -314,6 +340,21 @@ document.getElementById('service-form').addEventListener('submit', async e => {
     audienceMap[payload.id] = payload.audience;
     localStorage.setItem('taj-service-audience', JSON.stringify(audienceMap));
     if (window.TajData?.settings?.set) await TajData.settings.set('service-audience', audienceMap);
+  } catch (_) {}
+
+  // Persist Arabic name/description into the settings map (service-i18n),
+  // keyed by English name. On rename, move the entry to the new name.
+  try {
+    const nameAr = F.nameAr ? F.nameAr.value.trim() : '';
+    const descAr = F.descAr ? F.descAr.value.trim() : '';
+    if (isEdit && current && current.name !== payload.name) delete i18nMap[current.name];
+    if (nameAr || descAr) {
+      i18nMap[payload.name] = { name: nameAr, desc: descAr };
+    } else {
+      delete i18nMap[payload.name];
+    }
+    localStorage.setItem('taj-service-i18n', JSON.stringify(i18nMap));
+    if (window.TajData?.settings?.set) await TajData.settings.set('service-i18n', i18nMap);
   } catch (_) {}
 
   // Disable save button while we persist

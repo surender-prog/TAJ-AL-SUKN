@@ -360,6 +360,13 @@
             { key: 'whatsapp', label: 'WhatsApp',      type: 'text' },
             { key: 'email',    label: 'Email',         type: 'text' },
             { key: 'hours',    label: 'Opening hours', type: 'text' }
+          ] },
+        { id: 'socials', title: 'Social media links',
+          fields: [
+            { key: 'instagram', label: 'Instagram URL', type: 'text' },
+            { key: 'whatsapp',  label: 'WhatsApp URL',  type: 'text' },
+            { key: 'facebook',  label: 'Facebook URL',  type: 'text' },
+            { key: 'tiktok',    label: 'TikTok URL',    type: 'text' }
           ] }
       ]
     }

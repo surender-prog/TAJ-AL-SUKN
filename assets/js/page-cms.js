@@ -101,9 +101,9 @@
       // (page-about.leadership.*). Photo lives here because that's where the
       // uploaded image is stored; it renders on both Home and About.
       founder: {
-        eyebrow: 'A Word from Our Operational Manager',
+        eyebrow: 'A Word from the Founder',
         title:   'Hands that *understand*.',
-        image:   'assets/images/manager-portrait.jpg'
+        image:   'https://vrljiousxfvjvkhkftwt.supabase.co/storage/v1/object/public/cms-images/img-1077-jpg-mqngkr7z-fzrs.jpeg'
       },
       cta: {
         eyebrow: 'Your Sanctuary Awaits',
@@ -162,19 +162,19 @@
         accent:  'assets/images/therapist-prep.jpg'
       },
       leadership: {
-        role:  'Operational Manager',
-        years: '14 yrs',
-        name:  'Carmen Santos',
-        b1: 'Leads daily spa operations with a strong focus on service excellence and guest satisfaction.',
+        role:  'Founder & Managing Director',
+        years: '',
+        name:  'Hareem Iqbal',
+        b1: 'TAJ AL SUKUN is more than a spa to me. When I started this journey in 2025, my goal was simple—to create a place where people could find peace, comfort, and genuine care. It took nearly a year of dedication, patience, and attention to every detail to build what Taj Al Sukun is today. There were challenges along the way, but each one strengthened my belief in what I was creating. Seeing guests leaving feeling relaxed, refreshed, and cared for makes all the effort worthwhile, and their trust makes this journey truly meaningful.',
         b2: 'Oversees therapist performance, training, and quality standards to ensure a consistent luxury experience.',
         b3: 'Dedicated to creating a calm, welcoming environment where every guest feels valued and cared for.',
         b4: 'Ensures smooth coordination between departments, maintaining efficiency and operational excellence.',
         b5: 'Passionate about promoting wellness, professional growth, and continuous improvement within the team.',
         b6: 'Committed to delivering exceptional service while upholding the highest standards of hospitality and care.',
-        image: 'assets/images/manager-portrait.jpg',
-        ig: 'https://www.instagram.com/tajalsukunspa2026',
-        fb: '#',
-        li: '#',
+        image: 'https://vrljiousxfvjvkhkftwt.supabase.co/storage/v1/object/public/cms-images/img-1077-jpg-mqngkr7z-fzrs.jpeg',
+        ig: 'https://www.instagram.com/hareemiqbal_',
+        fb: 'https://www.facebook.com/share/1Bdb8vCd5e/?mibextid=wwXIfr',
+        li: 'https://www.linkedin.com/in/hareem-iqbal-b08463415?utm_source=share_via&utm_content=profile&utm_medium=member_ios',
         wa: 'https://wa.me/97335194422'
       },
       team: {
@@ -423,6 +423,12 @@
         hours:    'Daily · 10am – 6pm',
         whatsapp: '+973 35194422',
         email:    'hello@tasukunspa.com'
+      },
+      socials: {
+        instagram: 'https://www.instagram.com/tajalsukunspa2026',
+        whatsapp:  'https://wa.me/97335194422',
+        facebook:  '#',
+        tiktok:    '#'
       }
     }
   };

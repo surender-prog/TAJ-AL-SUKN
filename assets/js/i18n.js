@@ -215,11 +215,26 @@
       if (dot > 0) needed.add(k.slice(0, dot));
     });
     const arKeys = Array.from(needed).map(function (k) { return k + '_ar'; });
+    // Admin-saved Arabic service names/descriptions (service editor):
+    // { [englishName]: { name, desc } } — merged into SVCS below.
+    arKeys.push('service-i18n');
     try {
       const { data } = await window.TajData._sb
         .from('settings').select('key,value').in('key', arKeys);
       (data || []).forEach(function (row) {
         if (!row.value || typeof row.value !== 'object') return;
+        if (row.key === 'service-i18n') {
+          Object.keys(row.value).forEach(function (en) {
+            var tr = row.value[en];
+            if (!tr || typeof tr !== 'object') return;
+            var cur = SVCS[en] || {};
+            SVCS[en] = {
+              name: tr.name || cur.name || '',
+              desc: tr.desc || cur.desc || ''
+            };
+          });
+          return;
+        }
         const pageKey = row.key.replace(/_ar$/, '');
         (function walk(val, prefix) {
           Object.keys(val).forEach(function (k) {
