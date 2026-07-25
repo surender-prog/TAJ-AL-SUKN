@@ -38,12 +38,22 @@
       if (prop === 'bg' || prop === 'src') return;
       var key = el.getAttribute('data-i18n') || el.getAttribute('data-cms');
       if (toArabic) {
-        if (CMS[key] == null || CMS[key] === '') return;  // no Arabic → leave English
+        if (CMS[key] == null) return;  // no Arabic → leave English
+        if (CMS[key] === '') {
+          // Explicitly cleared in admin — restore the English default (which
+          // may itself be empty) instead of stranding a stale Arabic value.
+          if (el.getAttribute('data-en') != null) el.innerHTML = el.getAttribute('data-en');
+          return;
+        }
         // Capture the CURRENT English each time (it may have just been (re)set
         // by page-cms after its async Supabase fetch), so EN-restore is accurate
         // and a late CMS overwrite doesn't strand us in English.
-        if (el.innerHTML !== CMS[key]) el.setAttribute('data-en', el.innerHTML);
-        el.innerHTML = CMS[key];
+        // Light markdown support in admin-saved Arabic: **bold** and newlines.
+        var arHtml = String(CMS[key])
+          .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+          .replace(/\n/g, '<br>');
+        if (el.innerHTML !== arHtml) el.setAttribute('data-en', el.innerHTML);
+        el.innerHTML = arHtml;
       } else if (el.getAttribute('data-en') != null) {
         el.innerHTML = el.getAttribute('data-en');
       }
@@ -64,6 +74,7 @@
     '.member-toggle__head .label', '.member-banner__hello',
     '.info-card h5', '.info-card p', '.day', '.time', '.closed-lbl',
     '.numlabel .lbl', '.mtier__tier', '.svc-card .tag', '.feature .tag', '.compare th',
+    '.hero__logo-card .est', '.stamp small',
     '.s-head p', '.hours h4',
     // home deeper sections + testimonials
     '.numbento__cell h5', '.numbento__cell p',
@@ -82,7 +93,26 @@
     // signup wizard
     '.wizard-step__label', '.wizard-panel__head h2',
     // membership comparison table cells
-    '.compare td', '.compare th', '.compare td strong'
+    '.compare td', '.compare th', '.compare td strong',
+    // closing CTA banner (membership + shared)
+    '.cta-banner h2', '.cta-banner h2 em', '.cta-banner p',
+    // booking page: hero, summary card, why-book values
+    '.banner h1', '.banner h1 em', '.banner__content p', '.s-head h2', '.s-head h2 em',
+    '.summary h4', '.summary h5', '.summary p', '.summary .row span', '.summary .total .lbl',
+    '.form-card p', '#sum-member-badge',
+    // member sign-in page
+    '.auth-side__eyebrow', '.auth-side h1', '.auth-side h1 em', '.auth-side > p',
+    '.auth-side__bullets li', '.auth-side__quote', '.auth-side__quote-attr',
+    '.auth-card__head h2', '.auth-card__head h2 em', '.auth-card__head p',
+    '.field__hint', '.auth-remember span', '.auth-error span', '.auth-foot', '.auth-foot strong',
+    '.auth-demo__label', '.auth-demo__reset', '.auth-demo__tier', '.auth-demo__hint', '.auth-demo__hint strong', '.auth-meta',
+    // member sign-up wizard
+    '.signup-head h1', '.signup-head h1 em', '.signup-head p', '.wizard-panel__head p',
+    '.field__note', '.field__note strong', '.tier-choose__name', '.tier-choose__tag',
+    '.tier-choose__price .unit', '.tier-choose__inner ul li', '.tier-choose__pick', '.tier-choose__ribbon',
+    '.signup-summary__label', '.signup-summary__val', '.pay-choose__inner strong', '.pay-choose__inner small',
+    '.bank-info h4', '.bank-info dt', '.bank-info dd', '.auth-remember span a',
+    '.welcome-card h2', '.welcome-card h2 em', '.welcome-card > p', '.welcome-card__label', '.welcome-card__grid div div'
   ].join(',');
 
   function translateChrome(toArabic) {

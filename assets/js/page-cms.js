@@ -707,6 +707,16 @@
       const n = k => parseInt(t[k], 10) || 0;
       const m = n('massages'), h = n('hammams'), f = n('foot'), g = n('guest'), d = n('discount'), p = n('priority');
       const L = [];
+      const isAR = (document.documentElement.getAttribute('lang') || 'en') === 'ar';
+      if (isAR) {
+        if (m) L.push(`**${m} ${m > 1 ? 'جلسات' : 'جلسة'} مجانية** تدليك مميَّز (60 دقيقة)`);
+        if (h) L.push(`**${h} ${h > 1 ? 'طقوس' : 'طقس'} الحمّام الملكي** مشمولة`);
+        if (f) L.push(`**${f} ${f > 1 ? 'طقوس' : 'طقس'} قدم** مجانية`);
+        if (d) L.push(`**خصم ${d}٪** على جميع العلاجات الإضافية`);
+        if (g) L.push(`**${g} تصريح ضيف** سنويًا`);
+        if (p) L.push(`حجز ذو أولوية — قبل ${p} ساعة`);
+        return L;
+      }
       if (m) L.push(`**${m} complimentary** 60-min signature massage${m > 1 ? 's' : ''}`);
       if (h) L.push(`**${h} Royal Hammam** ritual${h > 1 ? 's' : ''} included`);
       if (f) L.push(`**${f} complimentary** foot ritual${f > 1 ? 's' : ''}`);

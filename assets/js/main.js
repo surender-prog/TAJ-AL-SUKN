@@ -487,6 +487,8 @@ function showToast(msg) {
   }));
   form.addEventListener('input', update);
   form.addEventListener('change', update);
+  // Refresh the summary (service name language) when the site language flips.
+  document.addEventListener('taj-lang-applied', update);
 
   // Pre-select service from URL ?service=... (e.g. coming from services page)
   (function preselectFromUrl() {
@@ -556,7 +558,13 @@ function showToast(msg) {
     const discountAmount = (basePrice * discountPct) / 100;
     const finalPrice = basePrice - discountAmount;
 
-    if (sel && sName)  sName.textContent  = sel.dataset.name;
+    if (sel && sName) {
+      // Show the Arabic service name in the summary when the site is in Arabic.
+      const svcDict = (window.TAJ_I18N && window.TAJ_I18N.services) || {};
+      const isAR = (document.documentElement.getAttribute('lang') || 'en') === 'ar';
+      const tr = isAR && svcDict[sel.dataset.name];
+      sName.textContent = (tr && tr.name) || sel.dataset.name;
+    }
     if (sel && sPrice) sPrice.textContent = basePrice + ' BHD';
     if (sTotal) sTotal.textContent = finalPrice.toFixed(finalPrice % 1 ? 2 : 0) + ' BHD';
     if (sDate) sDate.textContent = date;
